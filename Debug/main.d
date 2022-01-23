@@ -28,21 +28,21 @@ main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
 main.obj: ../local_include/led.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/SysFlag.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 main.obj: ../local_include/onBoardSwitch.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/SysFlag.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysFlag.h
 main.obj: ../local_include/sysclk.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/SysFlag.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysFlag.h
 main.obj: ../local_include/SysTick.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/SysFlag.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 main.obj: ../local_include/SysFlag.h
 main.obj: ../local_include/uart.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/SysFlag.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_ints.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_uart.h
@@ -104,35 +104,35 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
 
 ../local_include/led.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/global.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/SysFlag.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
 
 ../local_include/onBoardSwitch.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/global.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/SysFlag.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysFlag.h:
 
 ../local_include/sysclk.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/global.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/SysFlag.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysFlag.h:
 
 ../local_include/SysTick.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/global.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/SysFlag.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
 
 ../local_include/SysFlag.h:
 
 ../local_include/uart.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/global.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_include/SysFlag.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c:
 

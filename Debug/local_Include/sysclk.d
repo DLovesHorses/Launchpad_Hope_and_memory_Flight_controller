@@ -2,7 +2,7 @@
 
 local_Include/sysclk.obj: ../local_Include/sysclk.c
 local_Include/sysclk.obj: ../local_Include/sysclk.h
-local_Include/sysclk.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/global.h
+local_Include/sysclk.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
 local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h
 local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h
 local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/linkage.h
@@ -14,7 +14,7 @@ local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
 local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
 local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
-local_Include/sysclk.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/SysFlag.h
+local_Include/sysclk.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysFlag.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
@@ -33,7 +33,7 @@ local_Include/sysclk.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
 
 ../local_Include/sysclk.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/global.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h:
 
@@ -57,7 +57,7 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/Led_working/blinky/local_Include/SysFlag.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysFlag.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h:
 
