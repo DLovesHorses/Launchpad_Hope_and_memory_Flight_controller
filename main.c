@@ -9,6 +9,8 @@
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
 
+
+
 #ifdef DEBUG
 void
 __error__(char *pcFilename, uint32_t ui32Line)
@@ -34,7 +36,6 @@ void SystemInitialize(void)
     SysFlag_Init();
     LED_LEDInit();
     SWITCH_Init();
-    //UART0_Init();
     UART0_STDIO_Init();
 
 }
@@ -50,7 +51,8 @@ int main(void)
     SystemInitialize();
 
     char UART0_strToRec[5];
-    const char strToTr[5] = "Hello";
+    char strToTr[50] = "Hello, How are you?";
+    unsigned char charRec = '\0';
     // Loop forever.
     //
     while (1)
@@ -63,30 +65,42 @@ int main(void)
             if (SysFlag_Check(SYSFLAG_UART0_RX))
             {
                 SysFlag_Clear(SYSFLAG_UART0_RX);
-                //UART0_charRec = UARTCharGetNonBlocking(UART0_BASE);
+                charRec = HWREG( UART0_BASE + UART_O_DR );
+                UARTprintf("%c", charRec);
+
+                if(charRec == '\r'){
+                    UARTprintf("\n");
+                }
+
+                if(charRec == 'H'){
+                    //UARTprintf("Secret String: %s", strToTr);
+                    UARTprintf("Price, and hon: %s", "sdfdf");
+
+                    //UARTFlushTx(false);
+                }
+                //UARTFlushTx(true);
+                //UARTFlushRx();
             }
 
             if (SysFlag_Check(SYSFLAG_UART0_TX))
             {
                 SysFlag_Clear(SYSFLAG_UART0_TX);
-                //UARTCharPutNonBlocking(UART0_BASE, UART0_charRec);
             }
-
 
             if (SWITCH_SW2_Pressed())
             {
-                LED_LED2(ON);
-                //UARTprintf("Enter string: ");
-                //UARTgets(UART0_strToRec, 5);
-                //UARTprintf("Entered String: %c", UART_strToRec[4]);
-                UARTwrite(strToTr, 5);
+
             }
+
+
         }
 
         else
         {
             // systick is not expired
             //LED_ALL(OFF);
+
+
 
         }
     }

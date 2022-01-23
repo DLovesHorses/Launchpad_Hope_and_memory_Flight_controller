@@ -1,39 +1,32 @@
 #include "uart.h"
 #include "led.h"
+#include <stdlib.h>
 
-void UART0_IntHandler(void)
+
+void UART0_STDIO_IntHandler(void)
 {
 
     uint32_t interruptReason = UARTIntStatus(UART0_BASE, true);
     UARTIntClear(UART0_BASE, interruptReason);
 
-    if (interruptReason == UART_INT_RX)
+    if (interruptReason == UART_INT_RX  || interruptReason == UART_INT_RT)
     {
+        //UART_ReceiveToQueue();
+
         SysFlag_Set(SYSFLAG_UART0_RX);
+
     }
 
     else if (interruptReason == UART_INT_TX)
     {
         SysFlag_Set(SYSFLAG_UART0_TX);
     }
-    else
-    {
 
-    }
-    LED_LED3(ON);
-    uint32_t count = 0;
-    for (count = 0; count < 20000; count++)
-    {
+    else{
 
     }
 
-    LED_ALL(OFF);
-}
 
-void UART0_STDIO_IntHandler(void){
-
-    uint32_t interruptReason = UARTIntStatus(UART0_BASE, true);
-    UARTIntClear(UART0_BASE, interruptReason);
     return;
 }
 
@@ -48,15 +41,20 @@ void UART0_STDIO_Init(void)
     GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
     UARTIntRegister(UART0_BASE, UART0_STDIO_IntHandler);
+    //UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
+
 
     UARTClockSourceSet(UART0_BASE, UART_CLOCK_SYSTEM);
     UARTStdioConfig(0, 115200, SysCtlClockGet());
-    UARTFlushRx();
-    UARTFlushTx(true);
-    //UARTprintf("Hello");
-    //UARTEchoSet(false);
+    //UARTIntDisable(UART0_BASE, UART_INT_RT);
+    UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
+
 }
 
+
+
+// This function is here just for reference.
+// The main function is UART0_STDIO_Init.
 void UART0_Init(void)
 {
 
@@ -79,13 +77,8 @@ void UART0_Init(void)
 
     HWREG( UART0_BASE + 0x00000018 ) = 0;
 
-    UARTIntRegister(UART0_BASE, UART0_IntHandler);
+    //UARTIntRegister(UART0_BASE, UART0_IntHandler);
     UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
 
-    //UARTCharPut(UART0_BASE, 'a');
 
-    /*
-     UARTStdioConfig(0, 115200, SysCtlClockGet());
-     UARTprintf("Hello world!\n");
-     */
 }
