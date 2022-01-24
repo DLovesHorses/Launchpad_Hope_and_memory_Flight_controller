@@ -20,6 +20,7 @@ local_Include/sysclk.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/Sy
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
+local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_i2c.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/debug.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h
@@ -28,6 +29,7 @@ local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom_map.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
+local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h
 local_Include/sysclk.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
 
 ../local_Include/sysclk.c:
@@ -70,6 +72,8 @@ C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h:
 
+C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_i2c.h:
+
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/debug.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h:
@@ -85,6 +89,8 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom_map.h:
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h:
+
+C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
 

@@ -5,6 +5,10 @@
 #include "local_include/SysTick.h"
 #include "local_include/SysFlag.h"
 #include "local_include/uart.h"
+#include "local_include/i2c.h"
+
+//external sensors
+#include "local_include/MPU9250.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -35,6 +39,10 @@ void SystemInitialize(void)
     LED_LEDInit();
     SWITCH_Init();
     UART0_STDIO_Init();
+    I2C0_Init();
+    //MPU9250_Init();
+    PCF8574A_Init();
+
 
 }
 
@@ -65,8 +73,8 @@ int main(void)
             if (SysFlag_Check(SYSFLAG_UART0_RX))
             {
                 SysFlag_Clear(SYSFLAG_UART0_RX);
-                charRec = HWREG(UART0_BASE + UART_O_DR);
-                UARTprintf("%c", charRec);
+                charRec = UARTgetc();
+                //UARTprintf("%c", charRec);
 
                 if (charRec == '\r')
                 {
@@ -77,10 +85,13 @@ int main(void)
                 {
                     //UARTprintf("Secret String: %s", strToTr);
                     UARTprintf("Hello, I am D, and I made this program! %d", 39485);
+                    PCF8574A_Write( PCF8574A_SA, 0xA7);
 
                     //UARTwrite("Hello, I am D, and I made this program!", 40);
+
+                    /*
                     char charBuffer[800];
-                    /*sprintf(charBuffer,
+                    sprintf(charBuffer,
                             "Hello, I am D, and I made this program!\r\nThis is what a dream feels like.\r\nRandom number: %d\r\n", 234231);
                     int32_t count = 0;
                     while (charBuffer[count] != NULL)
@@ -90,6 +101,10 @@ int main(void)
                     }
                     */
                     //UARTFlushTx(false);
+                }
+
+                if (charRec == 'G'){
+                    PCF8574A_Write( PCF8574A_SA, 0x47);
                 }
                 //UARTFlushTx(true);
                 //UARTFlushRx();

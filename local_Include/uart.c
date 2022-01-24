@@ -1,46 +1,13 @@
 #include "uart.h"
 #include "led.h"
 #include <stdlib.h>
-
-
-    /*
-     * Bug Fixes in uartstdio.c
-     *
-     * Description:         When project is in buffered mode, the UARTprintf function
-     *                      will now output more than 19 characters.
-     *
-     * Fix          :       In utils/uartstdio.c file
-     *
-     *                      In UARTwrite() function defination,
-     *                      under #ifdef UART_BUFFERED code section,
-     *
-     *
-     *                          // Buggy version
-     *
-                                if (!TX_BUFFER_EMPTY)
-                                {
-                                    UARTPrimeTransmit(g_ui32Base);
-                                    MAP_UARTIntEnable(g_ui32Base, UART_INT_TX);
-                                }
-
-
-                                // Fixed Version
-                                while (!TX_BUFFER_EMPTY)
-                                {
-                                    UARTPrimeTransmit(g_ui32Base);
-                                    MAP_UARTIntEnable(g_ui32Base, UART_INT_TX);
-                                }
-     *
-     *
-     *
-     */
-
+void UARTStdioIntHandler(void);
 
 void UART0_STDIO_IntHandler(void)
 {
-
     uint32_t interruptReason = UARTIntStatus(UART0_BASE, true);
-    UARTIntClear(UART0_BASE, interruptReason);
+
+    UARTStdioIntHandler();
 
     if (interruptReason == UART_INT_RX || interruptReason == UART_INT_RT)
     {
@@ -57,7 +24,6 @@ void UART0_STDIO_IntHandler(void)
     }
 
     return;
-
 
 }
 
@@ -79,6 +45,11 @@ void UART0_STDIO_Init(void)
     //UARTIntDisable(UART0_BASE, UART_INT_RT);
     UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
 
+    UARTEchoSet(false); // disable echoing from UARTStdioIntHandler()
+
+    UARTprintf("UART0 Initialized.\n");
+
+    return;
 }
 
 // This function is here just for reference.
@@ -107,5 +78,6 @@ void UART0_Init(void)
 
     //UARTIntRegister(UART0_BASE, UART0_IntHandler);
     UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
+
 }
 

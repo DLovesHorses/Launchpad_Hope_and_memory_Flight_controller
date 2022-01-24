@@ -19,6 +19,7 @@ main.obj: ../local_include/SysFlag.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
+main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_i2c.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/debug.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h
@@ -27,6 +28,7 @@ main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom_map.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
+main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
 main.obj: ../local_include/led.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
@@ -42,6 +44,12 @@ main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integratio
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 main.obj: ../local_include/SysFlag.h
 main.obj: ../local_include/uart.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
+main.obj: ../local_include/i2c.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
+main.obj: ../local_include/MPU9250.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c
@@ -87,6 +95,8 @@ C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h:
 
+C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_i2c.h:
+
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/debug.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h:
@@ -102,6 +112,8 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom_map.h:
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h:
+
+C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
 
@@ -132,6 +144,18 @@ C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/
 ../local_include/SysFlag.h:
 
 ../local_include/uart.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
+
+../local_include/i2c.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
+
+../local_include/MPU9250.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 

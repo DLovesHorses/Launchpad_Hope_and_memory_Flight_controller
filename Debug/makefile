@@ -12,8 +12,10 @@ GEN_CMDS__FLAG :=
 ORDERED_OBJS += \
 "./main.obj" \
 "./startup_ccs.obj" \
+"./local_Include/MPU9250.obj" \
 "./local_Include/SysFlag.obj" \
 "./local_Include/SysTick.obj" \
+"./local_Include/i2c.obj" \
 "./local_Include/led.obj" \
 "./local_Include/onBoardSwitch.obj" \
 "./local_Include/sysclk.obj" \
@@ -166,8 +168,8 @@ DroneProject.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" 
-	-$(RM) "main.d" "startup_ccs.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" 
+	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\MPU9250.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\i2c.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" 
+	-$(RM) "main.d" "startup_ccs.d" "local_Include\MPU9250.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\i2c.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
