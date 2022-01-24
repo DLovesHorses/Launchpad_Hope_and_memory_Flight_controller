@@ -3,18 +3,48 @@
 #include <stdlib.h>
 
 
+    /*
+     * Bug Fixes in uartstdio.c
+     *
+     * Description:         When project is in buffered mode, the UARTprintf function
+     *                      will now output more than 19 characters.
+     *
+     * Fix          :       In utils/uartstdio.c file
+     *
+     *                      In UARTwrite() function defination,
+     *                      under #ifdef UART_BUFFERED code section,
+     *
+     *
+     *                          // Buggy version
+     *
+                                if (!TX_BUFFER_EMPTY)
+                                {
+                                    UARTPrimeTransmit(g_ui32Base);
+                                    MAP_UARTIntEnable(g_ui32Base, UART_INT_TX);
+                                }
+
+
+                                // Fixed Version
+                                while (!TX_BUFFER_EMPTY)
+                                {
+                                    UARTPrimeTransmit(g_ui32Base);
+                                    MAP_UARTIntEnable(g_ui32Base, UART_INT_TX);
+                                }
+     *
+     *
+     *
+     */
+
+
 void UART0_STDIO_IntHandler(void)
 {
 
     uint32_t interruptReason = UARTIntStatus(UART0_BASE, true);
     UARTIntClear(UART0_BASE, interruptReason);
 
-    if (interruptReason == UART_INT_RX  || interruptReason == UART_INT_RT)
+    if (interruptReason == UART_INT_RX || interruptReason == UART_INT_RT)
     {
-        //UART_ReceiveToQueue();
-
         SysFlag_Set(SYSFLAG_UART0_RX);
-
     }
 
     else if (interruptReason == UART_INT_TX)
@@ -22,17 +52,18 @@ void UART0_STDIO_IntHandler(void)
         SysFlag_Set(SYSFLAG_UART0_TX);
     }
 
-    else{
-
+    else
+    {
     }
 
-
     return;
-}
 
+
+}
 
 void UART0_STDIO_Init(void)
 {
+
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
 
@@ -43,15 +74,12 @@ void UART0_STDIO_Init(void)
     UARTIntRegister(UART0_BASE, UART0_STDIO_IntHandler);
     //UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
 
-
     UARTClockSourceSet(UART0_BASE, UART_CLOCK_SYSTEM);
     UARTStdioConfig(0, 115200, SysCtlClockGet());
     //UARTIntDisable(UART0_BASE, UART_INT_RT);
     UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
 
 }
-
-
 
 // This function is here just for reference.
 // The main function is UART0_STDIO_Init.
@@ -79,6 +107,5 @@ void UART0_Init(void)
 
     //UARTIntRegister(UART0_BASE, UART0_IntHandler);
     UARTIntEnable(UART0_BASE, UART_INT_TX | UART_INT_RX);
-
-
 }
+

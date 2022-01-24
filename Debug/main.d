@@ -13,6 +13,8 @@ main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
+main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h
+main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
 main.obj: ../local_include/SysFlag.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
@@ -26,7 +28,6 @@ main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom_map.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
-main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
 main.obj: ../local_include/led.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
@@ -74,6 +75,10 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h:
 
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h:
+
+C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
+
 ../local_include/SysFlag.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h:
@@ -99,8 +104,6 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h:
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
-
-C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
 
 ../local_include/led.h:
 

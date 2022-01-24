@@ -9,8 +9,6 @@
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
 
-
-
 #ifdef DEBUG
 void
 __error__(char *pcFilename, uint32_t ui32Line)
@@ -53,10 +51,12 @@ int main(void)
     char UART0_strToRec[5];
     char strToTr[50] = "Hello, How are you?";
     unsigned char charRec = '\0';
+    UARTprintf("Hello, I am D, and I made this program!");
     // Loop forever.
     //
     while (1)
     {
+
         if (SysFlag_Check(SYSFLAG_SYS_TICK))
         {
             // systick is expired
@@ -65,17 +65,30 @@ int main(void)
             if (SysFlag_Check(SYSFLAG_UART0_RX))
             {
                 SysFlag_Clear(SYSFLAG_UART0_RX);
-                charRec = HWREG( UART0_BASE + UART_O_DR );
+                charRec = HWREG(UART0_BASE + UART_O_DR);
                 UARTprintf("%c", charRec);
 
-                if(charRec == '\r'){
+                if (charRec == '\r')
+                {
                     UARTprintf("\n");
                 }
 
-                if(charRec == 'H'){
+                if (charRec == 'H')
+                {
                     //UARTprintf("Secret String: %s", strToTr);
-                    UARTprintf("Price, and hon: %s", "sdfdf");
+                    UARTprintf("Hello, I am D, and I made this program! %d", 39485);
 
+                    //UARTwrite("Hello, I am D, and I made this program!", 40);
+                    char charBuffer[800];
+                    /*sprintf(charBuffer,
+                            "Hello, I am D, and I made this program!\r\nThis is what a dream feels like.\r\nRandom number: %d\r\n", 234231);
+                    int32_t count = 0;
+                    while (charBuffer[count] != NULL)
+                    {
+                        UARTprintf("%c", charBuffer[count]);
+                        count++;
+                    }
+                    */
                     //UARTFlushTx(false);
                 }
                 //UARTFlushTx(true);
@@ -92,15 +105,12 @@ int main(void)
 
             }
 
-
         }
 
         else
         {
             // systick is not expired
             //LED_ALL(OFF);
-
-
 
         }
     }
