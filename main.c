@@ -52,6 +52,9 @@ void SystemInitialize(void)
 //
 //*****************************************************************************
 
+// Todo: Enable interrupts on GPIO PF0 (SW2) and PF4 (SW1);
+
+
 int main(void)
 {
     SystemInitialize();
