@@ -40,9 +40,8 @@ void SystemInitialize(void)
     SWITCH_Init();
     UART0_STDIO_Init();
     I2C0_Init();
-    //MPU9250_Init();
+    MPU9250_Init();
     PCF8574A_Init();
-
 
 }
 
@@ -54,15 +53,10 @@ void SystemInitialize(void)
 
 // Todo: Enable interrupts on GPIO PF0 (SW2) and PF4 (SW1);
 
-
 int main(void)
 {
     SystemInitialize();
-
-    char UART0_strToRec[5];
-    char strToTr[50] = "Hello, How are you?";
     unsigned char charRec = '\0';
-    UARTprintf("Hello, I am D, and I made this program!");
     // Loop forever.
     //
     while (1)
@@ -79,38 +73,74 @@ int main(void)
                 charRec = UARTgetc();
                 //UARTprintf("%c", charRec);
 
-                if (charRec == '\r')
+                switch (charRec)
                 {
-                    UARTprintf("\n");
+
+                case 'A':
+                {
+                    MPU9250_Write(GYRO_CONFIG, 0x18);
+
+                    break;
                 }
 
-                if (charRec == 'H')
+                case 'G':
                 {
-                    //UARTprintf("Secret String: %s", strToTr);
-                    UARTprintf("Hello, I am D, and I made this program! %d", 39485);
+                    MPU9250_Write(GYRO_CONFIG, 0x18);
+
+                    break;
+                }
+
+                case 'R':
+                {
+                    uint32_t receivedData;
+                    PCF8574A_Read( PCF8574A_SA, &receivedData);
+
+                    bool pb4State = receivedData & PCF8574A_PB4;
+                    bool pb5State = receivedData & PCF8574A_PB5;
+                    bool pb6State = receivedData & PCF8574A_PB6;
+                    UARTprintf("\nPB4 state: %d ", pb4State);
+                    UARTprintf("PB5 state: %d ", pb5State);
+                    UARTprintf("PB6 state: %d", pb6State);
+                    break;
+                }
+                case '1':
+                {
+
                     PCF8574A_Write( PCF8574A_SA, 0xA7);
-
-                    //UARTwrite("Hello, I am D, and I made this program!", 40);
-
-                    /*
-                    char charBuffer[800];
-                    sprintf(charBuffer,
-                            "Hello, I am D, and I made this program!\r\nThis is what a dream feels like.\r\nRandom number: %d\r\n", 234231);
-                    int32_t count = 0;
-                    while (charBuffer[count] != NULL)
-                    {
-                        UARTprintf("%c", charBuffer[count]);
-                        count++;
-                    }
-                    */
-                    //UARTFlushTx(false);
+                    UARTprintf("PCF8575A written with %X", 0xA7);
+                    break;
                 }
 
-                if (charRec == 'G'){
+                case '2':
+                {
                     PCF8574A_Write( PCF8574A_SA, 0x47);
+                    UARTprintf("PCF8575A written with %X", 0x47);
+                    break;
                 }
-                //UARTFlushTx(true);
-                //UARTFlushRx();
+
+                case '\x03': // CTRL + C
+                {
+                    uint8_t i = 0;
+                    for (i = 0; i < 100; i++)
+                    {
+                        UARTprintf("\r\n");
+                    }
+                    break;
+                }
+
+                case '\r':
+                {
+                    UARTprintf("\r\n");
+
+                    break;
+                }
+
+                default:
+                {
+
+                }
+                }
+
             }
 
             if (SysFlag_Check(SYSFLAG_UART0_TX))

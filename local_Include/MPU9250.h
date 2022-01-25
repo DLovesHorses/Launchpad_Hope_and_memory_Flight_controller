@@ -1,8 +1,14 @@
 #include "local_include/global.h"
 
-#define     GYRO_CONFIG     0x1B
+#define GYRO_CONFIG 0x1B
+#define MPU9250_SA 0x68
+
+
+
 
 void MPU9250_Init(void);
+void MPU9250_Write(uint8_t regAddr, uint8_t dataToWr);
+
 
 
 
@@ -37,4 +43,4 @@ void MPU9250_Init(void);
 
 void PCF8574A_Init( void );
 void PCF8574A_Write( uint8_t uiSA, uint8_t uiData );
-void PCF8574A_Read( uint8_t uiSA, uint8_t* puiData );
+void PCF8574A_Read( uint8_t uiSA, uint32_t* puiData );
