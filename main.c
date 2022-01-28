@@ -40,8 +40,9 @@ void SystemInitialize(void)
     SWITCH_Init();
     UART0_STDIO_Init();
     I2C0_Init();
-    MPU9250_Init();
+
     PCF8574A_Init();
+    MPU9250_Init();
 
 }
 
@@ -76,16 +77,36 @@ int main(void)
                 switch (charRec)
                 {
 
+                case 'a':
+                {
+
+                    break;
+                }
+
+                case 'm':
+                {
+                    static uint8_t reg = 0;
+                    uint8_t gyroData[1];
+                    uint8_t count;
+                    for (count = reg; count < reg + 10; count++)
+                    {
+                        //MPU9250_MultiByteRead(count, 1, gyroData);
+                        I2C_ReadByte(MPU9250_SA, count, gyroData);
+                        UARTprintf("Reg: %X, value: %X \n", count, gyroData[0]);
+                    }
+
+                    reg = reg + 10;
+                    break;
+                }
                 case 'A':
                 {
-                    MPU9250_Write(GYRO_CONFIG, 0x18);
 
                     break;
                 }
 
                 case 'G':
                 {
-                    MPU9250_Write(GYRO_CONFIG, 0x18);
+
 
                     break;
                 }
@@ -151,6 +172,36 @@ int main(void)
             if (SWITCH_SW2_Pressed())
             {
 
+                SysCtlDelay(1000000);
+                uint8_t sensorData[14];
+                uint8_t *pGyro = sensorData;
+                uint8_t count;
+                for (count = 0x3B; count < 0x49; count++)
+                {
+
+                    I2C_ReadByte(MPU9250_SA, count, pGyro);
+
+                    //UARTprintf("Reg: %d, value: %X \n", count, gyroData[count-67]);
+                    pGyro++;
+                }
+
+                uint32_t accX = (sensorData[0] << 8) | (sensorData[1]);
+                uint32_t accY = (sensorData[2] << 8) | (sensorData[3]);
+                uint32_t accZ = (sensorData[4] << 8) | (sensorData[5]);
+                uint32_t temp = (sensorData[6] << 8) | (sensorData[7]);
+                uint32_t gyroX = (sensorData[8] << 8) | (sensorData[9]);
+                uint32_t gyroY = (sensorData[10] << 8) | (sensorData[11]);
+                uint32_t gyroZ = (sensorData[12] << 8) | (sensorData[13]);
+
+
+
+                UARTprintf(
+                        "Accelerometer:   X   :  %d      |    Y   :   %d      | Z     : %d        | \n",
+                        accX, accY, accZ);
+                UARTprintf("Temperature:   %d \n", temp);
+                UARTprintf(
+                        "Gyrometer:   X   :  %d      |    Y   :   %d      | Z     : %d        | \n\n",
+                        gyroX, gyroY, gyroZ);
             }
 
         }
