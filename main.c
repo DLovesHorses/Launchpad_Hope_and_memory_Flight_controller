@@ -1,3 +1,17 @@
+/*
+ * File         :   main.c
+ *
+ * Purpose      :   Glues everything together
+ *
+ * Description  :   Starting point of firmware.
+ *
+ * Written By   :   The one and only D!
+ * Date         :   2022-01-22
+ */
+
+
+// Includes
+
 #include "local_include/global.h"
 #include "local_include/led.h"
 #include "local_include/onBoardSwitch.h"
@@ -7,19 +21,28 @@
 #include "local_include/uart.h"
 #include "local_include/i2c.h"
 
-//external sensors
+//external sensors Includes
 #include "local_include/MPU9250.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
 
+
+// global variables and externs
+
 #ifdef DEBUG
-void
-__error__(char *pcFilename, uint32_t ui32Line)
+void __error__(char *pcFilename, uint32_t ui32Line)
 {
-    while(1);
+    UARTprintf(
+            "Internal code:      File:   %s      , Line:     %d      , status:   ERROR   ",
+            pcFilename, ui32Line);
+    while (1)
+        ;
 }
 #endif
+
+// Function definitions.
+
 
 //*****************************************************************************
 //
@@ -83,20 +106,58 @@ int main(void)
                     break;
                 }
 
+                case 'b':
+                {
+                    uint8_t testReg = 0x00;
+                    uint8_t knownValue = 0xD8;
+                    I2C_AddressBruteForcer(testReg, knownValue);
+                    break;
+                }
                 case 'm':
                 {
-                    static uint8_t reg = 0;
+#ifdef DEBUG
+                    static int reg = 0;
                     uint8_t gyroData[1];
-                    uint8_t count;
+                    int count;
                     for (count = reg; count < reg + 10; count++)
                     {
+                        SysCtlDelay(100000);
                         //MPU9250_MultiByteRead(count, 1, gyroData);
                         I2C_ReadByte(MPU9250_SA, count, gyroData);
-                        UARTprintf("Reg: %X, value: %X \n", count, gyroData[0]);
+                        UARTprintf("Reg: %d (0x%X), \t value: 0x%X \n", count,
+                                   count, gyroData[0]);
                     }
 
                     reg = reg + 10;
+#endif
                     break;
+                }
+
+                case 'w':
+                {
+#ifdef DEBUG
+                    uint8_t dataToRec;
+
+                    UARTprintf("\n MPU9250: WHO_AM_I command sending...\n");
+                    I2C_ReadByte(MPU9250_SA, MPU9250_WHO_AM_I, &dataToRec);
+
+                    UARTprintf("MPU9250: WHO_AM_I command response: %X\n",
+                               dataToRec);
+
+                    UARTprintf("\n AK8963: WHO_AM_I command sending...\n");
+                    I2C_ReadByte(AK8963_SA, AK8963_WIA, &dataToRec);
+
+                    UARTprintf("AK_8963: WHO_AM_I command response: %X\n",
+                               dataToRec);
+
+                    UARTprintf("\n BMP180: WHO_AM_I command sending...\n");
+                    I2C_ReadByte(BMP280_SA, BMP280_CHIP_ID, &dataToRec);
+
+                    UARTprintf("BMP180: WHO_AM_I command response: %X\n",
+                               dataToRec);
+#endif
+                    break;
+
                 }
                 case 'A':
                 {
@@ -107,12 +168,13 @@ int main(void)
                 case 'G':
                 {
 
-
                     break;
                 }
 
                 case 'R':
                 {
+#ifdef DEBUG
+                    UARTprintf("Reading state of PCF switches/n/n");
                     uint32_t receivedData;
                     PCF8574A_Read( PCF8574A_SA, &receivedData);
 
@@ -121,22 +183,38 @@ int main(void)
                     bool pb6State = receivedData & PCF8574A_PB6;
                     UARTprintf("\nPB4 state: %d ", pb4State);
                     UARTprintf("PB5 state: %d ", pb5State);
-                    UARTprintf("PB6 state: %d", pb6State);
+                    UARTprintf("PB6 state: %d/n/n", pb6State);
+
+                    UARTprintf("Reading all registers of MPU9250/n/n");
+                    uint8_t gyroData[1];
+                    int count;
+                    for (count = 0; count < 256; count++)
+                    {
+                        //MPU9250_MultiByteRead(count, 1, gyroData);
+                        I2C_ReadByte(MPU9250_SA, count, gyroData);
+                        UARTprintf("Reg: %d (0x%X), \t value: 0x%X \n", count,
+                                   count, gyroData[0]);
+                        SysCtlDelay(10000);
+                    }
+#endif
                     break;
                 }
                 case '1':
                 {
-
+#ifdef DEBUG
                     PCF8574A_Write( PCF8574A_SA, 0xA7);
-                    UARTprintf("PCF8575A written with %X", 0xA7);
+                    UARTprintf("PCF8575A written with %X\n", 0xA7);
                     break;
+#endif
                 }
 
                 case '2':
                 {
+#ifdef DEBUG
                     PCF8574A_Write( PCF8574A_SA, 0x47);
                     UARTprintf("PCF8575A written with %X", 0x47);
                     break;
+#endif
                 }
 
                 case '\x03': // CTRL + C
@@ -171,7 +249,7 @@ int main(void)
 
             if (SWITCH_SW2_Pressed())
             {
-
+#ifdef DEBUG
                 SysCtlDelay(1000000);
                 uint8_t sensorData[14];
                 uint8_t *pGyro = sensorData;
@@ -193,8 +271,6 @@ int main(void)
                 uint32_t gyroY = (sensorData[10] << 8) | (sensorData[11]);
                 uint32_t gyroZ = (sensorData[12] << 8) | (sensorData[13]);
 
-
-
                 UARTprintf(
                         "Accelerometer:   X   :  %d      |    Y   :   %d      | Z     : %d        | \n",
                         accX, accY, accZ);
@@ -202,6 +278,7 @@ int main(void)
                 UARTprintf(
                         "Gyrometer:   X   :  %d      |    Y   :   %d      | Z     : %d        | \n\n",
                         gyroX, gyroY, gyroZ);
+#endif
             }
 
         }

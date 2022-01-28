@@ -1,4 +1,21 @@
+/*
+ * File         :   led.c
+ *
+ * Description  :   Houses LED Initialization and driver.
+ *
+ * Written By   :   The one and only D!
+ * Date         :   2022-01-24
+ */
+
+
+// Includes
+
 #include "led.h"
+
+// global variables and externs
+
+
+// Function definitions.
 
 void LED_LEDInit(void)
 {

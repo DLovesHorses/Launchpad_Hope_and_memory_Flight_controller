@@ -1,9 +1,18 @@
+/*
+ * File         :   onBoardSwitch.c
+ *
+ * Description  :   Houses On-Board switches Initialization and driver.
+ *
+ * Written By   :   The one and only D!
+ * Date         :   2022-01-24
+ */
+
+// Includes
 #include "onBoardSwitch.h"
 
+// global variables and externs
 
-
-
-
+// Function definitions.
 
 void SWITCH_Init(void)
 {
@@ -26,20 +35,17 @@ void SWITCH_Init(void)
     // Set each of the button GPIO pins as an input with a pull-up.
     //
     GPIODirModeSet(GPIO_PORTF_BASE,
-                   GPIO_PIN_0 | GPIO_PIN_4 ,
+    GPIO_PIN_0 | GPIO_PIN_4,
                    GPIO_DIR_MODE_IN);
 
-
     GPIOPadConfigSet(GPIO_PORTF_BASE,
-                     GPIO_PIN_0 | GPIO_PIN_4,
+    GPIO_PIN_0 | GPIO_PIN_4,
                      GPIO_STRENGTH_2MA,
                      GPIO_PIN_TYPE_STD_WPU);
-
 
     // GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_4); // this cannot be used since we need a pull-up register
 
 }
-
 
 bool SWITCH_SW1_Pressed(void)
 {

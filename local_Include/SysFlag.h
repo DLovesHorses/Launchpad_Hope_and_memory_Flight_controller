@@ -1,12 +1,25 @@
+/*
+ * File         :   SysFlag.h
+ *
+ * Description  :   Provides defines, Macros and
+ *                  function prototypes for SysFlag.c
+ *
+ * Written By   :   The one and only D!
+ * Date         :   2022-01-24
+ */
+
+// Includes
 #include <stdint.h>
 #include <stdbool.h>
 
-void SysFlag_Init( void );
-void SysFlag_Set( uint32_t uiSysFlag );
-void SysFlag_Clear( uint32_t uiSysFlag );
-bool SysFlag_Check( uint32_t uiSysFlag );
+// Defines
 
+// System flags (bit positions)
+#define SYSFLAG_SYS_TICK       0
+#define SYSFLAG_UART0_TX       1
+#define SYSFLAG_UART0_RX       2
 
+// Macros
 
 // Bit-Band Alias
 // a = address in the bit-band region:
@@ -20,12 +33,9 @@ bool SysFlag_Check( uint32_t uiSysFlag );
                     | ( ( ( ( uint32_t )( a ) & 0x000FFFFF ) << 5 ) \
                     + ( ( ( uint8_t )( b ) & 0x1F ) << 2 ) ) ) )
 
-
-
-// System flags (bit positions)
-#define SYSFLAG_SYS_TICK       0
-#define SYSFLAG_UART0_TX       1
-#define SYSFLAG_UART0_RX       2
-
-
+// Function prototypes
+void SysFlag_Init(void);
+void SysFlag_Set(uint32_t uiSysFlag);
+void SysFlag_Clear(uint32_t uiSysFlag);
+bool SysFlag_Check(uint32_t uiSysFlag);
 

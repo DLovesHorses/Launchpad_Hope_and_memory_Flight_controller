@@ -1,6 +1,25 @@
+/*
+ * File         :   uart.c
+ *
+ * Description  :   Houses functions for UART communication with console.
+ *
+ * Written By   :   The one and only D!
+ * Date         :   2022-01-26
+ */
+
+// Includes
+
 #include "uart.h"
 #include "led.h"
 #include <stdlib.h>
+
+
+// global variables and externs
+
+
+
+// Function definitions.
+
 void UARTStdioIntHandler(void);
 
 void UART0_STDIO_IntHandler(void)
@@ -52,6 +71,19 @@ void UART0_STDIO_Init(void)
     return;
 }
 
+void UARTdebug(char* component, char* file, char* routine, char* operation, char* status){
+#ifdef DEBUG
+    UARTprintf("\n\nDEBUG\n");
+    UARTprintf("    ->  Component   : %s\n", component);
+    UARTprintf("    ->  File        : %s\n", file);
+    UARTprintf("    ->  Routine     : %s\n", routine);
+    UARTprintf("    ->  Operation   : %s\n", operation);
+    UARTprintf("    ->  Status      : %s\n", status);
+    UARTprintf("    ->  Data        : ");
+#endif
+}
+
+/*
 // This function is here just for reference.
 // The main function is UART0_STDIO_Init.
 void UART0_Init(void)
@@ -81,3 +113,4 @@ void UART0_Init(void)
 
 }
 
+*/

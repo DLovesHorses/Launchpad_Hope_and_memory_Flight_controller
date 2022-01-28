@@ -13,6 +13,7 @@ ORDERED_OBJS += \
 "./main.obj" \
 "./startup_ccs.obj" \
 "./local_Include/MPU9250.obj" \
+"./local_Include/SampleTemplate.obj" \
 "./local_Include/SysFlag.obj" \
 "./local_Include/SysTick.obj" \
 "./local_Include/i2c.obj" \
@@ -152,7 +153,7 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 DroneProject.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --define=ccs="ccs" --define=UART_BUFFERED --define=PART_TM4C123GH6PM --define=TARGET_IS_TM4C123_RB1 -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi --ual -z -m"blinky_ccs.map" --heap_size=4096 --stack_size=4096 -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="DroneProject_linkInfo.xml" --rom_model -o "DroneProject.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --define=ccs="ccs" --define=DEBUG --define=UART_BUFFERED --define=PART_TM4C123GH6PM --define=TARGET_IS_TM4C123_RB1 -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi --ual -z -m"blinky_ccs.map" --heap_size=4096 --stack_size=4096 -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="DroneProject_linkInfo.xml" --rom_model -o "DroneProject.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -168,8 +169,8 @@ DroneProject.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\MPU9250.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\i2c.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" 
-	-$(RM) "main.d" "startup_ccs.d" "local_Include\MPU9250.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\i2c.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" 
+	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\MPU9250.obj" "local_Include\SampleTemplate.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\i2c.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" 
+	-$(RM) "main.d" "startup_ccs.d" "local_Include\MPU9250.d" "local_Include\SampleTemplate.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\i2c.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
