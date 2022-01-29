@@ -1,4 +1,3 @@
-
 /*
  * File         :   MPU9250.c
  *
@@ -24,10 +23,8 @@
  */
 
 // Includes
-
 #include "MPU9250.h"
 #include "i2c.h"
-
 
 // global variables and externs
 
@@ -44,17 +41,16 @@ void MPU9250_Init(void)
 
     //
     /*
-    MPU9250_WriteNew(MPU9250_CONFIG, 0x00);
-    MPU9250_WriteNew(MPU9250_GYRO_CONFIG, 0x18);
-    MPU9250_WriteNew(MPU9250_ACCEL_CONFIG, 0x00);
-    MPU9250_WriteNew(MPU9250_SMPLRT_DIV, 0x07);
-    MPU9250_WriteNew(MPU9250_INT_ENABLE, 0x01);
-    MPU9250_WriteNew(MPU9250_PWR_MGMT_1, 0x01);
-    MPU9250_WriteNew(MPU9250_WHO_AM_I, 0x71);
-*/
+     MPU9250_WriteNew(MPU9250_CONFIG, 0x00);
+     MPU9250_WriteNew(MPU9250_GYRO_CONFIG, 0x18);
+     MPU9250_WriteNew(MPU9250_ACCEL_CONFIG, 0x00);
+     MPU9250_WriteNew(MPU9250_SMPLRT_DIV, 0x07);
+     MPU9250_WriteNew(MPU9250_INT_ENABLE, 0x01);
+     MPU9250_WriteNew(MPU9250_PWR_MGMT_1, 0x01);
+     MPU9250_WriteNew(MPU9250_WHO_AM_I, 0x71);
+     */
 
 #ifdef DEBUG
-
 
     uint8_t dataToRec;
 
@@ -66,9 +62,6 @@ void MPU9250_Init(void)
 #endif
 
 }
-
-
-
 
 void MPU9250_WriteNew(uint8_t regAddr, uint8_t dataToWr)
 {
@@ -382,6 +375,5 @@ void MPU9250_WriteNew(uint8_t regAddr, uint8_t dataToWr)
 
  }
 
-*/
-
+ */
 

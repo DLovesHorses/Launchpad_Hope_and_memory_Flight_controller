@@ -65,7 +65,7 @@ void SystemInitialize(void)
     I2C0_Init();
 
     PCF8574A_Init();
-    MPU9250_Init();
+    //MPU9250_Init();
 
 }
 

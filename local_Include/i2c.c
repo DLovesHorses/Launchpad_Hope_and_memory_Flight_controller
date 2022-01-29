@@ -8,14 +8,10 @@
  */
 
 // Includes
-
 #include "i2c.h"
 #include "uart.h"
 
-
 // global variables and externs
-
-
 
 // Function definitions.
 
@@ -49,6 +45,19 @@ void I2C0_Init(void)
 
 }
 
+void I2C_readReg(uint8_t slaveAddr, uint32_t regAddr, uint8_t *pBuffer,
+                 uint16_t len)
+{
+
+    uint16_t count = 0;
+    uint32_t regToRead;
+    for (count = 0; count < len; count++)
+    {
+        regToRead = regAddr + count;
+        I2C_ReadByte(slaveAddr, regToRead, pBuffer);
+        pBuffer++;
+    }
+}
 void I2C_ReadByte(uint8_t slaveAddr, uint32_t regAddr, uint8_t *puiData) // working
 {
 
@@ -97,9 +106,39 @@ void I2C_ReadByte(uint8_t slaveAddr, uint32_t regAddr, uint8_t *puiData) // work
     return;
 }
 
+void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite)
+{
+
+    I2CMasterSlaveAddrSet(I2C0_BASE, slaveAddr, false); // write
+
+    // wait if bus is busy
+    while (I2CMasterBusy(I2C0_BASE))
+    {
+
+    }
+
+    I2CMasterDataPut(I2C0_BASE, regAddr);
+    I2CMasterControl(I2C0_BASE, I2C_START | I2C_RUN ); // IDLE -> Transmit (S-(SA+W)-ACK-REG-ACK-)
+
+    // wait if bus is busy
+    while (I2CMasterBusy(I2C0_BASE))
+    {
+
+    }
+
+    I2CMasterDataPut(I2C0_BASE, byteToWrite);
+    I2CMasterControl(I2C0_BASE, I2C_STOP | I2C_RUN);
+
+    // wait if bus is busy
+    while (I2CMasterBusy(I2C0_BASE))
+    {
+
+    }
+}
+
 // For Debug only
 
-void I2C_AddressBruteForcer(uint8_t knownReg, uint8_t knownValue)
+bool I2C_AddressBruteForcer(uint8_t knownReg, uint8_t knownValue)
 {
     uint8_t testAddr = 0x00;
     bool found = 0;
@@ -109,20 +148,23 @@ void I2C_AddressBruteForcer(uint8_t knownReg, uint8_t knownValue)
     UARTprintf("\n\nTarget Register: %X \n", knownReg);
     UARTprintf("\n\nKnown Value: %X \n", knownValue);
 
-    for(testAddr = 0x00; testAddr < 0xFF; testAddr++){
+    for (testAddr = 0x00; testAddr < 0xFF; testAddr++)
+    {
         I2C_ReadByte(testAddr, knownReg, dataReceived);
 
-        if(dataReceived[0] == knownValue){
+        if (dataReceived[0] == knownValue)
+        {
             found = 1;
             UARTprintf("\nSlave address found: %x", testAddr);
         }
     }
 
-    if (found == 0){
+    if (found == 0)
+    {
         UARTprintf("\nSlave not on the bus.", testAddr);
     }
 
-    return;
+    return found;
 }
 
 void PCF8574A_Init(void)

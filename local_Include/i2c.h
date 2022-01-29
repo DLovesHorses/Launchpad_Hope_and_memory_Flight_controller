@@ -26,7 +26,7 @@ void I2C0_IntHandler(void);
 void I2C0_Init(void);
 
 void I2C_ReadByte(uint8_t slaveAddr, uint32_t regAddr, uint8_t *puiData);
-void I2C_AddressBruteForcer(uint8_t knownReg, uint8_t knownValue);
+bool I2C_AddressBruteForcer(uint8_t knownReg, uint8_t knownValue);
 
 // For Debug only
 
@@ -60,3 +60,7 @@ void PCF8574A_Init(void);
 void PCF8574A_Write(uint8_t uiSA, uint8_t uiData);
 void PCF8574A_Read(uint8_t uiSA, uint32_t *puiData);
 
+void I2C_readReg(uint8_t slaveAddr, uint32_t regAddr, uint8_t *pBuffer,
+                 uint16_t len);
+
+void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite);

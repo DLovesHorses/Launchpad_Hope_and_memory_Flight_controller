@@ -26,3 +26,15 @@ void SysTick_Init(void)
     SysTickIntEnable();
     SysTickEnable();
 }
+
+void SYSTICK_Delay( uint32_t uiDelay )
+{
+    while( uiDelay )
+    {
+        while( !GLOBAL_CheckSysFlag( SYSFLAG_SYS_TICK ) );
+        GLOBAL_ClearSysFlag( SYSFLAG_SYS_TICK );
+        uiDelay--;
+    }
+
+    return;
+}
