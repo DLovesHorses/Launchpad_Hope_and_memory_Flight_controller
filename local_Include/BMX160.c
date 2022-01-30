@@ -17,17 +17,12 @@
  *
  *
  * Written By   :   The one and only D!
- * Date         :   2022-01-28
+ * Date         :   2022-01-29
  */
 
 // Includes
 #include "BMX160.h"
-#include "led.h"
-#include "uart.h"
-#include "i2c.h"
-#include "SysTick.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 
 // global variables and externs
 
@@ -45,14 +40,53 @@ BMX160_INT1_SLOPE_MASK,
                                             BMX160_INT2_DATA_READY_MASK,
                                             BMX160_INT2_FIFO_FULL_MASK,
                                             BMX160_INT2_FIFO_WM_MASK };
+
+// Variables
+
+float accelRange = BMX160_ACCEL_MG_LSB_2G * 9.8;
+float gyroRange = BMX160_GYRO_SENSITIVITY_250DPS;
+
+sBmx160Dev_t *Obmx160;
+
+sBmx160SensorData_t *Omagn;
+sBmx160SensorData_t *Oaccel;
+sBmx160SensorData_t *Ogyro;
+
 // Function definitions.
 
 void BMX160_Init(void)
 {
+#ifdef DEBUG
+    UARTprintf("Initializing BMX160.\n");
+#endif
+
     Obmx160 = (sBmx160Dev_t*) malloc(sizeof(sBmx160Dev_t));
     Oaccel = (sBmx160SensorData_t*) malloc(sizeof(sBmx160SensorData_t));
     Ogyro = (sBmx160SensorData_t*) malloc(sizeof(sBmx160SensorData_t));
     Omagn = (sBmx160SensorData_t*) malloc(sizeof(sBmx160SensorData_t));
+    if ((Obmx160 == NULL) || (Oaccel == NULL) || (Ogyro == NULL)
+            || (Omagn == NULL))
+    {
+#ifdef DEBUG
+        UARTprintf("Cannot allocate enough space for data to store.\n");
+#endif
+    }
+    else
+    {
+
+        if (BMX160_begin() == false)
+        {
+#ifdef DEBUG
+            UARTprintf("BMX160 cannot be initializad\n");
+#endif
+        }
+        else
+        {
+#ifdef DEBUG
+            UARTprintf("BMX160 Initialized...\n");
+#endif
+        }
+    }
 }
 
 bool BMX160_scan(void)
@@ -71,9 +105,17 @@ bool BMX160_scan(void)
 
 bool BMX160_begin(void)
 {
+
+#ifdef DEBUG
+    UARTprintf("Scanning for BMX160 on the bus.\n");
+#endif
+
     if (BMX160_scan() == true)
     {
 
+#ifdef DEBUG
+        UARTprintf("BMX160 is on the bus.\n");
+#endif
         // same logic as BMX160_wakeUp
         // perform a soft-reset (without overhead of POR)
         BMX160_softReset();
@@ -120,7 +162,10 @@ bool BMX160_begin(void)
         return true;
     }
     else
-        return false;
+#ifdef DEBUG
+        UARTprintf("BMX160 cannot be located on the bus.\n");
+#endif
+    return false;
 }
 
 void BMX160_setLowPower(void)
@@ -198,16 +243,30 @@ void BMX160_wakeUp(void)
 
 bool BMX160_softReset(void)
 {
+
+#ifdef DEBUG
+    UARTprintf("BMX160 : softReset IN \n");
+#endif
+
     int8_t rslt = BMX160_OK;
     if (Obmx160 == NULL)
     {
         rslt = BMX160_E_NULL_PTR;
     }
     rslt = BMX160_softResetWorker(Obmx160);
-    if (rslt == 0)
-        return true;
+    if (rslt == 0){
+#ifdef DEBUG
+        UARTprintf("BMX160 : softReset OK \n");
+#endif
+    return true;
+    }
     else
-        return false;
+    {
+#ifdef DEBUG
+        UARTprintf("BMX160 : softReset FAIL \n");
+#endif
+    }
+    return false;
 }
 
 int8_t BMX160_softResetWorker(sBmx160Dev_t *dev)
@@ -249,6 +308,9 @@ void BMX160_defaultParamSettg(sBmx160Dev_t *dev)
 
 void BMX160_setMagnConf(void)
 {
+#ifdef DEBUG
+    UARTprintf("BMX160: Configuring Magnetometer...\n");
+#endif
     // NOTE!: BMX160 uses BMM150 magnetometer on its dye.
     // the registers of BMM150 can be accessed using Mag. Interface Registers (0x4C - 0x4F).
 
@@ -271,7 +333,7 @@ void BMX160_setMagnConf(void)
     BMX160_writeBmxReg(BMX160_MAGN_IF_2_ADDR, 0x51);
 
     // set Number of repetation for z axis to 15: (1+1(0x0E)): (0x51 <- 04)
-    // REPXY regular preset (pg. 51 of BMM150 datasheet)
+    // REPZ regular preset (pg. 51 of BMM150 datasheet)
     BMX160_writeBmxReg(BMX160_MAGN_IF_3_ADDR, 0x0E);
     BMX160_writeBmxReg(BMX160_MAGN_IF_2_ADDR, 0x52);
 
@@ -288,6 +350,10 @@ void BMX160_setMagnConf(void)
     // Burst read operation of 8 bytes- in Data mode
     BMX160_writeBmxReg(BMX160_MAGN_IF_0_ADDR, 0x03);
     SYSTICK_Delay(50);
+
+#ifdef DEBUG
+    UARTprintf("BMX160: Magnetometer configured.\n");
+#endif
 }
 
 void BMX160_setGyroRange(eGyroRange_t bits)
@@ -378,6 +444,10 @@ void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
 
 void BMX160_writeBmxReg(uint8_t reg, uint8_t value)
 {
+#ifdef DEBUG
+    UARTprintf("BMX160 : writing register : 0x%x with value: 0x%x\n", reg,
+               value);
+#endif
     //uint8_t buffer[1] = { value };
     uint8_t _addr = BMX160_SA;
     // Call I2C_writeSingleReg()

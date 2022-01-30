@@ -16,7 +16,6 @@ local_Include/led.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/in
 local_Include/led.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
 local_Include/led.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h
 local_Include/led.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
-local_Include/led.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 local_Include/led.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 local_Include/led.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 local_Include/led.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
@@ -63,8 +62,6 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h:
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h:
 

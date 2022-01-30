@@ -9,10 +9,10 @@
  * Date         :   2022-01-22
  */
 
-
 // Includes
-
 #include "local_include/global.h"
+
+#include "local_include/SysFlag.h"
 #include "local_include/led.h"
 #include "local_include/onBoardSwitch.h"
 #include "local_include/sysclk.h"
@@ -21,12 +21,11 @@
 #include "local_include/uart.h"
 #include "local_include/i2c.h"
 
-//external sensors Includes
-#include "local_include/MPU9250.h"
+//#include "local_include/MPU9250.h"
+#include "local_include/BMX160.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
-
 
 // global variables and externs
 
@@ -42,7 +41,6 @@ void __error__(char *pcFilename, uint32_t ui32Line)
 #endif
 
 // Function definitions.
-
 
 //*****************************************************************************
 //
@@ -66,6 +64,7 @@ void SystemInitialize(void)
 
     PCF8574A_Init();
     //MPU9250_Init();
+    BMX160_Init();
 
 }
 
@@ -123,7 +122,7 @@ int main(void)
                     {
                         SysCtlDelay(100000);
                         //MPU9250_MultiByteRead(count, 1, gyroData);
-                        I2C_ReadByte(MPU9250_SA, count, gyroData);
+                        //I2C_ReadByte(MPU9250_SA, count, gyroData);
                         UARTprintf("Reg: %d (0x%X), \t value: 0x%X \n", count,
                                    count, gyroData[0]);
                     }
@@ -135,26 +134,32 @@ int main(void)
 
                 case 'w':
                 {
+
+                    // wake the BMX160
+                    BMX160_wakeUp();
 #ifdef DEBUG
-                    uint8_t dataToRec;
 
-                    UARTprintf("\n MPU9250: WHO_AM_I command sending...\n");
-                    I2C_ReadByte(MPU9250_SA, MPU9250_WHO_AM_I, &dataToRec);
+                    /*
+                     uint8_t dataToRec;
 
-                    UARTprintf("MPU9250: WHO_AM_I command response: %X\n",
-                               dataToRec);
+                     UARTprintf("\n MPU9250: WHO_AM_I command sending...\n");
+                     I2C_ReadByte(MPU9250_SA, MPU9250_WHO_AM_I, &dataToRec);
 
-                    UARTprintf("\n AK8963: WHO_AM_I command sending...\n");
-                    I2C_ReadByte(AK8963_SA, AK8963_WIA, &dataToRec);
+                     UARTprintf("MPU9250: WHO_AM_I command response: %X\n",
+                     dataToRec);
 
-                    UARTprintf("AK_8963: WHO_AM_I command response: %X\n",
-                               dataToRec);
+                     UARTprintf("\n AK8963: WHO_AM_I command sending...\n");
+                     I2C_ReadByte(AK8963_SA, AK8963_WIA, &dataToRec);
 
-                    UARTprintf("\n BMP180: WHO_AM_I command sending...\n");
-                    I2C_ReadByte(BMP280_SA, BMP280_CHIP_ID, &dataToRec);
+                     UARTprintf("AK_8963: WHO_AM_I command response: %X\n",
+                     dataToRec);
 
-                    UARTprintf("BMP180: WHO_AM_I command response: %X\n",
-                               dataToRec);
+                     UARTprintf("\n BMP180: WHO_AM_I command sending...\n");
+                     I2C_ReadByte(BMP280_SA, BMP280_CHIP_ID, &dataToRec);
+
+                     UARTprintf("BMP180: WHO_AM_I command response: %X\n",
+                     dataToRec);
+                     */
 #endif
                     break;
 
@@ -191,7 +196,7 @@ int main(void)
                     for (count = 0; count < 256; count++)
                     {
                         //MPU9250_MultiByteRead(count, 1, gyroData);
-                        I2C_ReadByte(MPU9250_SA, count, gyroData);
+                        //I2C_ReadByte(MPU9250_SA, count, gyroData);
                         UARTprintf("Reg: %d (0x%X), \t value: 0x%X \n", count,
                                    count, gyroData[0]);
                         SysCtlDelay(10000);
@@ -250,34 +255,33 @@ int main(void)
             if (SWITCH_SW2_Pressed())
             {
 #ifdef DEBUG
-                SysCtlDelay(1000000);
-                uint8_t sensorData[14];
-                uint8_t *pGyro = sensorData;
-                uint8_t count;
-                for (count = 0x3B; count < 0x49; count++)
-                {
 
-                    I2C_ReadByte(MPU9250_SA, count, pGyro);
+                // get data from BMX160;
+                sBmx160SensorData_t magData;
+                sBmx160SensorData_t gyroData;
+                sBmx160SensorData_t accData;
 
-                    //UARTprintf("Reg: %d, value: %X \n", count, gyroData[count-67]);
-                    pGyro++;
-                }
+                sBmx160SensorData_t *pmagData = &magData;
+                sBmx160SensorData_t *pgyroData = &gyroData;
+                sBmx160SensorData_t *paccData = &accData;
 
-                uint32_t accX = (sensorData[0] << 8) | (sensorData[1]);
-                uint32_t accY = (sensorData[2] << 8) | (sensorData[3]);
-                uint32_t accZ = (sensorData[4] << 8) | (sensorData[5]);
-                uint32_t temp = (sensorData[6] << 8) | (sensorData[7]);
-                uint32_t gyroX = (sensorData[8] << 8) | (sensorData[9]);
-                uint32_t gyroY = (sensorData[10] << 8) | (sensorData[11]);
-                uint32_t gyroZ = (sensorData[12] << 8) | (sensorData[13]);
+                // Get data
+                BMX160_getAllData(pmagData, pgyroData, paccData);
+
+                UARTprintf("\n\n Data from BMX160: \n");
 
                 UARTprintf(
-                        "Accelerometer:   X   :  %d      |    Y   :   %d      | Z     : %d        | \n",
-                        accX, accY, accZ);
-                UARTprintf("Temperature:   %d \n", temp);
+                        "Accelerometer:     X: %d   |   Y:  %d  |   Z:  %d\n\n",
+                        accData.x, accData.y, accData.z);
+
                 UARTprintf(
-                        "Gyrometer:   X   :  %d      |    Y   :   %d      | Z     : %d        | \n\n",
-                        gyroX, gyroY, gyroZ);
+                        "Gyrometer:         X: %d   |   Y:  %d  |   Z:  %d\n\n",
+                        gyroData.x, gyroData.y, gyroData.z);
+
+                UARTprintf(
+                        "Magnetometer:      X: %f   |   Y:  %f  |   Z:  %f\n\n",
+                        magData.x, magData.y, magData.z);
+
 #endif
             }
 

@@ -134,6 +134,17 @@ void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite)
     {
 
     }
+
+    if(I2CMasterErr(I2C0_BASE) == I2C_MASTER_ERR_NONE){
+#ifdef DEBUG
+        UARTprintf("I2C : Successfully written register : 0x%x with value: 0x%x\n", regAddr, byteToWrite);
+#endif
+    }
+    else{
+#ifdef DEBUG
+        UARTprintf("I2C : Failed writing register : 0x%x with value: 0x%x\n", regAddr, byteToWrite);
+#endif
+    }
 }
 
 // For Debug only
@@ -155,7 +166,8 @@ bool I2C_AddressBruteForcer(uint8_t knownReg, uint8_t knownValue)
         if (dataReceived[0] == knownValue)
         {
             found = 1;
-            UARTprintf("\nSlave address found: %x", testAddr);
+            UARTprintf("\nSlave address found: %x\n", testAddr);
+            return found;
         }
     }
 

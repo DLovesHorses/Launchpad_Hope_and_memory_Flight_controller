@@ -11,6 +11,13 @@
 // Includes
 #include "local_Include/global.h"
 
+#include "led.h"
+#include "uart.h"
+#include "i2c.h"
+#include "SysTick.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 // Defines
 
 // These defines were derived from the datasheet (pg.53):   https://img.dfrobot.com.cn/wiki/none/40e914cf5839ec7f4d10675f34f8f78c.pdf
@@ -1007,17 +1014,7 @@ typedef enum
     eAccelRange_16G /**< Macro for mg per LSB at +/- 16g sensitivity (1 LSB = 0.000488281mg) */
 } eAccelRange_t;
 
-// Variables
 
-float accelRange = BMX160_ACCEL_MG_LSB_2G * 9.8;
-float gyroRange = BMX160_GYRO_SENSITIVITY_250DPS;
-
-
-sBmx160Dev_t *Obmx160;
-
-sBmx160SensorData_t *Omagn;
-sBmx160SensorData_t *Oaccel;
-sBmx160SensorData_t *Ogyro;
 
 // Function prototypes
 

@@ -9,7 +9,8 @@
 
 // Includes
 
-#include "uart.h"
+#include "local_include/uart.h"
+#include "local_include/SysFlag.h"
 #include "led.h"
 #include <stdlib.h>
 

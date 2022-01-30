@@ -1,7 +1,7 @@
 # FIXED
 
 local_Include/SysTick.obj: ../local_Include/SysTick.c
-local_Include/SysTick.obj: ../local_Include/SysTick.h
+local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 local_Include/SysTick.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h
 local_Include/SysTick.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h
@@ -16,7 +16,6 @@ local_Include/SysTick.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LT
 local_Include/SysTick.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
 local_Include/SysTick.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h
 local_Include/SysTick.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
-local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
@@ -31,13 +30,14 @@ local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
+local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysTick.h
+local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 local_Include/SysTick.obj: ../local_Include/LED.h
 local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
-local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 
 ../local_Include/SysTick.c:
 
-../local_Include/SysTick.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
@@ -67,8 +67,6 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
-
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h:
@@ -97,9 +95,11 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
 
-../local_Include/LED.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysTick.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
+../local_Include/LED.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 

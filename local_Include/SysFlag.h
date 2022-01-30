@@ -9,8 +9,7 @@
  */
 
 // Includes
-#include <stdint.h>
-#include <stdbool.h>
+#include "local_include/global.h"
 
 // Defines
 

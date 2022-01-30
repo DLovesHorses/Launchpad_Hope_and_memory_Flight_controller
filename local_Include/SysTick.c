@@ -7,7 +7,8 @@
  * Written By   :   The one and only D!
  * Date         :   2022-01-23
  */
-#include "SysTick.h"
+#include "local_include/SysFlag.h"
+#include "local_include/SysTick.h"
 #include "LED.h"
 
 // global variables and externs
@@ -29,10 +30,13 @@ void SysTick_Init(void)
 
 void SYSTICK_Delay( uint32_t uiDelay )
 {
+#ifdef DEBUG
+        UARTprintf("SYSTICK: Waiting for %d ms\n", uiDelay);
+#endif
     while( uiDelay )
     {
-        while( !GLOBAL_CheckSysFlag( SYSFLAG_SYS_TICK ) );
-        GLOBAL_ClearSysFlag( SYSFLAG_SYS_TICK );
+        while( !SysFlag_Check( SYSFLAG_SYS_TICK ) );
+        SysFlag_Clear( SYSFLAG_SYS_TICK );
         uiDelay--;
     }
 

@@ -1,7 +1,7 @@
 # FIXED
 
 local_Include/uart.obj: ../local_Include/uart.c
-local_Include/uart.obj: ../local_Include/uart.h
+local_Include/uart.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/uart.h
 local_Include/uart.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 local_Include/uart.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h
 local_Include/uart.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h
@@ -16,7 +16,6 @@ local_Include/uart.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/i
 local_Include/uart.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
 local_Include/uart.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h
 local_Include/uart.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
-local_Include/uart.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 local_Include/uart.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 local_Include/uart.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 local_Include/uart.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
@@ -31,14 +30,15 @@ local_Include/uart.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h
 local_Include/uart.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
 local_Include/uart.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h
 local_Include/uart.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
+local_Include/uart.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
+local_Include/uart.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 local_Include/uart.obj: ../local_Include/led.h
 local_Include/uart.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
-local_Include/uart.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h
 local_Include/uart.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdlib.h
 
 ../local_Include/uart.c:
 
-../local_Include/uart.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/uart.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
@@ -68,8 +68,6 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
-
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h:
@@ -98,11 +96,13 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
 
-../local_Include/led.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysFlag.h:
+../local_Include/led.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdlib.h:
 
