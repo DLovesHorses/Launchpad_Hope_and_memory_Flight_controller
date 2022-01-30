@@ -90,6 +90,15 @@ int main(void)
             // systick is expired
             SysFlag_Clear(SYSFLAG_SYS_TICK);
 
+            static uint16_t sensorDataSampleTimeCounter = 0;
+            if (sensorDataSampleTimeCounter == 332) // 2 seconds
+            {
+                BMX160_showData();
+                sensorDataSampleTimeCounter = 0;
+            }
+
+            sensorDataSampleTimeCounter++;
+
             if (SysFlag_Check(SYSFLAG_UART0_RX))
             {
                 SysFlag_Clear(SYSFLAG_UART0_RX);
@@ -252,45 +261,32 @@ int main(void)
                 SysFlag_Clear(SYSFLAG_UART0_TX);
             }
 
+            static bool showData = true;
             if (SWITCH_SW2_Pressed())
             {
 #ifdef DEBUG
 
-                // get data from BMX160;
-                sBmx160SensorData_t magData;
-                sBmx160SensorData_t gyroData;
-                sBmx160SensorData_t accData;
-
-                sBmx160SensorData_t *pmagData = &magData;
-                sBmx160SensorData_t *pgyroData = &gyroData;
-                sBmx160SensorData_t *paccData = &accData;
-
-                // Get data
-                BMX160_getAllData(pmagData, pgyroData, paccData);
-
-                UARTprintf("\n\n Data from BMX160: \n");
-
-                UARTprintf(
-                        "Accelerometer:     X: %d   |   Y:  %d  |   Z:  %d\n\n",
-                        accData.x, accData.y, accData.z);
-
-                UARTprintf(
-                        "Gyrometer:         X: %d   |   Y:  %d  |   Z:  %d\n\n",
-                        gyroData.x, gyroData.y, gyroData.z);
-
-                UARTprintf(
-                        "Magnetometer:      X: %f   |   Y:  %f  |   Z:  %f\n\n",
-                        magData.x, magData.y, magData.z);
+                if (showData == true)
+                {
+                    BMX160_showData();
+                    showData = false;
+                }
 
 #endif
             }
 
-        }
+            else
+            {
+                // if Switch 2 is not pressed
 
+                showData = true;
+            }
+
+        }
         else
         {
-            // systick is not expired
-            //LED_ALL(OFF);
+// systick is not expired
+//LED_ALL(OFF);
 
         }
     }

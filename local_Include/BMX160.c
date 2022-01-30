@@ -23,7 +23,6 @@
 // Includes
 #include "BMX160.h"
 
-
 // global variables and externs
 
 const uint8_t int_mask_lookup_table[13] = {
@@ -254,11 +253,12 @@ bool BMX160_softReset(void)
         rslt = BMX160_E_NULL_PTR;
     }
     rslt = BMX160_softResetWorker(Obmx160);
-    if (rslt == 0){
+    if (rslt == 0)
+    {
 #ifdef DEBUG
         UARTprintf("BMX160 : softReset OK \n");
 #endif
-    return true;
+        return true;
     }
     else
     {
@@ -462,4 +462,141 @@ void BMX160_readReg(uint8_t reg, uint8_t *pBuf, uint16_t len)
     // Call I2C_readReg()
     I2C_readReg(_addr, reg, pBuf, len);
 
+}
+
+void BMX160_showData(void)
+{
+#ifdef DEBUG
+    // get data from BMX160;
+    sBmx160SensorData_t magData;
+    sBmx160SensorData_t gyroData;
+    sBmx160SensorData_t accData;
+
+
+    // Get data
+    BMX160_getAllData(&magData, &gyroData, &accData);
+
+
+    UARTprintf("\n\n Data from BMX160: \n");
+    UARTprintf("Accel.  X:  %d\n", (int)accData.x);
+    UARTprintf("Accel.  Y:  %d\n", (int)accData.y);
+    UARTprintf("Accel.  Z:  %d\n", (int)accData.z);
+
+    UARTprintf("\n");
+    UARTprintf("Gyro.   X:  %d\n", (int)gyroData.x);
+    UARTprintf("Gyro.   Y:  %d\n", (int)gyroData.y);
+    UARTprintf("Gyro.   Z:  %d\n", (int)gyroData.z);
+
+    UARTprintf("\n");
+    UARTprintf("Mag.   X:  %d\n", (int)magData.x);
+    UARTprintf("Mag.   Y:  %d\n", (int)magData.y);
+    UARTprintf("Mag.   Z:  %d\n", (int)magData.z);
+
+
+    // convert the float into integral and fraction part.
+ /*   signed int result[18];
+    uint16_t precision = 1000;
+    float storedValue[9];
+
+    storedValue[0] = accData.x;
+    storedValue[1] = accData.y;
+    storedValue[2] = accData.z;
+
+    storedValue[3] = gyroData.x;
+    storedValue[4] = gyroData.y;
+    storedValue[5] = gyroData.z;
+
+    storedValue[6] = magData.x;
+    storedValue[7] = magData.y;
+    storedValue[8] = magData.z;
+
+    uint8_t count = 0;
+    for (count = 0; count < 9; count++)
+    {
+        static uint8_t resultCount = 0;
+        if (storedValue[count] > 0)
+        {
+            // normal floor operation
+            result[resultCount] = (signed int) floor(storedValue[count]);
+            resultCount++;
+            result[resultCount] = (storedValue[count] - result[resultCount - 1])
+                    * precision;
+            resultCount++;
+        }
+
+        else
+        {
+            // add one to integral part after flooring
+            result[resultCount] = (signed int) floor(storedValue[count]) + 1;
+            resultCount++;
+            result[resultCount] = ((-1 * storedValue[count])
+                    - (-1 * result[resultCount - 1])) * precision;
+            resultCount++;
+        }
+    }
+
+    //result[0] = (signed int) floor(accData.x); // Int. part of mag.x
+    //result[1] = (accData.x - result[0]) * precision; // Fract. part of max.x
+*/
+
+
+/*
+    for (count = 0; count < 9; count++)
+    {
+        switch (count)
+        {
+        case 0:
+        {
+            UARTprintf("Accelerometer X: %d.%d\n", result[0], result[1]);
+            break;
+        }
+        case 1:
+        {
+            UARTprintf("Accelerometer Y: %d.%d\n", result[2], result[3]);
+            break;
+        }
+        case 2:
+        {
+            UARTprintf("Accelerometer Z: %d.%d\n", result[4], result[5]);
+            break;
+        }
+        case 3:
+        {
+            UARTprintf("Gyrometer X: %d.%d\n", result[6], result[7]);
+            break;
+        }
+        case 4:
+        {
+            UARTprintf("Gyrometer Y: %d.%d\n", result[8], result[9]);
+            break;
+        }
+        case 5:
+        {
+            UARTprintf("Gyrometer X: %d.%d\n", result[10], result[11]);
+            break;
+        }
+        case 6:
+        {
+            UARTprintf("Magnetometer X: %d.%d\n", result[12], result[13]);
+            break;
+        }
+        case 7:
+        {
+            UARTprintf("Magnetometer Y: %d.%d\n", result[14], result[15]);
+            break;
+        }
+        case 8:
+        {
+            UARTprintf("Magnetometer Z: %d.%d\n", result[16], result[17]);
+            break;
+        }
+
+        }
+    }
+*/
+    UARTprintf("\n\n");
+
+#endif
+
+    return;
 }
