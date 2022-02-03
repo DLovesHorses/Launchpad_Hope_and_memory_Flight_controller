@@ -42,8 +42,11 @@ BMX160_INT1_SLOPE_MASK,
 
 // Variables
 
-float accelRange = BMX160_ACCEL_MG_LSB_2G * 9.8;
-float gyroRange = BMX160_GYRO_SENSITIVITY_250DPS;
+#define ACCEL_SENSITIVITY_SELECT    BMX160_ACCEL_MG_LSB_2G
+#define GYRO_SENSITIVITY_SELECT     BMX160_GYRO_SENSITIVITY_125DPS
+
+float accelRange = ACCEL_SENSITIVITY_SELECT; // * 9.8;
+float gyroRange = GYRO_SENSITIVITY_SELECT;
 
 sBmx160Dev_t *Obmx160;
 
@@ -295,11 +298,12 @@ void BMX160_defaultParamSettg(sBmx160Dev_t *dev)
     dev->gyroCfg.bw = BMX160_GYRO_BW_NORMAL_MODE;
     dev->gyroCfg.odr = BMX160_GYRO_ODR_100HZ;
     dev->gyroCfg.power = BMX160_GYRO_SUSPEND_MODE;
-    dev->gyroCfg.range = BMX160_GYRO_RANGE_2000_DPS;
+    dev->gyroCfg.range = BMX160_GYRO_RANGE_125_DPS;        //Gyro range: 125 DPS  ; Sensitivity: BMX160_GYRO_SENSITIVITY_125DPS
+
     dev->accelCfg.bw = BMX160_ACCEL_BW_NORMAL_AVG4;
     dev->accelCfg.odr = BMX160_ACCEL_ODR_100HZ;
     dev->accelCfg.power = BMX160_ACCEL_SUSPEND_MODE;
-    dev->accelCfg.range = BMX160_ACCEL_RANGE_2G;
+    dev->accelCfg.range = BMX160_ACCEL_RANGE_2G;            //Accel range: 2G       ; Sensitivity : BMX160_ACCEL_MG_LSB_2G
 
     dev->prevMagnCfg = dev->magnCfg;
     dev->prevGyroCfg = dev->gyroCfg;
@@ -404,7 +408,7 @@ void BMX160_setAccelRange(eAccelRange_t bits)
 }
 
 void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
-                       sBmx160SensorData_t *accel)
+                       sBmx160SensorData_t *accel, rawData *magRaw, rawData *gyroRaw, rawData *accRaw)
 {
 
     uint8_t data[23] = { 0 };
@@ -421,6 +425,10 @@ void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
         magn->x = x * BMX160_MAGN_UT_LSB; // resolution: 0.3 uT / LSB (pg.11 of datasheet)
         magn->y = y * BMX160_MAGN_UT_LSB;
         magn->z = z * BMX160_MAGN_UT_LSB;
+
+        magRaw->x = x;
+        magRaw->y = y;
+        magRaw->z = z;
     }
     if (gyro)
     {
@@ -430,6 +438,10 @@ void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
         gyro->x = x * gyroRange;
         gyro->y = y * gyroRange;
         gyro->z = z * gyroRange;
+
+        gyroRaw->x = x;
+        gyroRaw->y = y;
+        gyroRaw->z = z;
     }
     if (accel)
     {
@@ -439,6 +451,10 @@ void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
         accel->x = x * accelRange;
         accel->y = y * accelRange;
         accel->z = z * accelRange;
+
+        accRaw->x = x;
+        accRaw->y = y;
+        accRaw->z = z;
     }
 }
 
@@ -472,25 +488,47 @@ void BMX160_showData(void)
     sBmx160SensorData_t gyroData;
     sBmx160SensorData_t accData;
 
+    rawData accRaw;
+    rawData gyroRaw;
+    rawData magRaw;
+
 
     // Get data
-    BMX160_getAllData(&magData, &gyroData, &accData);
+    BMX160_getAllData(&magData, &gyroData, &accData, &magRaw, &gyroRaw, &accRaw);
 
+
+    char printBuffer[252] = "";
 
     UARTprintf("\n\n Data from BMX160: \n");
+    sprintf(printBuffer, "Accel: ( %d, %d, %d ) -> ( %6.3f, %6.3f, %6.3f ).\n\n", accRaw.x, accRaw.y, accRaw.z, accData.x, accData.y, accData.z );
+    UARTprintf("%s", printBuffer);
+    printBuffer[0] = '\0';
+
+    /*
     UARTprintf("Accel.  X:  %d\n", (int)accData.x);
     UARTprintf("Accel.  Y:  %d\n", (int)accData.y);
     UARTprintf("Accel.  Z:  %d\n", (int)accData.z);
+    */
 
-    UARTprintf("\n");
+    sprintf(printBuffer, "Gyro : ( %d, %d, %d ) -> ( %6.3f, %6.3f, %6.3f ).\n\n", gyroRaw.x, gyroRaw.y, gyroRaw.z, gyroData.x, gyroData.y, gyroData.z );
+    UARTprintf("%s", printBuffer);
+    printBuffer[0] = '\0';
+
+    /*
     UARTprintf("Gyro.   X:  %d\n", (int)gyroData.x);
     UARTprintf("Gyro.   Y:  %d\n", (int)gyroData.y);
     UARTprintf("Gyro.   Z:  %d\n", (int)gyroData.z);
+    */
 
-    UARTprintf("\n");
+    sprintf(printBuffer, "Mag   : ( %d, %d, %d ) -> ( %6.3f, %6.3f, %6.3f ).\n\n", magRaw.x, magRaw.y, magRaw.z, magData.x, magData.y, magData.z );
+    UARTprintf("%s", printBuffer);
+    printBuffer[0] = '\0';
+
+    /*
     UARTprintf("Mag.   X:  %d\n", (int)magData.x);
     UARTprintf("Mag.   Y:  %d\n", (int)magData.y);
     UARTprintf("Mag.   Z:  %d\n", (int)magData.z);
+    */
 
 
     // convert the float into integral and fraction part.

@@ -80,6 +80,7 @@ int main(void)
 {
     SystemInitialize();
     unsigned char charRec = '\0';
+    UARTprintf("System Clock: %d Hz\n", SysCtlClockGet());
     // Loop forever.
     //
     while (1)
@@ -91,7 +92,7 @@ int main(void)
             SysFlag_Clear(SYSFLAG_SYS_TICK);
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 332) // 2 seconds
+            if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
                 BMX160_showData();
                 sensorDataSampleTimeCounter = 0;

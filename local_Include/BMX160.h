@@ -698,6 +698,12 @@ typedef struct
     uint32_t sensortime; /**< sensor time */
 } sBmx160SensorData_t;
 
+typedef struct{
+    int16_t x;
+    int16_t y;
+    int16_t z;
+} rawData;
+
 /**
  * @enum eBmx160IntChannel_t
  * @brief Interrupt channel
@@ -1040,7 +1046,7 @@ void BMX160_setMagnConf(void);
 void BMX160_setGyroRange(eGyroRange_t bits);
 void BMX160_setAccelRange(eAccelRange_t bits);
 void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
-                       sBmx160SensorData_t *accel);
+                       sBmx160SensorData_t *accel, rawData *magRaw, rawData *gyroRaw, rawData *accRaw);
 
 void BMX160_writeBmxReg(uint8_t reg, uint8_t value);
 void BMX160_readReg(uint8_t reg, uint8_t *pBuf, uint16_t len);
