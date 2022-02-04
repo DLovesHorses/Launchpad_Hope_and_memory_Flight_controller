@@ -6,7 +6,6 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../local_Include/BMX160.c \
 ../local_Include/MPU9250.c \
 ../local_Include/SampleTemplate.c \
 ../local_Include/SysFlag.c \
@@ -18,7 +17,6 @@ C_SRCS += \
 ../local_Include/uart.c 
 
 C_DEPS += \
-./local_Include/BMX160.d \
 ./local_Include/MPU9250.d \
 ./local_Include/SampleTemplate.d \
 ./local_Include/SysFlag.d \
@@ -30,7 +28,6 @@ C_DEPS += \
 ./local_Include/uart.d 
 
 OBJS += \
-./local_Include/BMX160.obj \
 ./local_Include/MPU9250.obj \
 ./local_Include/SampleTemplate.obj \
 ./local_Include/SysFlag.obj \
@@ -42,7 +39,6 @@ OBJS += \
 ./local_Include/uart.obj 
 
 OBJS__QUOTED += \
-"local_Include\BMX160.obj" \
 "local_Include\MPU9250.obj" \
 "local_Include\SampleTemplate.obj" \
 "local_Include\SysFlag.obj" \
@@ -54,7 +50,6 @@ OBJS__QUOTED += \
 "local_Include\uart.obj" 
 
 C_DEPS__QUOTED += \
-"local_Include\BMX160.d" \
 "local_Include\MPU9250.d" \
 "local_Include\SampleTemplate.d" \
 "local_Include\SysFlag.d" \
@@ -66,7 +61,6 @@ C_DEPS__QUOTED += \
 "local_Include\uart.d" 
 
 C_SRCS__QUOTED += \
-"../local_Include/BMX160.c" \
 "../local_Include/MPU9250.c" \
 "../local_Include/SampleTemplate.c" \
 "../local_Include/SysFlag.c" \

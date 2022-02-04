@@ -112,5 +112,7 @@ PDE_DEPS__QUOTED :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 . \
+local_Include/BMP388 \
+local_Include/BMX160 \
 local_Include \
 

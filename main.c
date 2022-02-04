@@ -22,7 +22,8 @@
 #include "local_include/i2c.h"
 
 //#include "local_include/MPU9250.h"
-#include "local_include/BMX160.h"
+#include "local_include/BMX160/BMX160.h"
+#include "local_include/BMP388/BMP388.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"

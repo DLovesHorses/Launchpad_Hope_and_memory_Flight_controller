@@ -11,10 +11,10 @@
 // Includes
 #include "local_Include/global.h"
 
-#include "led.h"
-#include "uart.h"
-#include "i2c.h"
-#include "SysTick.h"
+#include "local_Include/led.h"
+#include "local_Include/uart.h"
+#include "local_Include/i2c.h"
+#include "local_Include/SysTick.h"
 #include <stdio.h>
 #include <stdlib.h>
 

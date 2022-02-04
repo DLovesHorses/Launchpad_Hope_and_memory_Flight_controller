@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.5                     
 ******************************************************************************
->> Linked Thu Feb  3 10:43:26 2022
+>> Linked Fri Feb  4 12:06:31 2022
 
 OUTPUT FILE NAME:   <DroneProject.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000420d
@@ -261,7 +261,6 @@ MODULE SUMMARY
        Total:                       3317    678       1196   
                                                              
     .\local_Include\
-       BMX160.obj                   2209    0         24     
        i2c.obj                      1159    0         0      
        uart.obj                     184     0         0      
        SysFlag.obj                  172     0         4      
@@ -270,7 +269,12 @@ MODULE SUMMARY
        led.obj                      52      0         0      
        sysclk.obj                   16      0         0      
     +--+----------------------------+-------+---------+---------+
-       Total:                       4022    0         28     
+       Total:                       1813    0         4      
+                                                             
+    .\local_Include\BMX160\
+       BMX160.obj                   2209    0         24     
+    +--+----------------------------+-------+---------+---------+
+       Total:                       2209    0         24     
                                                              
     C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/ccs/Debug/driverlib.lib
        interrupt.obj                156     20        620    

@@ -12,7 +12,8 @@ GEN_CMDS__FLAG :=
 ORDERED_OBJS += \
 "./main.obj" \
 "./startup_ccs.obj" \
-"./local_Include/BMX160.obj" \
+"./local_Include/BMP388/BMP388.obj" \
+"./local_Include/BMX160/BMX160.obj" \
 "./local_Include/MPU9250.obj" \
 "./local_Include/SampleTemplate.obj" \
 "./local_Include/SysFlag.obj" \
@@ -35,8 +36,12 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir_vars.mk
+-include local_Include/BMP388/subdir_vars.mk
+-include local_Include/BMX160/subdir_vars.mk
 -include local_Include/subdir_vars.mk
 -include subdir_rules.mk
+-include local_Include/BMP388/subdir_rules.mk
+-include local_Include/BMX160/subdir_rules.mk
 -include local_Include/subdir_rules.mk
 -include objects.mk
 
@@ -170,8 +175,8 @@ DroneProject.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\BMX160.obj" "local_Include\MPU9250.obj" "local_Include\SampleTemplate.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\i2c.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" 
-	-$(RM) "main.d" "startup_ccs.d" "local_Include\BMX160.d" "local_Include\MPU9250.d" "local_Include\SampleTemplate.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\i2c.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" 
+	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\BMP388\BMP388.obj" "local_Include\BMX160\BMX160.obj" "local_Include\MPU9250.obj" "local_Include\SampleTemplate.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\i2c.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" 
+	-$(RM) "main.d" "startup_ccs.d" "local_Include\BMP388\BMP388.d" "local_Include\BMX160\BMX160.d" "local_Include\MPU9250.d" "local_Include\SampleTemplate.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\i2c.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
