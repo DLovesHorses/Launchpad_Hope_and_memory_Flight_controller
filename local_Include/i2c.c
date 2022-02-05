@@ -111,7 +111,7 @@ void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite)
 
     I2CMasterSlaveAddrSet(I2C0_BASE, slaveAddr, false); // write
 
-    // wait if bus is busy
+    // wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 

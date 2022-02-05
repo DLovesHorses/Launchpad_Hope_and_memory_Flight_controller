@@ -133,6 +133,22 @@ extern "C" {
 #define BMP3_E_INVALID_LEN                  (-6)
 #define BMP3_E_COMM_FAIL                    (-7)
 #define BMP3_E_FIFO_WATERMARK_NOT_REACHED   (-8)
+#define BMP3_E_RESET_FAILED                 (-9)
+#define BMP3_E_CALIB_DATA_RET_FAILED        (-10)
+#define BMP3_E_GET_REG_DATA_FAILED          (-11)
+#define BMP3_E_CHIP_NOT_RECOGNIZED          (-12)
+#define BMP3_E_DEVICE_CONFIG_FAILED         (-13)
+#define BMP3_E_SET_SENSOR_SETTINGS_FAILED   (-14)
+#define BMP3_E_SET_OP_MODE_FAILED           (-15)
+#define BMP3_E_SENSOR_DATA_READ_FAILED      (-16)
+#define BMP3_E_REG_READ_FAILED              (-17)
+#define BMP3_E_REG_WRITE_FAILED             (-18)
+#define BMP3_E_POWER_CNTL_SET_FAILED        (-19)
+#define BMP3_E_POWER_MODE_SET_FAILED        (-20)
+#define BMP3_E_DATA_COMPENSATION_FAILED     (-21)
+#define BMP3_E_I2C_INVALIDE_WRITE_LENGTH    (-22)
+#define BMP3_E_I2C_WRITE_ERROR              (-23)
+#define BMP3_E_I2C_READ_ERROR               (-24)
 
 /**\name API warning codes */
 #define BMP3_W_SENSOR_NOT_ENABLED           (1)
@@ -198,6 +214,10 @@ extern "C" {
 /**\name Latch */
 #define BMP3_INT_PIN_LATCH          (0x01)      // values for 'int_latch' bit field in INT_CTRL (0x19) reg
 #define BMP3_INT_PIN_NON_LATCH      (0x00)
+
+#define BMP3_INT_FIFO_WM            (0x08)
+#define BMP3_INT_FIFO_FULL          (0x10)
+#define BMP3_INT_DATA_RDY           (0x40)
 
 /**\name Advance settings  */
 /**\name I2c watch dog timer period selection */
@@ -287,7 +307,7 @@ extern "C" {
  These values are internal for API implementation. Don't relate this to
  data sheet.*/
 #define BMP3_PRESS         (1)
-#define BMP3_TEMP          (1 << 1)
+#define BMP3_TEMP          (1 << 2) // original : (1 << 1)
 #define BMP3_ALL           (0x03)
 
 /**\name Macros for bit masking */
@@ -416,6 +436,25 @@ extern "C" {
 #define BMP3_T_DATA_LEN                 (3)
 #define BMP3_SENSOR_TIME_LEN            (3)
 #define BMP3_FIFO_MAX_FRAMES            (73)
+
+
+// Calib. parameter denominators
+#define BMP3_CALIB_PAR_T1_DIVISOR_VALUE        0.00390625f              //-2^-8
+#define BMP3_CALIB_PAR_T2_DIVISOR_VALUE        1073741824.0f              //-2^30
+#define BMP3_CALIB_PAR_T3_DIVISOR_VALUE        281474976710656.0f         //-2^48
+#define BMP3_CALIB_PAR_P1_DIVISOR_VALUE        1048576.0f                 //-2^20
+#define BMP3_CALIB_PAR_P2_DIVISOR_VALUE        536870912.0f               //-2^29
+#define BMP3_CALIB_PAR_P3_DIVISOR_VALUE        4294967296.0f              //-2^32
+#define BMP3_CALIB_PAR_P4_DIVISOR_VALUE        137438953472.0f            //-2^37
+#define BMP3_CALIB_PAR_P5_DIVISOR_VALUE        0.125f                   //-2^-3
+#define BMP3_CALIB_PAR_P6_DIVISOR_VALUE        64.0f                      //-2^6
+#define BMP3_CALIB_PAR_P7_DIVISOR_VALUE        256.0f                     //-2^8
+#define BMP3_CALIB_PAR_P8_DIVISOR_VALUE        32768.0f                   //-2^15
+#define BMP3_CALIB_PAR_P9_DIVISOR_VALUE        281474976710656.0f         //-2^48
+#define BMP3_CALIB_PAR_P10_DIVISOR_VALUE       281474976710656.0f         //-2^48
+#define BMP3_CALIB_PAR_P11_DIVISOR_VALUE       36893488147419103232.0f    //-2^65
+
+
 
 /********************************************************/
 
@@ -724,57 +763,59 @@ struct bmp3_dev
     struct bmp3_fifo *fifo;
 };
 
-
-
 // functions prototypes
 
 // interface functions
 
 // public functions
 
-void BMP388_Init(void);
-void BMP388_Init_SPI(int cs);
-int8_t BMP388_begin(void);
-float BMP388_readTemperature(void);
-float BMP388_readPressure(void);
-float BMP388_readCalibratedAltitude(float seaLevel);
-float BMP388_readSeaLevel(float altitude);
-float BMP388_readAltitude(void);
-void BMP388_INTEnable(void);
-void BMP388_INTDisable(void);
-void BMP388_set_iic_addr(uint8_t addr);
+void BMP388_Init(void);                                 // implemented
+void BMP388_Init_SPI(int cs);                           // not-implemented
+int8_t BMP388_begin(void);                              // implemented
+float BMP388_readTemperature(void);                     // implemented
+float BMP388_readPressure(void);                        // implemented
+float BMP388_readCalibratedAltitude(float seaLevel);    // implemented
+float BMP388_readSeaLevel(float altitude);              // implemented
+float BMP388_readAltitude(void);                        // implemented
+int8_t BMP388_INTEnable(uint8_t config);                // implemented
+int8_t BMP388_INTDisable(uint8_t config);               // implemented
+void BMP388_set_i2c_addr(const uint8_t addr);           // implemented
 
 // private functions
 
-int8_t BMP388_reset (void);
-int8_t BMP388_set_sensor_settings (uint32_t desired_settings);
-int8_t BMP388_get_sensor_data (uint8_t sensor_comp, struct bmp3_data *data);
-int8_t BMP388_get_regs (uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
-int8_t BMP388_set_regs (uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len);
-int8_t BMP388_set_config (void);
-int8_t BMP388_set_op_mode (void);
-int8_t BMP388_write_power_mode (void);
-int8_t BMP388_get_calib_data (void);
-int8_t BMP388_set_pwr_ctrl_settings (uint32_t desired_settings);
-void BMP388_parse_sensor_data (const uint8_t *reg_data,
-                              struct bmp3_uncomp_data *uncomp_data);
-int8_t BMP388_compensate_data (uint8_t sensor_comp,
+int8_t BMP388_reset(void);                                                              // implemented
+int8_t BMP388_set_sensor_settings(uint32_t desired_settings);                           // implemented
+int8_t BMP388_get_sensor_data(uint8_t sensor_comp, struct bmp3_data *data);             // implemented
+int8_t BMP388_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);           // implemented
+int8_t BMP388_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len);        // implemented
+int8_t BMP388_set_config(void);                                                         // implemented
+int8_t BMP388_set_op_mode(void);                                                        // implemented
+int8_t BMP388_write_power_mode(void);                                                   // implemented
+int8_t BMP388_get_calib_data(void);                                                     // implemented
+int8_t BMP388_set_pwr_ctrl_settings(uint32_t desired_settings);                         // implemented
+void BMP388_parse_sensor_data(const uint8_t *reg_data,
+                              struct bmp3_uncomp_data *uncomp_data);                    // implemented
+int8_t BMP388_compensate_data(uint8_t sensor_comp,
                               const struct bmp3_uncomp_data *uncomp_data,
                               struct bmp3_data *comp_data,
-                              struct bmp3_calib_data *calib_data);
-void BMP388_parse_calib_data (const uint8_t *reg_data);
-double BMP388_compensate_temperature (const struct bmp3_uncomp_data *uncomp_data,
-                                     struct bmp3_calib_data *calib_data);
-double BMP388_compensate_pressure (const struct bmp3_uncomp_data *uncomp_data,
-                                  const struct bmp3_calib_data *calib_data);
-double BMP388_bmp3_pow (double base, uint8_t power);
-
+                              struct bmp3_calib_data *calib_data);                      // implemented
+void BMP388_parse_calib_data(const uint8_t *reg_data);                                  // implemented
+double BMP388_compensate_temperature(const struct bmp3_uncomp_data *uncomp_data,
+                                     struct bmp3_calib_data *calib_data);               // implemented
+double BMP388_compensate_pressure(const struct bmp3_uncomp_data *uncomp_data,
+                                  const struct bmp3_calib_data *calib_data);            // implemented
+double BMP388_bmp3_pow(double base, uint8_t power);                                     // not implemented (not needed so far)
 
 // Interface funcitons (used internally)
 
-void BMP388_user_delay_ms (uint32_t num);
-int8_t BMP388_user_i2c_write (uint8_t dev_id, uint8_t reg_addr,uint8_t *data, uint16_t len);
-int8_t BMP388_user_i2c_read (uint8_t dev_id, uint8_t reg_addr,uint8_t *data, uint16_t len);
+void BMP388_user_delay_ms(uint32_t num);                                                // implemented
+int8_t BMP388_user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
+                             uint16_t len);                                             // implemented
+int8_t BMP388_user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
+                            uint16_t len);                                              // implemented
+
+int8_t BMP388_user_i2c_MultiByteWrite(uint8_t dev_id, uint8_t *reg_addr, uint8_t *data,
+                             uint16_t len);                                             // implemented
 
 #ifdef __cplusplus
 }
