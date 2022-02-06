@@ -12,9 +12,9 @@
 // Includes
 
 #include "SampleTemplate.h"
-#include "led.h"
-#include "uart.h"
-#include "i2c.h"
+#include "local_Include/led.h"
+#include "local_Include/uart.h"
+#include "local_Include/i2c.h"
 
 
 // global variables and externs

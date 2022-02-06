@@ -22,8 +22,10 @@
 #include "local_include/i2c.h"
 
 //#include "local_include/MPU9250.h"
+//#include "local_include/BUZZER/buzzer.h"
 #include "local_include/BMX160/BMX160.h"
 #include "local_include/BMP388/BMP388.h"
+
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -60,12 +62,14 @@ void SystemInitialize(void)
     SysFlag_Init();
     LED_LEDInit();
     SWITCH_Init();
+
     UART0_STDIO_Init();
     I2C0_Init();
 
     PCF8574A_Init();
     // MPU9250_Init();
     // BMX160_Init();
+    // init_Buzzer();
     BMP388_Init();
 
 }
@@ -265,26 +269,16 @@ int main(void)
                 SysFlag_Clear(SYSFLAG_UART0_TX);
             }
 
-            static bool showData = true;
+            if (SWITCH_SW1_Pressed())
+            {
+
+            }
+
             if (SWITCH_SW2_Pressed())
             {
-#ifdef DEBUG
 
-                if (showData == true)
-                {
-                    BMX160_showData();
-                    showData = false;
-                }
-
-#endif
             }
 
-            else
-            {
-                // if Switch 2 is not pressed
-
-                showData = true;
-            }
 
         }
         else

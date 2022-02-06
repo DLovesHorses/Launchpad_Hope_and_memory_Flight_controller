@@ -16,6 +16,31 @@
 struct bmp3_dev dev;
 uint8_t BMP388_addr;
 
+/*
+ * settings to configure:
+ *
+ * dev.settings.op_mode                         // Power mode which user wants to set
+ * dev.settings.press_en                        // Enable pressure sensor?
+ * dev.settings.temp_en                         // Enable Temperature sensor?
+ *
+ * dev.settings.odr_filter.press_os             // Over sampling for Pressure sensor
+ * dev.settings.odr_filter.temp_os              // Over sampling for Temperature sensor
+ * dev.settings.odr_filter.iir_filter           // Filter coefficient for IIR filter
+ * dev.settings.odr_filter.odr                  // Output data rate (subdivision selection) (pg.37)
+ *
+ * dev.settings.int_settings.output_mode        // Configure output: 1 -> open-drain  , 0 -> push-pull
+ * dev.settings.int_settings.level              // level of INT pin: 1 -> active_high , 0 -> active_low
+ * dev.settings.int_settings.latch              // Latching of interrupts for
+ *                                              // INT pin and INT_STATUS register: 1 -> enabled     , 0 -> disabled
+ *
+ * dev.settings.int_settings.drdy_en            // enable temperature / pressure
+ *                                              // data ready interrupt for INT pin and INT_STATUS
+ *
+ * dev.settings.adv_settings.i2c_wdt_en         // i2c watch dog enable
+ * dev.settings.adv_settings.i2c_wdt_sel        // i2c watch dog select
+ *
+ */
+
 // Function definitions.
 /*
  *
