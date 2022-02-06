@@ -179,6 +179,8 @@ extern "C" {
 #define BMP3_IF_CONF_ADDR           (0x1A)
 #define BMP3_PWR_CTRL_ADDR          (0x1B)
 #define BMP3_OSR_ADDR               (0X1C)
+#define BMP3_ODR_ADDR               (0x1D)
+#define BMP3_CONFIG_ADDR            (0x1F)
 #define BMP3_CALIB_DATA_ADDR        (0x31)      // Register mapped to NVM: See pg. no. 27 of the datasheet.
 #define BMP3_CMD_ADDR               (0x7E)
 
@@ -307,7 +309,7 @@ extern "C" {
  These values are internal for API implementation. Don't relate this to
  data sheet.*/
 #define BMP3_PRESS         (1)
-#define BMP3_TEMP          (1 << 2) // original : (1 << 1)
+#define BMP3_TEMP          (1 << 1) // original : (1 << 1)
 #define BMP3_ALL           (0x03)
 
 /**\name Macros for bit masking */
@@ -770,8 +772,8 @@ struct bmp3_dev
 // public functions
 
 void BMP388_Init(void);                                 // implemented
-void BMP388_Init_SPI(int cs);                           // not-implemented
 int8_t BMP388_begin(void);                              // implemented
+void BMP388_showData(void);
 float BMP388_readTemperature(void);                     // implemented
 float BMP388_readPressure(void);                        // implemented
 float BMP388_readCalibratedAltitude(float seaLevel);    // implemented
@@ -800,12 +802,19 @@ int8_t BMP388_compensate_data(uint8_t sensor_comp,
                               struct bmp3_data *comp_data,
                               struct bmp3_calib_data *calib_data);                      // implemented
 void BMP388_parse_calib_data(const uint8_t *reg_data);                                  // implemented
+
+
+
+
+
+
 double BMP388_compensate_temperature(const struct bmp3_uncomp_data *uncomp_data,
                                      struct bmp3_calib_data *calib_data);               // implemented
 double BMP388_compensate_pressure(const struct bmp3_uncomp_data *uncomp_data,
                                   const struct bmp3_calib_data *calib_data);            // implemented
 double BMP388_bmp3_pow(double base, uint8_t power);                                     // not implemented (not needed so far)
 
+void BMP388_read_all_regs(void);
 // Interface funcitons (used internally)
 
 void BMP388_user_delay_ms(uint32_t num);                                                // implemented

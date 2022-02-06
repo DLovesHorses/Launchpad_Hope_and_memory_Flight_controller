@@ -115,12 +115,18 @@ int8_t BMP388_begin(void)
         return BMP3_E_CHIP_NOT_RECOGNIZED;
     }
 
+    dev.chip_id = chip_id;
+
 #ifdef DEBUG
     UARTprintf("SUCCESS: BMP388 Chip Recognized: ID: %X\n", dev.chip_id);
 #endif
 
+    // next call is for debug purpose only
+    // BMP388_read_all_regs();
+
     /* Reset the sensor */
     rslt = BMP388_reset();
+
 
     if (rslt != BMP3_OK)
     {
@@ -282,6 +288,56 @@ float BMP388_readTemperature(void)
  *
  *
  */
+void BMP388_showData(void){
+    char charBuffer[80];
+    charBuffer[0] = '\0';
+
+    // data from BMP388_readPressure
+    sprintf(charBuffer, "Pressure: \t %7.3f \t (readPressure)\n", BMP388_readPressure());
+    UARTprintf("%s", charBuffer);
+    charBuffer[0] = '\0';
+
+    // data from BMP388_readTemperature
+    sprintf(charBuffer, "Temperature: \t %7.3f \t (readTemperature)\n", BMP388_readTemperature());
+    UARTprintf("%s", charBuffer);
+    charBuffer[0] = '\0';
+
+    // data from BMP388_readAltitude
+    sprintf(charBuffer, "Alt.: \t \t  %7.3f \t (readAltitude)\n", BMP388_readAltitude());
+    UARTprintf("%s", charBuffer);
+    charBuffer[0] = '\0';
+
+    // data from BMP388_readCalibratedAltitude
+    sprintf(charBuffer, "Calib. Alt.: \t %7.3f \t (readCalibratedAltitude)\n", BMP388_readCalibratedAltitude(1031.25));
+    UARTprintf("%s", charBuffer);
+    charBuffer[0] = '\0';
+
+    // data from BMP388_readSeaLevel
+    sprintf(charBuffer, "Sea Level: \t %7.3f \t (readSeaLevel)\n\n", BMP388_readSeaLevel(102));
+    UARTprintf("%s", charBuffer);
+    charBuffer[0] = '\0';
+
+
+    return;
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 
 float BMP388_readPressure(void)
 {
@@ -509,7 +565,7 @@ int8_t BMP388_reset(void)
     {
 #ifdef DEBUG
         UARTprintf(
-                "FAILED: Soft-Reset failed because command decoder is busy.\n");
+                "FAILED: Soft-Reset failed because command decoder of BMP388 is busy.\n");
 #endif
         rslt = BMP3_E_CMD_EXEC_FAILED;
     }
@@ -1313,6 +1369,44 @@ void BMP388_user_delay_ms(uint32_t num)
  *
  *
  *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void BMP388_read_all_regs(void)
+{
+    uint8_t reg_addr = BMP3_CHIP_ID_ADDR;
+    uint8_t length = BMP3_CONFIG_ADDR - BMP3_CHIP_ID_ADDR; // 32
+
+    uint8_t data[32] = {0};
+
+    //breakpoint at next line,
+    // step-over the program in debug mode
+    // read the contents of returned values in debug variables tab.
+    BMP388_get_regs(reg_addr, data, length);
+
+
+    return;
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *  From pg. 40
  *
  *  Writing is done by sending the slave address in write mode (RW = ‘0’), resulting in slave address 111011X0 (‘X’ is determined
@@ -1322,7 +1416,7 @@ void BMP388_user_delay_ms(uint32_t num)
  *
  */
 
-int8_t BMP388_user_i2c_write(uint8_t dev_id, uint8_t reg_addr,uint8_t *data,
+int8_t BMP388_user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
                              uint16_t len)
 {
 
@@ -1331,7 +1425,7 @@ int8_t BMP388_user_i2c_write(uint8_t dev_id, uint8_t reg_addr,uint8_t *data,
 
 #ifdef DEBUG
         UARTprintf(
-        "FAILED: I2C write failed for BMP388: Invalid write length.\n");
+                "FAILED: I2C write failed for BMP388: Invalid write length.\n");
 #endif
 
         return BMP3_E_I2C_INVALIDE_WRITE_LENGTH;
@@ -1390,6 +1484,24 @@ int8_t BMP388_user_i2c_write(uint8_t dev_id, uint8_t reg_addr,uint8_t *data,
     return rslt;
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 int8_t BMP388_user_i2c_MultiByteWrite(uint8_t dev_id, uint8_t *reg_addr,
                                       uint8_t *data, uint16_t len)
 {
@@ -1509,6 +1621,13 @@ int8_t BMP388_user_i2c_MultiByteWrite(uint8_t dev_id, uint8_t *reg_addr,
  *
  *
  *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  * From BMP388 datasheet section 5.2.2
  *
  * To be able to read registers, first the register address must be sent in write mode (slave address 111011X0). Then either a
@@ -1520,8 +1639,8 @@ int8_t BMP388_user_i2c_MultiByteWrite(uint8_t dev_id, uint8_t *reg_addr,
  *
  */
 
-int8_t user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
-                     uint16_t len)
+int8_t BMP388_user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
+                            uint16_t len)
 {
 
     int8_t rslt = BMP3_OK;
@@ -1608,7 +1727,7 @@ int8_t user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
 
     }
 
-    else
+    else if (len > 1)
     {
         // Repeated START condition followed by RECEIVE
         // (master goes to Master Receive state).

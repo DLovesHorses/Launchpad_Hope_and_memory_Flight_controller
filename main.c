@@ -64,8 +64,9 @@ void SystemInitialize(void)
     I2C0_Init();
 
     PCF8574A_Init();
-    //MPU9250_Init();
-    BMX160_Init();
+    // MPU9250_Init();
+    // BMX160_Init();
+    BMP388_Init();
 
 }
 
@@ -95,7 +96,8 @@ int main(void)
             static uint16_t sensorDataSampleTimeCounter = 0;
             if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
-                BMX160_showData();
+                //BMX160_showData();
+                //BMP388_showData();
                 sensorDataSampleTimeCounter = 0;
             }
 
