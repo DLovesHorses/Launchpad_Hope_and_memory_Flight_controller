@@ -39,6 +39,8 @@ uint8_t BMP388_addr;
  * dev.settings.adv_settings.i2c_wdt_en         // i2c watch dog enable
  * dev.settings.adv_settings.i2c_wdt_sel        // i2c watch dog select
  *
+ *
+ *
  */
 
 // Function definitions.
@@ -152,7 +154,6 @@ int8_t BMP388_begin(void)
     /* Reset the sensor */
     rslt = BMP388_reset();
 
-
     if (rslt != BMP3_OK)
     {
 #ifdef DEBUG
@@ -186,6 +187,9 @@ int8_t BMP388_begin(void)
 
     rslt = BMP388_set_config();
 
+    // next call is for debug purpose only: to ensure config is properly set
+     BMP388_read_all_regs();
+
     if (rslt != BMP3_OK)
     {
 #ifdef DEBUG
@@ -213,61 +217,145 @@ int8_t BMP388_begin(void)
  *
  *
  */
+/* wrong implementation
+ int8_t BMP388_set_config(void)
+ {
+ int8_t rslt;
 
+ /* Used to select the settings user needs to change
+ uint16_t settings_sel;
+
+ /* Select the pressure and temperature sensor to be enabled
+ dev.settings.press_en = BMP3_ENABLE;
+ dev.settings.temp_en = BMP3_ENABLE;
+
+ /* Select the output data rate and oversampling settings for pressure and temperature
+ dev.settings.odr_filter.press_os = BMP3_NO_OVERSAMPLING;
+ dev.settings.odr_filter.temp_os = BMP3_NO_OVERSAMPLING;
+ dev.settings.odr_filter.odr = BMP3_ODR_200_HZ;
+
+ /* Assign the settings which needs to be set in the sensor
+ settings_sel = BMP3_PRESS_EN_SEL | BMP3_TEMP_EN_SEL | BMP3_PRESS_OS_SEL
+ | BMP3_TEMP_OS_SEL | BMP3_ODR_SEL;
+ rslt = BMP388_set_sensor_settings(settings_sel);
+
+ if (rslt != BMP3_OK)
+ {
+ #ifdef DEBUG
+ UARTprintf("FAILED: Setting BMP388 settings.\n");
+ #endif
+ return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
+ }
+
+ #ifdef DEBUG
+ UARTprintf("SUCCESS: BMP388 Settings configured properly.\n");
+ #endif
+
+ /* Set the power mode to normal mode
+ dev.settings.op_mode = BMP3_NORMAL_MODE;
+ rslt = BMP388_set_op_mode();
+
+ if (rslt != BMP3_OK)
+ {
+ #ifdef DEBUG
+ UARTprintf("FAILED: Setting operation mode of BMP388.\n");
+ #endif
+ return BMP3_E_SET_OP_MODE_FAILED;
+ }
+
+ #ifdef DEBUG
+ UARTprintf("SUCCESS: BMP3888 operation mode set to : %x\n",
+ dev.settings.op_mode);
+ #endif
+
+ return rslt;
+ }
+
+ */
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 int8_t BMP388_set_config(void)
 {
-    int8_t rslt;
 
-    /* Used to select the settings user needs to change */
-    uint16_t settings_sel;
+    int8_t rslt = BMP3_E_NULL_PTR;
+    uint8_t reg_addr;
 
-    /* Select the pressure and temperature sensor to be enabled */
-    dev.settings.press_en = BMP3_ENABLE;
-    dev.settings.temp_en = BMP3_ENABLE;
-
-    /* Select the output data rate and oversampling settings for pressure and temperature */
-    dev.settings.odr_filter.press_os = BMP3_NO_OVERSAMPLING;
-    dev.settings.odr_filter.temp_os = BMP3_NO_OVERSAMPLING;
-    dev.settings.odr_filter.odr = BMP3_ODR_200_HZ;
-
-    /* Assign the settings which needs to be set in the sensor */
-    settings_sel = BMP3_PRESS_EN_SEL | BMP3_TEMP_EN_SEL | BMP3_PRESS_OS_SEL
-            | BMP3_TEMP_OS_SEL | BMP3_ODR_SEL;
-    rslt = BMP388_set_sensor_settings(settings_sel);
+    // write pwr_ctrl reg data
+    reg_addr = BMP3_PWR_CTRL_ADDR;
+    uint8_t pwr_ctrl_data = 0x33;
+    rslt = BMP388_set_regs(&reg_addr, &pwr_ctrl_data, 1);
 
     if (rslt != BMP3_OK)
     {
 #ifdef DEBUG
-        UARTprintf("FAILED: Setting BMP388 settings.\n");
+        UARTprintf("FAILED: Setting Power Control register [0x%x] of BMP388.\n",
+                   reg_addr);
 #endif
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
 
-#ifdef DEBUG
-    UARTprintf("SUCCESS: BMP388 Settings configured properly.\n");
-#endif
-
-    /* Set the power mode to normal mode */
-    dev.settings.op_mode = BMP3_NORMAL_MODE;
-    rslt = BMP388_set_op_mode();
+    // write config reg data
+    reg_addr = BMP3_CONFIG_ADDR;
+    uint8_t config_data = 0x02;
+    rslt = BMP388_set_regs(&reg_addr, &config_data, 1);
 
     if (rslt != BMP3_OK)
     {
 #ifdef DEBUG
-        UARTprintf("FAILED: Setting operation mode of BMP388.\n");
+        UARTprintf("FAILED: Setting Config register [0x%x] of BMP388.\n",
+                   reg_addr);
 #endif
-        return BMP3_E_SET_OP_MODE_FAILED;
+        return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
 
+    // write output sampeling reg (osr) reg data
+    reg_addr = BMP3_OSR_ADDR;
+    uint8_t osr_data = 0x03;
+    rslt = BMP388_set_regs(&reg_addr, &osr_data, 1);
+
+    if (rslt != BMP3_OK)
+    {
 #ifdef DEBUG
-    UARTprintf("SUCCESS: BMP3888 operation mode set to : %x\n",
-               dev.settings.op_mode);
+        UARTprintf("FAILED: OSR register [0x%x] of BMP388.\n", reg_addr);
 #endif
+        return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
+    }
+
+    // write output data rate (odr) reg data
+    reg_addr = BMP3_ODR_ADDR;
+    uint8_t odr_data = 0x02;
+    rslt = BMP388_set_regs(&reg_addr, &odr_data, 1);
+
+    if (rslt != BMP3_OK)
+    {
+#ifdef DEBUG
+        UARTprintf("FAILED: ODR register [0x%x] of BMP388.\n", reg_addr);
+#endif
+        return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
+    }
+
+
 
     return rslt;
+
 }
 
 /*
+ *
+ *
+ *
+ *
+ *
  *
  *
  *
@@ -313,35 +401,40 @@ float BMP388_readTemperature(void)
  *
  *
  */
-void BMP388_showData(void){
+void BMP388_showData(void)
+{
     char charBuffer[80];
     charBuffer[0] = '\0';
 
     // data from BMP388_readPressure
-    sprintf(charBuffer, "Pressure: \t %7.3f \t (readPressure)\n", BMP388_readPressure());
+    sprintf(charBuffer, "Pressure: \t %7.3f \t (readPressure)\n",
+            BMP388_readPressure());
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 
     // data from BMP388_readTemperature
-    sprintf(charBuffer, "Temperature: \t %7.3f \t (readTemperature)\n", BMP388_readTemperature());
+    sprintf(charBuffer, "Temperature: \t %7.3f \t (readTemperature)\n",
+            BMP388_readTemperature());
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 
     // data from BMP388_readAltitude
-    sprintf(charBuffer, "Alt.: \t \t  %7.3f \t (readAltitude)\n", BMP388_readAltitude());
+    sprintf(charBuffer, "Alt.: \t \t  %7.3f \t (readAltitude)\n",
+            BMP388_readAltitude());
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 
     // data from BMP388_readCalibratedAltitude
-    sprintf(charBuffer, "Calib. Alt.: \t %7.3f \t (readCalibratedAltitude)\n", BMP388_readCalibratedAltitude(1031.25));
+    sprintf(charBuffer, "Calib. Alt.: \t %7.3f \t (readCalibratedAltitude)\n",
+            BMP388_readCalibratedAltitude(1031.25));
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 
     // data from BMP388_readSeaLevel
-    sprintf(charBuffer, "Sea Level: \t %7.3f \t (readSeaLevel)\n\n", BMP388_readSeaLevel(102));
+    sprintf(charBuffer, "Sea Level: \t %7.3f \t (readSeaLevel)\n\n",
+            BMP388_readSeaLevel(102));
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
-
 
     return;
 }
@@ -362,7 +455,6 @@ void BMP388_showData(void){
  *
  *
  */
-
 
 float BMP388_readPressure(void)
 {
@@ -1406,15 +1498,16 @@ void BMP388_user_delay_ms(uint32_t num)
 void BMP388_read_all_regs(void)
 {
     uint8_t reg_addr = BMP3_CHIP_ID_ADDR;
-    uint8_t length = BMP3_CONFIG_ADDR - BMP3_CHIP_ID_ADDR; // 32
+    uint8_t length = 32; // 32
 
-    uint8_t data[32] = {0};
+    uint8_t data[32] = { 0 };
 
     //breakpoint at next line,
     // step-over the program in debug mode
     // read the contents of returned values in debug variables tab.
+    reg_addr = 0x1B;
+    length = 6; // B, C, D, E, F
     BMP388_get_regs(reg_addr, data, length);
-
 
     return;
 }

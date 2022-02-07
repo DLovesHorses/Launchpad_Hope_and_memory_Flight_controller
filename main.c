@@ -101,7 +101,7 @@ int main(void)
             if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
                 //BMX160_showData();
-                //BMP388_showData();
+                BMP388_showData();
                 sensorDataSampleTimeCounter = 0;
             }
 
