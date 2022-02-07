@@ -11,6 +11,7 @@
 
 // Includes
 #include "BMP388.h"
+#include "local_include/BUZZER/buzzer.h"
 
 // global variables and externs
 struct bmp3_dev dev;
@@ -79,6 +80,7 @@ void BMP388_Init(void)
     {
 #ifdef DEBUG
         UARTprintf("BMP388 Initialized...\n");
+        BUZZ_BUZZER(BUZZ_DUR_SHORT, BUZZ_REP_TIME_3, BUZZ_PAUSE_TIME_100);
 #endif
     }
 
@@ -222,19 +224,19 @@ int8_t BMP388_begin(void)
  {
  int8_t rslt;
 
- /* Used to select the settings user needs to change
+ //  Used to select the settings user needs to change
  uint16_t settings_sel;
 
- /* Select the pressure and temperature sensor to be enabled
+//  Select the pressure and temperature sensor to be enabled
  dev.settings.press_en = BMP3_ENABLE;
  dev.settings.temp_en = BMP3_ENABLE;
 
- /* Select the output data rate and oversampling settings for pressure and temperature
+ //  Select the output data rate and oversampling settings for pressure and temperature
  dev.settings.odr_filter.press_os = BMP3_NO_OVERSAMPLING;
  dev.settings.odr_filter.temp_os = BMP3_NO_OVERSAMPLING;
  dev.settings.odr_filter.odr = BMP3_ODR_200_HZ;
 
- /* Assign the settings which needs to be set in the sensor
+ //  Assign the settings which needs to be set in the sensor
  settings_sel = BMP3_PRESS_EN_SEL | BMP3_TEMP_EN_SEL | BMP3_PRESS_OS_SEL
  | BMP3_TEMP_OS_SEL | BMP3_ODR_SEL;
  rslt = BMP388_set_sensor_settings(settings_sel);
@@ -251,7 +253,7 @@ int8_t BMP388_begin(void)
  UARTprintf("SUCCESS: BMP388 Settings configured properly.\n");
  #endif
 
- /* Set the power mode to normal mode
+ // Set the power mode to normal mode
  dev.settings.op_mode = BMP3_NORMAL_MODE;
  rslt = BMP388_set_op_mode();
 
@@ -406,6 +408,7 @@ void BMP388_showData(void)
     char charBuffer[80];
     charBuffer[0] = '\0';
 
+    UARTprintf("Data from BMP388: \n\n");
     // data from BMP388_readPressure
     sprintf(charBuffer, "Pressure: \t %7.3f \t (readPressure)\n",
             BMP388_readPressure());

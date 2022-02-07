@@ -499,8 +499,8 @@ void BMX160_showData(void)
 
     char printBuffer[252] = "";
 
-    UARTprintf("\n\n Data from BMX160: \n");
-    sprintf(printBuffer, "Accel: ( %d, %d, %d ) -> ( %6.3f, %6.3f, %6.3f ).\n\n", accRaw.x, accRaw.y, accRaw.z, accData.x, accData.y, accData.z );
+    UARTprintf("\n\nData from BMX160: \n\n");
+    sprintf(printBuffer, "Accel: ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", accRaw.x, accRaw.y, accRaw.z, accData.x, accData.y, accData.z );
     UARTprintf("%s", printBuffer);
     printBuffer[0] = '\0';
 
@@ -510,7 +510,7 @@ void BMX160_showData(void)
     UARTprintf("Accel.  Z:  %d\n", (int)accData.z);
     */
 
-    sprintf(printBuffer, "Gyro : ( %d, %d, %d ) -> ( %6.3f, %6.3f, %6.3f ).\n\n", gyroRaw.x, gyroRaw.y, gyroRaw.z, gyroData.x, gyroData.y, gyroData.z );
+    sprintf(printBuffer, "Gyro : ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", gyroRaw.x, gyroRaw.y, gyroRaw.z, gyroData.x, gyroData.y, gyroData.z );
     UARTprintf("%s", printBuffer);
     printBuffer[0] = '\0';
 
@@ -520,7 +520,7 @@ void BMX160_showData(void)
     UARTprintf("Gyro.   Z:  %d\n", (int)gyroData.z);
     */
 
-    sprintf(printBuffer, "Mag   : ( %d, %d, %d ) -> ( %6.3f, %6.3f, %6.3f ).\n\n", magRaw.x, magRaw.y, magRaw.z, magData.x, magData.y, magData.z );
+    sprintf(printBuffer, "Mag  : ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n\n", magRaw.x, magRaw.y, magRaw.z, magData.x, magData.y, magData.z );
     UARTprintf("%s", printBuffer);
     printBuffer[0] = '\0';
 

@@ -1,35 +1,35 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.5                     
 ******************************************************************************
->> Linked Mon Feb  7 05:45:36 2022
+>> Linked Mon Feb  7 10:33:16 2022
 
 OUTPUT FILE NAME:   <DroneProject.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00005d71
+ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00006699
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  FLASH                 00000000   00040000  000064a8  00039b58  R  X
-  SRAM                  20000000   00008000  000027f1  0000580f  RW X
+  FLASH                 00000000   00040000  00006ee6  0003911a  R  X
+  SRAM                  20000000   00008000  00002822  000057de  RW X
 
 
 SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    000064a8   000064a8    r-x
+00000000    00000000    00006ee8   00006ee8    r-x
   00000000    00000000    0000026c   0000026c    r-- .intvecs
-  0000026c    0000026c    00005ef4   00005ef4    r-x .text
-  00006160    00006160    00000308   00000308    r-- .const
-  00006468    00006468    00000040   00000040    r-- .cinit
-20000000    20000000    000027f8   00000000    rw-
+  0000026c    0000026c    0000691a   0000691a    r-x .text
+  00006b88    00006b88    00000308   00000308    r-- .const
+  00006e90    00006e90    00000058   00000058    r-- .cinit
+20000000    20000000    00002827   00000000    rw-
   20000000    20000000    0000026c   00000000    rw- .vtable
   20000270    20000270    00001000   00000000    rw- .stack
   20001270    20001270    00001000   00000000    rw- .sysmem
-  20002270    20002270    00000565   00000000    rw- .bss
-  200027d8    200027d8    00000020   00000000    rw- .data
+  20002270    20002270    0000057b   00000000    rw- .bss
+  200027ec    200027ec    0000003b   00000000    rw- .data
 
 
 SECTION ALLOCATION MAP
@@ -40,203 +40,221 @@ section   page    origin      length       input sections
 .intvecs   0    00000000    0000026c     
                   00000000    0000026c     startup_ccs.obj (.intvecs)
 
-.text      0    0000026c    00005ef4     
+.text      0    0000026c    0000691a     
                   0000026c    00000a4e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:__TI_printfi)
                   00000cba    00000002     startup_ccs.obj (.text:FaultISR)
                   00000cbc    000009d0     rtsv7M4_T_le_v4SPD16_eabi.lib : e_pow.c.obj (.text:pow)
                   0000168c    00000354     main.obj (.text:UARTvprintf)
-                  000019e0    0000031c     BMP388.obj (.text:BMP388_parse_calib_data)
-                  00001cfc    00000304     main.obj (.text:main)
-                  00002000    0000029a     BMP388.obj (.text:BMP388_compensate_pressure)
-                  0000229a    00000002     startup_ccs.obj (.text:IntDefaultHandler)
-                  0000229c    00000270     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_a)
-                  0000250c    0000026c     BMP388.obj (.text:BMP388_begin)
-                  00002778    000001dc     BMP388.obj (.text:BMP388_user_i2c_read)
-                  00002954    000001d0     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_g)
-                  00002b24    000001b8     BMP388.obj (.text:BMP388_showData)
-                  00002cdc    000001b6     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_add_t2.asm.obj (.text)
-                  00002e92    00000002     startup_ccs.obj (.text:NmiSR)
-                  00002e94    000001a0     BMP388.obj (.text:BMP388_reset)
-                  00003034    000001a0     BMP388.obj (.text:BMP388_set_config)
-                  000031d4    00000188     main.obj (.text:UARTStdioIntHandler)
-                  0000335c    0000016c     driverlib.lib : gpio.obj (.text:GPIOPadConfigSet)
-                  000034c8    00000158     rtsv7M4_T_le_v4SPD16_eabi.lib : e_sqrt.c.obj (.text:sqrt)
-                  00003620    0000013c                                   : _printfi.c.obj (.text:_pconv_e)
-                  0000375c    00000138     main.obj (.text:UARTStdioConfig)
-                  00003894    00000136     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_div_t2.asm.obj (.text)
-                  000039ca    00000002                                   : div0.asm.obj (.text)
-                  000039cc    0000012b     i2c.obj (.text:I2C_AddressBruteForcer)
-                  00003af7    00000001     --HOLE-- [fill = 0]
-                  00003af8    00000124     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:fcvt)
-                  00003c1c    00000118     BMP388.obj (.text:BMP388_user_i2c_write)
-                  00003d34    00000118     driverlib.lib : sysctl.obj (.text:SysCtlClockGet)
-                  00003e4c    00000114     main.obj (.text:UARTwrite)
-                  00003f60    00000110     rtsv7M4_T_le_v4SPD16_eabi.lib : s_scalbn.c.obj (.text:scalbn)
-                  00004070    0000010c     BMP388.obj (.text:BMP388_get_sensor_data)
-                  0000417c    00000100     i2c.obj (.text:I2C_writeSingleReg)
-                  0000427c    000000fc     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_mul_t2.asm.obj (.text)
-                  00004378    000000f4     driverlib.lib : sysctl.obj (.text:SysCtlClockSet)
-                  0000446c    000000c6     BMX160.obj (.text:BMX160_setMagnConf)
-                  00004532    00000002     --HOLE-- [fill = 0]
-                  00004534    000000b1     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_ltostr)
-                  000045e5    00000003     --HOLE-- [fill = 0]
-                  000045e8    000000ad     BMP388.obj (.text:BMP388_compensate_data)
-                  00004695    00000003     --HOLE-- [fill = 0]
-                  00004698    000000ab     BMP388.obj (.text:BMP388_get_calib_data)
-                  00004743    00000001     --HOLE-- [fill = 0]
-                  00004744    000000a4     BMP388.obj (.text:BMP388_set_regs)
-                  000047e8    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
-                  00004884    00000096                                   : ull_div_t2.asm.obj (.text)
-                  0000491a    00000002     --HOLE-- [fill = 0]
-                  0000491c    00000094     BMX160.obj (.text:BMX160_softReset)
-                  000049b0    00000094     main.obj (.text:UARTPrimeTransmit)
-                  00004a44    0000008c     BMP388.obj (.text:BMP388_Init)
-                  00004ad0    00000088     BMP388.obj (.text:BMP388_get_regs)
-                  00004b58    00000086     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_cmp_t2.asm.obj (.text:__aeabi_cdcmple)
-                  00004bde    00000086                                   : fd_cmp_t2.asm.obj (.text:__aeabi_cdrcmple)
-                  00004c64    00000084     i2c.obj (.text:PCF8574A_Read)
-                  00004ce8    00000080     uart.obj (.text:UART0_STDIO_Init)
-                  00004d68    0000007c     BMP388.obj (.text:BMP388_readAltitude)
-                  00004de4    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.asm.obj (.text)
-                  00004e5e    00000002     --HOLE-- [fill = 0]
-                  00004e60    00000078     BMP388.obj (.text:BMP388_readCalibratedAltitude)
-                  00004ed8    00000078     i2c.obj (.text:I2C0_Init)
-                  00004f50    00000070     BMP388.obj (.text:BMP388_readSeaLevel)
-                  00004fc0    0000006e     BMP388.obj (.text:BMP388_compensate_temperature)
-                  0000502e    0000006e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_mcpy)
-                  0000509c    0000006e                                   : fd_tos_t2.asm.obj (.text)
-                  0000510a    0000006c     BMP388.obj (.text:BMP388_parse_sensor_data)
-                  00005176    00000002     --HOLE-- [fill = 0]
-                  00005178    0000006c     i2c.obj (.text:I2C_ReadByte)
-                  000051e4    00000068     driverlib.lib : interrupt.obj (.text:IntEnable)
-                  0000524c    00000068     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  000052b4    00000066     BMP388.obj (.text:BMP388_readTemperature)
-                  0000531a    00000002     --HOLE-- [fill = 0]
-                  0000531c    00000064     rtsv7M4_T_le_v4SPD16_eabi.lib : s_frexp.c.obj (.text:frexp)
-                  00005380    00000063     BMP388.obj (.text:BMP388_readPressure)
-                  000053e3    00000001     --HOLE-- [fill = 0]
-                  000053e4    00000063     BMX160.obj (.text:BMX160_writeBmxReg)
-                  00005447    00000001     --HOLE-- [fill = 0]
-                  00005448    00000061     main.obj (.text:__error__)
-                  000054a9    00000003     --HOLE-- [fill = 0]
-                  000054ac    00000060     i2c.obj (.text:PCF8574A_Write)
-                  0000550c    00000056     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_f)
-                  00005562    00000054                                   : _ltoa.c.obj (.text:__TI_ltoa)
-                  000055b6    00000052     BMX160.obj (.text:BMX160_defaultParamSettg)
-                  00005608    00000052     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_ecpy)
-                  0000565a    00000002     --HOLE-- [fill = 0]
-                  0000565c    0000004c     driverlib.lib : gpio.obj (.text:GPIOPinConfigure)
-                  000056a8    0000004c                   : i2c.obj (.text:I2CMasterInitExpClk)
-                  000056f4    0000004c     onBoardSwitch.obj (.text:SWITCH_Init)
-                  00005740    0000004c     SysTick.obj (.text:SYSTICK_Delay)
-                  0000578c    0000004c     main.obj (.text:UARTFlushTx)
-                  000057d8    0000004c     rtsv7M4_T_le_v4SPD16_eabi.lib : atoi.c.obj (.text:atoi)
-                  00005824    00000048                                   : fd_toi_t2.asm.obj (.text)
-                  0000586c    00000044                                   : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
-                  000058b0    00000042     BMX160.obj (.text:BMX160_wakeUp)
-                  000058f2    00000002     --HOLE-- [fill = 0]
-                  000058f4    00000040     driverlib.lib : uart.obj (.text:_UARTIntNumberGet)
-                  00005934    00000040     rtsv7M4_T_le_v4SPD16_eabi.lib : u_divt2.asm.obj (.text)
-                  00005974    00000040                                   : sprintf.c.obj (.text:sprintf)
-                  000059b4    0000003e     i2c.obj (.text:PCF8574A_Init)
-                  000059f2    0000003e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_fcpy)
-                  00005a30    0000003c     main.obj (.text:IsBufferFull)
-                  00005a6c    0000003c     main.obj (.text:SystemInitialize)
-                  00005aa8    0000003c     main.obj (.text:UARTgetc)
-                  00005ae4    0000003a     BMP388.obj (.text:BMP388_read_all_regs)
-                  00005b1e    00000002     --HOLE-- [fill = 0]
-                  00005b20    00000038     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralReady)
-                  00005b58    00000038     SysFlag.obj (.text:SysFlag_Check)
-                  00005b90    00000038     uart.obj (.text:UART0_STDIO_IntHandler)
-                  00005bc8    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.asm.obj (.text)
-                  00005c00    00000036     BMX160.obj (.text:BMX160_softResetWorker)
-                  00005c36    00000002     --HOLE-- [fill = 0]
-                  00005c38    00000034     driverlib.lib : interrupt.obj (.text:IntRegister)
-                  00005c6c    00000034     led.obj (.text:LED_LEDInit)
-                  00005ca0    00000034     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralEnable)
-                  00005cd4    00000034     SysFlag.obj (.text:SysFlag_Clear)
-                  00005d08    00000034     SysFlag.obj (.text:SysFlag_Set)
-                  00005d3c    00000034     main.obj (.text:UARTFlushRx)
-                  00005d70    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
-                  00005da4    0000002e                                   : i_tofd_t2.asm.obj (.text)
-                  00005dd2    0000002c     driverlib.lib : gpio.obj (.text:GPIODirModeSet)
-                  00005dfe    0000002c     main.obj (.text:IsBufferEmpty)
-                  00005e2a    00000002     --HOLE-- [fill = 0]
-                  00005e2c    0000002c     main.obj (.text:UARTEchoSet)
-                  00005e58    00000024     onBoardSwitch.obj (.text:SWITCH_SW1_Pressed)
-                  00005e7c    00000024     onBoardSwitch.obj (.text:SWITCH_SW2_Pressed)
-                  00005ea0    00000024     main.obj (.text:UARTprintf)
-                  00005ec4    00000020     SysTick.obj (.text:SysTick_Init)
-                  00005ee4    00000020     rtsv7M4_T_le_v4SPD16_eabi.lib : u_tofd_t2.asm.obj (.text)
-                  00005f04    0000001c     driverlib.lib : systick.obj (.text:SysTickIntRegister)
-                  00005f20    0000001c     rtsv7M4_T_le_v4SPD16_eabi.lib : memccpy.c.obj (.text:memccpy)
-                  00005f3c    0000001a     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOOutput)
-                  00005f56    0000001a     rtsv7M4_T_le_v4SPD16_eabi.lib : s_copysign.c.obj (.text:copysign)
-                  00005f70    00000018     BMP388.obj (.text:BMP388_set_i2c_addr)
-                  00005f88    00000018     driverlib.lib : uart.obj (.text:UARTIntRegister)
-                  00005fa0    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outs)
-                  00005fb8    00000016     driverlib.lib : gpio.obj (.text:GPIOPinTypeI2C)
-                  00005fce    00000016                   : gpio.obj (.text:GPIOPinTypeI2CSCL)
-                  00005fe4    00000016                   : gpio.obj (.text:GPIOPinTypeUART)
-                  00005ffa    00000016                   : i2c.obj (.text:I2CMasterErr)
-                  00006010    00000016     rtsv7M4_T_le_v4SPD16_eabi.lib : strchr.c.obj (.text:strchr)
-                  00006026    00000002     --HOLE-- [fill = 0]
-                  00006028    00000014     driverlib.lib : sysctl.obj (.text:SysCtlResetCauseClear)
-                  0000603c    00000014                   : systick.obj (.text:SysTickEnable)
-                  00006050    00000014                   : systick.obj (.text:SysTickIntEnable)
-                  00006064    00000014     rtsv7M4_T_le_v4SPD16_eabi.lib : strlen.c.obj (.text:strlen)
-                  00006078    00000012                                   : wcslen.c.obj (.text:wcslen)
-                  0000608a    00000002     --HOLE-- [fill = 0]
-                  0000608c    00000010     sysclk.obj (.text:SysClk_Init)
-                  0000609c    00000010     driverlib.lib : systick.obj (.text:SysTickPeriodSet)
-                  000060ac    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
-                  000060ba    0000000c     BMP388.obj (.text:BMP388_user_delay_ms)
-                  000060c6    00000002     --HOLE-- [fill = 0]
-                  000060c8    0000000c     driverlib.lib : sysctl.obj (.text:SysCtlResetCauseGet)
-                  000060d4    0000000c     SysFlag.obj (.text:SysFlag_Init)
-                  000060e0    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init)
-                  000060ec    0000000a     driverlib.lib : i2c.obj (.text:I2CMasterEnable)
-                  000060f6    0000000a     SysTick.obj (.text:SysTick_IntHandler)
-                  00006100    0000000a     driverlib.lib : uart.obj (.text:UARTIntStatus)
-                  0000610a    0000000a     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outc)
-                  00006114    00000008     driverlib.lib : i2c.obj (.text:I2CMasterBusy)
-                  0000611c    00000008                   : i2c.obj (.text:I2CMasterSlaveAddrSet)
-                  00006124    00000008                   : uart.obj (.text:UARTIntEnable)
-                  0000612c    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.text:__aeabi_errno_addr)
-                  00006134    00000006     driverlib.lib : gpio.obj (.text:GPIOPinRead)
-                  0000613a    00000006     startup_ccs.obj (.text:ResetISR)
-                  00006140    00000006     driverlib.lib : sysctl.obj (.text:SysCtlDelay)
-                  00006146    00000006                   : uart.obj (.text:UARTClockSourceSet)
-                  0000614c    00000004                   : i2c.obj (.text:I2CMasterControl)
-                  00006150    00000004                   : i2c.obj (.text:I2CMasterDataGet)
-                  00006154    00000004                   : i2c.obj (.text:I2CMasterDataPut)
-                  00006158    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
-                  0000615c    00000004                                   : exit.c.obj (.text:abort:abort)
+                  000019e0    0000032c     main.obj (.text:main)
+                  00001d0c    0000031c     BMP388.obj (.text:BMP388_parse_calib_data)
+                  00002028    0000029a     BMP388.obj (.text:BMP388_compensate_pressure)
+                  000022c2    00000002     startup_ccs.obj (.text:IntDefaultHandler)
+                  000022c4    00000270     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_a)
+                  00002534    0000026c     BMP388.obj (.text:BMP388_begin)
+                  000027a0    00000230     BMX160.obj (.text:BMX160_getAllData)
+                  000029d0    000001f8     BMX160.obj (.text:BMX160_showData)
+                  00002bc8    000001dc     BMP388.obj (.text:BMP388_user_i2c_read)
+                  00002da4    000001d4     BMP388.obj (.text:BMP388_showData)
+                  00002f78    000001d0     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_g)
+                  00003148    000001b6                                   : fd_add_t2.asm.obj (.text)
+                  000032fe    00000002     startup_ccs.obj (.text:NmiSR)
+                  00003300    000001a0     BMP388.obj (.text:BMP388_reset)
+                  000034a0    000001a0     BMP388.obj (.text:BMP388_set_config)
+                  00003640    00000188     main.obj (.text:UARTStdioIntHandler)
+                  000037c8    0000016c     driverlib.lib : gpio.obj (.text:GPIOPadConfigSet)
+                  00003934    00000158     rtsv7M4_T_le_v4SPD16_eabi.lib : e_sqrt.c.obj (.text:sqrt)
+                  00003a8c    0000013c                                   : _printfi.c.obj (.text:_pconv_e)
+                  00003bc8    00000138     main.obj (.text:UARTStdioConfig)
+                  00003d00    00000136     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_div_t2.asm.obj (.text)
+                  00003e36    00000002                                   : _lock.c.obj (.text:_nop)
+                  00003e38    0000012b     i2c.obj (.text:I2C_AddressBruteForcer)
+                  00003f63    00000001     --HOLE-- [fill = 0]
+                  00003f64    00000124     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:fcvt)
+                  00004088    00000118     BMP388.obj (.text:BMP388_user_i2c_write)
+                  000041a0    00000118     driverlib.lib : sysctl.obj (.text:SysCtlClockGet)
+                  000042b8    00000114     main.obj (.text:UARTwrite)
+                  000043cc    00000110     rtsv7M4_T_le_v4SPD16_eabi.lib : s_scalbn.c.obj (.text:scalbn)
+                  000044dc    0000010c     BMP388.obj (.text:BMP388_get_sensor_data)
+                  000045e8    00000100     i2c.obj (.text:I2C_writeSingleReg)
+                  000046e8    00000100     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:aligned_alloc)
+                  000047e8    000000fc     BMX160.obj (.text:BMX160_Init)
+                  000048e4    000000fc     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_mul_t2.asm.obj (.text)
+                  000049e0    000000f4     driverlib.lib : sysctl.obj (.text:SysCtlClockSet)
+                  00004ad4    000000f0     buzzer.obj (.text:BUZZ_SM)
+                  00004bc4    000000c6     BMX160.obj (.text:BMX160_setMagnConf)
+                  00004c8a    00000002     rtsv7M4_T_le_v4SPD16_eabi.lib : div0.asm.obj (.text)
+                  00004c8c    000000be     BMX160.obj (.text:BMX160_begin)
+                  00004d4a    00000002     --HOLE-- [fill = 0]
+                  00004d4c    000000b1     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_ltostr)
+                  00004dfd    00000003     --HOLE-- [fill = 0]
+                  00004e00    000000ad     BMP388.obj (.text:BMP388_compensate_data)
+                  00004ead    00000003     --HOLE-- [fill = 0]
+                  00004eb0    000000ab     BMP388.obj (.text:BMP388_get_calib_data)
+                  00004f5b    00000001     --HOLE-- [fill = 0]
+                  00004f5c    000000a4     BMP388.obj (.text:BMP388_set_regs)
+                  00005000    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
+                  0000509c    00000096                                   : ull_div_t2.asm.obj (.text)
+                  00005132    00000002     --HOLE-- [fill = 0]
+                  00005134    00000094     BMP388.obj (.text:BMP388_Init)
+                  000051c8    00000094     BMX160.obj (.text:BMX160_softReset)
+                  0000525c    00000094     main.obj (.text:UARTPrimeTransmit)
+                  000052f0    00000088     BMP388.obj (.text:BMP388_get_regs)
+                  00005378    00000086     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_cmp_t2.asm.obj (.text:__aeabi_cdcmple)
+                  000053fe    00000086                                   : fd_cmp_t2.asm.obj (.text:__aeabi_cdrcmple)
+                  00005484    00000084     i2c.obj (.text:PCF8574A_Read)
+                  00005508    00000080     uart.obj (.text:UART0_STDIO_Init)
+                  00005588    0000007c     BMP388.obj (.text:BMP388_readAltitude)
+                  00005604    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.asm.obj (.text)
+                  0000567e    00000002     --HOLE-- [fill = 0]
+                  00005680    00000078     BMP388.obj (.text:BMP388_readCalibratedAltitude)
+                  000056f8    00000078     i2c.obj (.text:I2C0_Init)
+                  00005770    00000070     BMP388.obj (.text:BMP388_readSeaLevel)
+                  000057e0    00000070     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:split)
+                  00005850    0000006e     BMP388.obj (.text:BMP388_compensate_temperature)
+                  000058be    0000006e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_mcpy)
+                  0000592c    0000006e                                   : fd_tos_t2.asm.obj (.text)
+                  0000599a    0000006c     BMP388.obj (.text:BMP388_parse_sensor_data)
+                  00005a06    00000002     --HOLE-- [fill = 0]
+                  00005a08    0000006c     i2c.obj (.text:I2C_ReadByte)
+                  00005a74    00000068     driverlib.lib : interrupt.obj (.text:IntEnable)
+                  00005adc    00000068     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  00005b44    00000066     BMP388.obj (.text:BMP388_readTemperature)
+                  00005baa    00000002     --HOLE-- [fill = 0]
+                  00005bac    00000064     rtsv7M4_T_le_v4SPD16_eabi.lib : s_frexp.c.obj (.text:frexp)
+                  00005c10    00000063     BMP388.obj (.text:BMP388_readPressure)
+                  00005c73    00000001     --HOLE-- [fill = 0]
+                  00005c74    00000063     BMX160.obj (.text:BMX160_writeBmxReg)
+                  00005cd7    00000001     --HOLE-- [fill = 0]
+                  00005cd8    00000061     main.obj (.text:__error__)
+                  00005d39    00000003     --HOLE-- [fill = 0]
+                  00005d3c    00000060     i2c.obj (.text:PCF8574A_Write)
+                  00005d9c    00000056     i2c.obj (.text:I2C_readReg)
+                  00005df2    00000056     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_f)
+                  00005e48    00000054                                   : _ltoa.c.obj (.text:__TI_ltoa)
+                  00005e9c    00000052     BMX160.obj (.text:BMX160_defaultParamSettg)
+                  00005eee    00000052     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_ecpy)
+                  00005f40    0000004c     driverlib.lib : gpio.obj (.text:GPIOPinConfigure)
+                  00005f8c    0000004c                   : i2c.obj (.text:I2CMasterInitExpClk)
+                  00005fd8    0000004c     onBoardSwitch.obj (.text:SWITCH_Init)
+                  00006024    0000004c     SysTick.obj (.text:SYSTICK_Delay)
+                  00006070    0000004c     main.obj (.text:UARTFlushTx)
+                  000060bc    0000004c     rtsv7M4_T_le_v4SPD16_eabi.lib : atoi.c.obj (.text:atoi)
+                  00006108    00000048                                   : fd_toi_t2.asm.obj (.text)
+                  00006150    00000044     main.obj (.text:SystemInitialize)
+                  00006194    00000044     rtsv7M4_T_le_v4SPD16_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
+                  000061d8    00000042     BMX160.obj (.text:BMX160_wakeUp)
+                  0000621a    00000002     --HOLE-- [fill = 0]
+                  0000621c    00000040     driverlib.lib : uart.obj (.text:_UARTIntNumberGet)
+                  0000625c    00000040     rtsv7M4_T_le_v4SPD16_eabi.lib : u_divt2.asm.obj (.text)
+                  0000629c    00000040                                   : sprintf.c.obj (.text:sprintf)
+                  000062dc    0000003e     i2c.obj (.text:PCF8574A_Init)
+                  0000631a    0000003e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_fcpy)
+                  00006358    0000003c     buzzer.obj (.text:BUZZ_BUZZER)
+                  00006394    0000003c     main.obj (.text:IsBufferFull)
+                  000063d0    0000003c     main.obj (.text:UARTgetc)
+                  0000640c    0000003a     BMP388.obj (.text:BMP388_read_all_regs)
+                  00006446    00000002     --HOLE-- [fill = 0]
+                  00006448    00000038     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralReady)
+                  00006480    00000038     SysFlag.obj (.text:SysFlag_Check)
+                  000064b8    00000038     uart.obj (.text:UART0_STDIO_IntHandler)
+                  000064f0    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.asm.obj (.text)
+                  00006528    00000036     BMX160.obj (.text:BMX160_softResetWorker)
+                  0000655e    00000002     --HOLE-- [fill = 0]
+                  00006560    00000034     driverlib.lib : interrupt.obj (.text:IntRegister)
+                  00006594    00000034     led.obj (.text:LED_LEDInit)
+                  000065c8    00000034     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralEnable)
+                  000065fc    00000034     SysFlag.obj (.text:SysFlag_Clear)
+                  00006630    00000034     SysFlag.obj (.text:SysFlag_Set)
+                  00006664    00000034     main.obj (.text:UARTFlushRx)
+                  00006698    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
+                  000066cc    00000034     buzzer.obj (.text:init_Buzzer)
+                  00006700    0000002e     rtsv7M4_T_le_v4SPD16_eabi.lib : i_tofd_t2.asm.obj (.text)
+                  0000672e    00000002     --HOLE-- [fill = 0]
+                  00006730    0000002c     buzzer.obj (.text:BUZZ_BUZZ)
+                  0000675c    0000002c     driverlib.lib : gpio.obj (.text:GPIODirModeSet)
+                  00006788    0000002c     main.obj (.text:IsBufferEmpty)
+                  000067b4    0000002c     main.obj (.text:UARTEchoSet)
+                  000067e0    00000028     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:free_list_insert)
+                  00006808    00000026     BMX160.obj (.text:BMX160_readReg)
+                  0000682e    00000026     BMX160.obj (.text:BMX160_scan)
+                  00006854    00000024     onBoardSwitch.obj (.text:SWITCH_SW1_Pressed)
+                  00006878    00000024     onBoardSwitch.obj (.text:SWITCH_SW2_Pressed)
+                  0000689c    00000024     main.obj (.text:UARTprintf)
+                  000068c0    00000020     SysTick.obj (.text:SysTick_Init)
+                  000068e0    00000020     rtsv7M4_T_le_v4SPD16_eabi.lib : u_tofd_t2.asm.obj (.text)
+                  00006900    0000001c     driverlib.lib : systick.obj (.text:SysTickIntRegister)
+                  0000691c    0000001c     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:free_list_remove)
+                  00006938    0000001c                                   : memccpy.c.obj (.text:memccpy)
+                  00006954    0000001a     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOOutput)
+                  0000696e    0000001a     rtsv7M4_T_le_v4SPD16_eabi.lib : s_copysign.c.obj (.text:copysign)
+                  00006988    00000018     BMP388.obj (.text:BMP388_set_i2c_addr)
+                  000069a0    00000018     driverlib.lib : uart.obj (.text:UARTIntRegister)
+                  000069b8    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outs)
+                  000069d0    00000016     driverlib.lib : gpio.obj (.text:GPIOPinTypeI2C)
+                  000069e6    00000016                   : gpio.obj (.text:GPIOPinTypeI2CSCL)
+                  000069fc    00000016                   : gpio.obj (.text:GPIOPinTypeUART)
+                  00006a12    00000016                   : i2c.obj (.text:I2CMasterErr)
+                  00006a28    00000016     rtsv7M4_T_le_v4SPD16_eabi.lib : strchr.c.obj (.text:strchr)
+                  00006a3e    00000002     --HOLE-- [fill = 0]
+                  00006a40    00000014     driverlib.lib : sysctl.obj (.text:SysCtlResetCauseClear)
+                  00006a54    00000014                   : systick.obj (.text:SysTickEnable)
+                  00006a68    00000014                   : systick.obj (.text:SysTickIntEnable)
+                  00006a7c    00000014     rtsv7M4_T_le_v4SPD16_eabi.lib : strlen.c.obj (.text:strlen)
+                  00006a90    00000012                                   : wcslen.c.obj (.text:wcslen)
+                  00006aa2    00000002     --HOLE-- [fill = 0]
+                  00006aa4    00000010     sysclk.obj (.text:SysClk_Init)
+                  00006ab4    00000010     driverlib.lib : systick.obj (.text:SysTickPeriodSet)
+                  00006ac4    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
+                  00006ad2    0000000c     BMP388.obj (.text:BMP388_user_delay_ms)
+                  00006ade    00000002     --HOLE-- [fill = 0]
+                  00006ae0    0000000c     driverlib.lib : sysctl.obj (.text:SysCtlResetCauseGet)
+                  00006aec    0000000c     SysFlag.obj (.text:SysFlag_Init)
+                  00006af8    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init)
+                  00006b04    0000000a     driverlib.lib : i2c.obj (.text:I2CMasterEnable)
+                  00006b0e    0000000a     SysTick.obj (.text:SysTick_IntHandler)
+                  00006b18    0000000a     driverlib.lib : uart.obj (.text:UARTIntStatus)
+                  00006b22    0000000a     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outc)
+                  00006b2c    00000008     driverlib.lib : i2c.obj (.text:I2CMasterBusy)
+                  00006b34    00000008                   : i2c.obj (.text:I2CMasterSlaveAddrSet)
+                  00006b3c    00000008                   : uart.obj (.text:UARTIntEnable)
+                  00006b44    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.text:__aeabi_errno_addr)
+                  00006b4c    00000008                                   : memory.c.obj (.text:malloc)
+                  00006b54    00000006     driverlib.lib : gpio.obj (.text:GPIOPinRead)
+                  00006b5a    00000006                   : gpio.obj (.text:GPIOPinWrite)
+                  00006b60    00000006     startup_ccs.obj (.text:ResetISR)
+                  00006b66    00000006     driverlib.lib : sysctl.obj (.text:SysCtlDelay)
+                  00006b6c    00000006                   : uart.obj (.text:UARTClockSourceSet)
+                  00006b72    00000004                   : i2c.obj (.text:I2CMasterControl)
+                  00006b76    00000004                   : i2c.obj (.text:I2CMasterDataGet)
+                  00006b7a    00000004                   : i2c.obj (.text:I2CMasterDataPut)
+                  00006b7e    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  00006b82    00000004                                   : exit.c.obj (.text:abort:abort)
 
-.const     0    00006160    00000308     
-                  00006160    00000101     rtsv7M4_T_le_v4SPD16_eabi.lib : ctype.c.obj (.const:.string:_ctypes_)
-                  00006261    00000003     --HOLE-- [fill = 0]
-                  00006264    00000090     driverlib.lib : gpio.obj (.const:g_pui32GPIOBaseAddrs)
-                  000062f4    0000006c                   : sysctl.obj (.const:g_pui32Xtals)
-                  00006360    00000040                   : uart.obj (.const:g_ppui32UARTIntMap)
-                  000063a0    00000040                   : uart.obj (.const:g_ppui32UARTIntMapSnowflake)
-                  000063e0    00000030     rtsv7M4_T_le_v4SPD16_eabi.lib : e_pow.c.obj (.const:$O1$$)
-                  00006410    00000014     driverlib.lib : interrupt.obj (.const:g_pui32EnRegs)
-                  00006424    00000012     main.obj (.const:.string)
-                  00006436    00000002     --HOLE-- [fill = 0]
-                  00006438    0000000c     main.obj (.const:g_ui32UARTBase)
-                  00006444    0000000c     main.obj (.const:g_ui32UARTInt)
-                  00006450    0000000c     main.obj (.const:g_ui32UARTPeriph)
-                  0000645c    00000008     BMP388.obj (.const:$P$T0$1)
-                  00006464    00000004     main.obj (.const)
+.const     0    00006b88    00000308     
+                  00006b88    00000101     rtsv7M4_T_le_v4SPD16_eabi.lib : ctype.c.obj (.const:.string:_ctypes_)
+                  00006c89    00000003     --HOLE-- [fill = 0]
+                  00006c8c    00000090     driverlib.lib : gpio.obj (.const:g_pui32GPIOBaseAddrs)
+                  00006d1c    0000006c                   : sysctl.obj (.const:g_pui32Xtals)
+                  00006d88    00000040                   : uart.obj (.const:g_ppui32UARTIntMap)
+                  00006dc8    00000040                   : uart.obj (.const:g_ppui32UARTIntMapSnowflake)
+                  00006e08    00000030     rtsv7M4_T_le_v4SPD16_eabi.lib : e_pow.c.obj (.const:$O1$$)
+                  00006e38    00000014     driverlib.lib : interrupt.obj (.const:g_pui32EnRegs)
+                  00006e4c    00000012     main.obj (.const:.string)
+                  00006e5e    00000002     --HOLE-- [fill = 0]
+                  00006e60    0000000c     main.obj (.const:g_ui32UARTBase)
+                  00006e6c    0000000c     main.obj (.const:g_ui32UARTInt)
+                  00006e78    0000000c     main.obj (.const:g_ui32UARTPeriph)
+                  00006e84    00000008     BMP388.obj (.const:$P$T0$1)
+                  00006e8c    00000004     main.obj (.const)
 
-.cinit     0    00006468    00000040     
-                  00006468    0000000c     (__TI_handler_table)
-                  00006474    0000000b     (.cinit..data.load) [load image, compression = lzss]
-                  0000647f    00000001     --HOLE-- [fill = 0]
-                  00006480    00000008     (.cinit..bss.load) [load image, compression = zero_init]
-                  00006488    00000008     (.cinit..vtable.load) [load image, compression = zero_init]
-                  00006490    00000018     (__TI_cinit_table)
+.cinit     0    00006e90    00000058     
+                  00006e90    0000001d     (.cinit..data.load) [load image, compression = lzss]
+                  00006ead    00000003     --HOLE-- [fill = 0]
+                  00006eb0    0000000c     (__TI_handler_table)
+                  00006ebc    00000004     --HOLE-- [fill = 0]
+                  00006ec0    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  00006ec8    00000008     (.cinit..vtable.load) [load image, compression = zero_init]
+                  00006ed0    00000018     (__TI_cinit_table)
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
@@ -252,19 +270,30 @@ section   page    origin      length       input sections
                   20001270    00000010     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.sysmem)
                   20001280    00000ff0     --HOLE--
 
-.bss       0    20002270    00000565     UNINITIALIZED
+.bss       0    20002270    0000057b     UNINITIALIZED
                   20002270    00000400     main.obj (.bss:g_pcUARTTxBuffer)
                   20002670    000000d0     (.common:dev)
                   20002740    00000080     main.obj (.bss:g_pcUARTRxBuffer)
                   200027c0    00000008     main.obj (.bss)
-                  200027c8    00000004     (.common:Obmx160)
-                  200027cc    00000004     (.common:g_uiSysFlags)
-                  200027d0    00000004     (.common:resetCause)
-                  200027d4    00000001     (.common:BMP388_addr)
+                  200027c8    00000004     buzzer.obj (.bss)
+                  200027cc    00000004     (.common:Oaccel)
+                  200027d0    00000004     (.common:Obmx160)
+                  200027d4    00000004     (.common:Ogyro)
+                  200027d8    00000004     (.common:Omagn)
+                  200027dc    00000004     (.common:g_uiSysFlags)
+                  200027e0    00000004     (.common:resetCause)
+                  200027e4    00000002     (.common:buzDuration)
+                  200027e6    00000002     (.common:count)
+                  200027e8    00000002     (.common:pauseTime)
+                  200027ea    00000001     (.common:BMP388_addr)
 
-.data      0    200027d8    00000020     UNINITIALIZED
-                  200027d8    0000001c     main.obj (.data)
-                  200027f4    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.data)
+.data      0    200027ec    0000003b     UNINITIALIZED
+                  200027ec    0000001c     main.obj (.data)
+                  20002808    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.c.obj (.data:$O1$$)
+                  20002810    00000008                                   : memory.c.obj (.data:$O1$$)
+                  20002818    00000008     BMX160.obj (.data)
+                  20002820    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.data)
+                  20002824    00000003     buzzer.obj (.data)
 
 __llvm_prf_cnts 
 *          0    20000000    00000000     UNINITIALIZED
@@ -276,13 +305,13 @@ MODULE SUMMARY
        Module                       code    ro data   rw data
        ------                       ----    -------   -------
     .\
-       main.obj                     3281    58        1192   
+       main.obj                     3329    58        1192   
        startup_ccs.obj              12      620       0      
     +--+----------------------------+-------+---------+---------+
-       Total:                       3293    678       1192   
+       Total:                       3341    678       1192   
                                                              
     .\local_Include\
-       i2c.obj                      1073    0         0      
+       i2c.obj                      1159    0         0      
        uart.obj                     184     0         0      
        SysFlag.obj                  172     0         4      
        onBoardSwitch.obj            148     0         0      
@@ -290,31 +319,37 @@ MODULE SUMMARY
        led.obj                      52      0         0      
        sysclk.obj                   16      0         0      
     +--+----------------------------+-------+---------+---------+
-       Total:                       1763    0         4      
+       Total:                       1849    0         4      
                                                              
     .\local_Include\BMP388\
-       BMP388.obj                   6031    8         209    
+       BMP388.obj                   6067    8         209    
     +--+----------------------------+-------+---------+---------+
-       Total:                       6031    8         209    
+       Total:                       6067    8         209    
                                                              
     .\local_Include\BMX160\
-       BMX160.obj                   647     0         4      
+       BMX160.obj                   2229    0         24     
     +--+----------------------------+-------+---------+---------+
-       Total:                       647     0         4      
+       Total:                       2229    0         24     
+                                                             
+    .\local_Include\BUZZER\
+       buzzer.obj                   396     0         13     
+    +--+----------------------------+-------+---------+---------+
+       Total:                       396     0         13     
                                                              
     C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/ccs/Debug/driverlib.lib
        interrupt.obj                156     20        620    
        sysctl.obj                   670     108       0      
-       gpio.obj                     582     144       0      
+       gpio.obj                     588     144       0      
        uart.obj                     112     128       0      
        i2c.obj                      136     0         0      
        systick.obj                  84      0         0      
     +--+----------------------------+-------+---------+---------+
-       Total:                       1740    400       620    
+       Total:                       1746    400       620    
                                                              
     C:\ti\ccs1040\ccs\tools\compiler\ti-cgt-arm_20.2.5.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
        _printfi.c.obj               4851    0         0      
        e_pow.c.obj                  2512    48        0      
+       memory.c.obj                 444     0         8      
        fd_add_t2.asm.obj            438     0         0      
        e_sqrt.c.obj                 344     0         0      
        fd_div_t2.asm.obj            310     0         0      
@@ -346,30 +381,31 @@ MODULE SUMMARY
        copy_decompress_none.c.obj   14      0         0      
        copy_zero_init.c.obj         12      0         0      
        errno.c.obj                  8       0         4      
+       _lock.c.obj                  2       0         8      
        exit.c.obj                   4       0         0      
        pre_init.c.obj               4       0         0      
        div0.asm.obj                 2       0         0      
     +--+----------------------------+-------+---------+---------+
-       Total:                       10795   305       4      
+       Total:                       11241   305       20     
                                                              
        Heap:                        0       0         4096   
        Stack:                       0       0         4096   
-       Linker Generated:            0       63        0      
+       Linker Generated:            0       81        0      
     +--+----------------------------+-------+---------+---------+
-       Grand Total:                 24269   1454      10225  
+       Grand Total:                 26869   1472      10274  
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00006490 records: 3, size/record: 8, table size: 24
-	.data: load addr=00006474, load size=0000000b bytes, run addr=200027d8, run size=00000020 bytes, compression=lzss
-	.bss: load addr=00006480, load size=00000008 bytes, run addr=20002270, run size=00000565 bytes, compression=zero_init
-	.vtable: load addr=00006488, load size=00000008 bytes, run addr=20000000, run size=0000026c bytes, compression=zero_init
+__TI_cinit_table @ 00006ed0 records: 3, size/record: 8, table size: 24
+	.data: load addr=00006e90, load size=0000001d bytes, run addr=200027ec, run size=0000003b bytes, compression=lzss
+	.bss: load addr=00006ec0, load size=00000008 bytes, run addr=20002270, run size=0000057b bytes, compression=zero_init
+	.vtable: load addr=00006ec8, load size=00000008 bytes, run addr=20000000, run size=0000026c bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00006468 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00006eb0 records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_lzss
 	index: 2, handler: __TI_decompress_none
@@ -379,190 +415,216 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                          
 -------   ----                          
-00004a45  BMP388_Init                   
-200027d4  BMP388_addr                   
-0000250d  BMP388_begin                  
-000045e9  BMP388_compensate_data        
-00002001  BMP388_compensate_pressure    
-00004fc1  BMP388_compensate_temperature 
-00004699  BMP388_get_calib_data         
-00004ad1  BMP388_get_regs               
-00004071  BMP388_get_sensor_data        
-000019e1  BMP388_parse_calib_data       
-0000510b  BMP388_parse_sensor_data      
-00004d69  BMP388_readAltitude           
-00004e61  BMP388_readCalibratedAltitude 
-00005381  BMP388_readPressure           
-00004f51  BMP388_readSeaLevel           
-000052b5  BMP388_readTemperature        
-00005ae5  BMP388_read_all_regs          
-00002e95  BMP388_reset                  
-00003035  BMP388_set_config             
-00005f71  BMP388_set_i2c_addr           
-00004745  BMP388_set_regs               
-00002b25  BMP388_showData               
-000060bb  BMP388_user_delay_ms          
-00002779  BMP388_user_i2c_read          
-00003c1d  BMP388_user_i2c_write         
-000055b7  BMX160_defaultParamSettg      
-0000446d  BMX160_setMagnConf            
-0000491d  BMX160_softReset              
-00005c01  BMX160_softResetWorker        
-000058b1  BMX160_wakeUp                 
-000053e5  BMX160_writeBmxReg            
-0000615d  C$$EXIT                       
-00005dd3  GPIODirModeSet                
-0000335d  GPIOPadConfigSet              
-0000565d  GPIOPinConfigure              
-00006135  GPIOPinRead                   
-00005f3d  GPIOPinTypeGPIOOutput         
-00005fb9  GPIOPinTypeI2C                
-00005fcf  GPIOPinTypeI2CSCL             
-00005fe5  GPIOPinTypeUART               
-00004ed9  I2C0_Init                     
-00006115  I2CMasterBusy                 
-0000614d  I2CMasterControl              
-00006151  I2CMasterDataGet              
-00006155  I2CMasterDataPut              
-000060ed  I2CMasterEnable               
-00005ffb  I2CMasterErr                  
-000056a9  I2CMasterInitExpClk           
-0000611d  I2CMasterSlaveAddrSet         
-000039cd  I2C_AddressBruteForcer        
-00005179  I2C_ReadByte                  
-0000417d  I2C_writeSingleReg            
-000051e5  IntEnable                     
-00005c39  IntRegister                   
-00005c6d  LED_LEDInit                   
-200027c8  Obmx160                       
-000059b5  PCF8574A_Init                 
-00004c65  PCF8574A_Read                 
-000054ad  PCF8574A_Write                
-0000613b  ResetISR                      
-000056f5  SWITCH_Init                   
-00005e59  SWITCH_SW1_Pressed            
-00005e7d  SWITCH_SW2_Pressed            
-00005741  SYSTICK_Delay                 
-0000608d  SysClk_Init                   
-00003d35  SysCtlClockGet                
-00004379  SysCtlClockSet                
-00006141  SysCtlDelay                   
-00005ca1  SysCtlPeripheralEnable        
-00005b21  SysCtlPeripheralReady         
-00006029  SysCtlResetCauseClear         
-000060c9  SysCtlResetCauseGet           
-00005b59  SysFlag_Check                 
-00005cd5  SysFlag_Clear                 
-000060d5  SysFlag_Init                  
-00005d09  SysFlag_Set                   
-0000603d  SysTickEnable                 
-00006051  SysTickIntEnable              
-00005f05  SysTickIntRegister            
-0000609d  SysTickPeriodSet              
-00005ec5  SysTick_Init                  
-000060f7  SysTick_IntHandler            
-00005a6d  SystemInitialize              
-00004ce9  UART0_STDIO_Init              
-00005b91  UART0_STDIO_IntHandler        
-00006147  UARTClockSourceSet            
-00005e2d  UARTEchoSet                   
-00005d3d  UARTFlushRx                   
-0000578d  UARTFlushTx                   
-00006125  UARTIntEnable                 
-00005f89  UARTIntRegister               
-00006101  UARTIntStatus                 
-0000375d  UARTStdioConfig               
-000031d5  UARTStdioIntHandler           
-00005aa9  UARTgetc                      
-00005ea1  UARTprintf                    
+00005135  BMP388_Init                   
+200027ea  BMP388_addr                   
+00002535  BMP388_begin                  
+00004e01  BMP388_compensate_data        
+00002029  BMP388_compensate_pressure    
+00005851  BMP388_compensate_temperature 
+00004eb1  BMP388_get_calib_data         
+000052f1  BMP388_get_regs               
+000044dd  BMP388_get_sensor_data        
+00001d0d  BMP388_parse_calib_data       
+0000599b  BMP388_parse_sensor_data      
+00005589  BMP388_readAltitude           
+00005681  BMP388_readCalibratedAltitude 
+00005c11  BMP388_readPressure           
+00005771  BMP388_readSeaLevel           
+00005b45  BMP388_readTemperature        
+0000640d  BMP388_read_all_regs          
+00003301  BMP388_reset                  
+000034a1  BMP388_set_config             
+00006989  BMP388_set_i2c_addr           
+00004f5d  BMP388_set_regs               
+00002da5  BMP388_showData               
+00006ad3  BMP388_user_delay_ms          
+00002bc9  BMP388_user_i2c_read          
+00004089  BMP388_user_i2c_write         
+000047e9  BMX160_Init                   
+00004c8d  BMX160_begin                  
+00005e9d  BMX160_defaultParamSettg      
+000027a1  BMX160_getAllData             
+00006809  BMX160_readReg                
+0000682f  BMX160_scan                   
+00004bc5  BMX160_setMagnConf            
+000029d1  BMX160_showData               
+000051c9  BMX160_softReset              
+00006529  BMX160_softResetWorker        
+000061d9  BMX160_wakeUp                 
+00005c75  BMX160_writeBmxReg            
+00006731  BUZZ_BUZZ                     
+00006359  BUZZ_BUZZER                   
+00004ad5  BUZZ_SM                       
+00006b83  C$$EXIT                       
+0000675d  GPIODirModeSet                
+000037c9  GPIOPadConfigSet              
+00005f41  GPIOPinConfigure              
+00006b55  GPIOPinRead                   
+00006955  GPIOPinTypeGPIOOutput         
+000069d1  GPIOPinTypeI2C                
+000069e7  GPIOPinTypeI2CSCL             
+000069fd  GPIOPinTypeUART               
+00006b5b  GPIOPinWrite                  
+000056f9  I2C0_Init                     
+00006b2d  I2CMasterBusy                 
+00006b73  I2CMasterControl              
+00006b77  I2CMasterDataGet              
+00006b7b  I2CMasterDataPut              
+00006b05  I2CMasterEnable               
+00006a13  I2CMasterErr                  
+00005f8d  I2CMasterInitExpClk           
+00006b35  I2CMasterSlaveAddrSet         
+00003e39  I2C_AddressBruteForcer        
+00005a09  I2C_ReadByte                  
+00005d9d  I2C_readReg                   
+000045e9  I2C_writeSingleReg            
+00005a75  IntEnable                     
+00006561  IntRegister                   
+00006595  LED_LEDInit                   
+200027cc  Oaccel                        
+200027d0  Obmx160                       
+200027d4  Ogyro                         
+200027d8  Omagn                         
+000062dd  PCF8574A_Init                 
+00005485  PCF8574A_Read                 
+00005d3d  PCF8574A_Write                
+00006b61  ResetISR                      
+00005fd9  SWITCH_Init                   
+00006855  SWITCH_SW1_Pressed            
+00006879  SWITCH_SW2_Pressed            
+00006025  SYSTICK_Delay                 
+00006aa5  SysClk_Init                   
+000041a1  SysCtlClockGet                
+000049e1  SysCtlClockSet                
+00006b67  SysCtlDelay                   
+000065c9  SysCtlPeripheralEnable        
+00006449  SysCtlPeripheralReady         
+00006a41  SysCtlResetCauseClear         
+00006ae1  SysCtlResetCauseGet           
+00006481  SysFlag_Check                 
+000065fd  SysFlag_Clear                 
+00006aed  SysFlag_Init                  
+00006631  SysFlag_Set                   
+00006a55  SysTickEnable                 
+00006a69  SysTickIntEnable              
+00006901  SysTickIntRegister            
+00006ab5  SysTickPeriodSet              
+000068c1  SysTick_Init                  
+00006b0f  SysTick_IntHandler            
+00006151  SystemInitialize              
+00005509  UART0_STDIO_Init              
+000064b9  UART0_STDIO_IntHandler        
+00006b6d  UARTClockSourceSet            
+000067b5  UARTEchoSet                   
+00006665  UARTFlushRx                   
+00006071  UARTFlushTx                   
+00006b3d  UARTIntEnable                 
+000069a1  UARTIntRegister               
+00006b19  UARTIntStatus                 
+00003bc9  UARTStdioConfig               
+00003641  UARTStdioIntHandler           
+000063d1  UARTgetc                      
+0000689d  UARTprintf                    
 0000168d  UARTvprintf                   
-00003e4d  UARTwrite                     
+000042b9  UARTwrite                     
 20001270  __STACK_END                   
 00001000  __STACK_SIZE                  
 20000470  __STACK_TOP                   
 00001000  __SYSMEM_SIZE                 
-00006490  __TI_CINIT_Base               
-000064a8  __TI_CINIT_Limit              
-00006468  __TI_Handler_Table_Base       
-00006474  __TI_Handler_Table_Limit      
-0000586d  __TI_auto_init_nobinit_nopinit
-0000524d  __TI_decompress_lzss          
-000060ad  __TI_decompress_none          
-00005563  __TI_ltoa                     
+00006ed0  __TI_CINIT_Base               
+00006ee8  __TI_CINIT_Limit              
+00006eb0  __TI_Handler_Table_Base       
+00006ebc  __TI_Handler_Table_Limit      
+00006195  __TI_auto_init_nobinit_nopinit
+00005add  __TI_decompress_lzss          
+00006ac5  __TI_decompress_none          
+00005e49  __TI_ltoa                     
 ffffffff  __TI_pprof_out_hndl           
 0000026d  __TI_printfi                  
 ffffffff  __TI_prof_data_size           
 ffffffff  __TI_prof_data_start          
 00000000  __TI_static_base__            
-000060e1  __TI_zero_init                
-00004b59  __aeabi_cdcmpeq               
-00004b59  __aeabi_cdcmple               
-00004bdf  __aeabi_cdrcmple              
-0000509d  __aeabi_d2f                   
-00005825  __aeabi_d2iz                  
-00002ce7  __aeabi_dadd                  
-00003895  __aeabi_ddiv                  
-0000427d  __aeabi_dmul                  
-00002cdd  __aeabi_dsub                  
-0000612d  __aeabi_errno_addr            
-00005bc9  __aeabi_f2d                   
-00005da5  __aeabi_i2d                   
-000039cb  __aeabi_idiv0                 
-000039cb  __aeabi_ldiv0                 
-00004de5  __aeabi_memclr                
-00004de5  __aeabi_memclr4               
-00004de5  __aeabi_memclr8               
-000047e9  __aeabi_memcpy                
-000047e9  __aeabi_memcpy4               
-000047e9  __aeabi_memcpy8               
-00004de7  __aeabi_memset                
-00004de7  __aeabi_memset4               
-00004de7  __aeabi_memset8               
-00005ee5  __aeabi_ui2d                  
-00005935  __aeabi_uidiv                 
-00005935  __aeabi_uidivmod              
-00004885  __aeabi_uldivmod              
+00006af9  __TI_zero_init                
+00005379  __aeabi_cdcmpeq               
+00005379  __aeabi_cdcmple               
+000053ff  __aeabi_cdrcmple              
+0000592d  __aeabi_d2f                   
+00006109  __aeabi_d2iz                  
+00003153  __aeabi_dadd                  
+00003d01  __aeabi_ddiv                  
+000048e5  __aeabi_dmul                  
+00003149  __aeabi_dsub                  
+00006b45  __aeabi_errno_addr            
+000064f1  __aeabi_f2d                   
+00006701  __aeabi_i2d                   
+00004c8b  __aeabi_idiv0                 
+00004c8b  __aeabi_ldiv0                 
+00005605  __aeabi_memclr                
+00005605  __aeabi_memclr4               
+00005605  __aeabi_memclr8               
+00005001  __aeabi_memcpy                
+00005001  __aeabi_memcpy4               
+00005001  __aeabi_memcpy8               
+00005607  __aeabi_memset                
+00005607  __aeabi_memset4               
+00005607  __aeabi_memset8               
+000068e1  __aeabi_ui2d                  
+0000625d  __aeabi_uidiv                 
+0000625d  __aeabi_uidivmod              
+0000509d  __aeabi_uldivmod              
 ffffffff  __binit__                     
 ffffffff  __c_args__                    
-00005449  __error__                     
+00005cd9  __error__                     
 UNDEFED   __mpu_init                    
 20000270  __stack                       
 20000000  __start___llvm_prf_cnts       
 20000000  __stop___llvm_prf_cnts        
-00005d71  _c_int00_noargs               
-00006160  _ctypes_                      
+00006699  _c_int00_noargs               
+00006b88  _ctypes_                      
+20002808  _lock                         
+00003e37  _nop                          
 20001270  _sys_memory                   
 UNDEFED   _system_post_cinit            
-00006159  _system_pre_init              
-0000615d  abort                         
-000057d9  atoi                          
+00006b7f  _system_pre_init              
+2000280c  _unlock                       
+00006b83  abort                         
+20002818  accelRange                    
+000046e9  aligned_alloc                 
+000060bd  atoi                          
 ffffffff  binit                         
-00005f57  copysign                      
-00005f57  copysignl                     
+200027e4  buzDuration                   
+0000696f  copysign                      
+0000696f  copysignl                     
+200027e6  count                         
 20002670  dev                           
-200027f4  errno                         
-0000531d  frexp                         
-0000531d  frexpl                        
+20002820  errno                         
+00005bad  frexp                         
+00005bad  frexpl                        
 20000000  g_pfnRAMVectors               
 00000000  g_pfnVectors                  
-200027cc  g_uiSysFlags                  
-00003f61  ldexp                         
-00003f61  ldexpl                        
-00001cfd  main                          
-00005f21  memccpy                       
-000047e9  memcpy                        
-00004ded  memset                        
+200027dc  g_uiSysFlags                  
+2000281c  gyroRange                     
+000066cd  init_Buzzer                   
+000043cd  ldexp                         
+000043cd  ldexpl                        
+000019e1  main                          
+00006b4d  malloc                        
+000046e9  memalign                      
+00006939  memccpy                       
+00005001  memcpy                        
+0000560d  memset                        
+200027e8  pauseTime                     
 00000cbd  pow                           
 00000cbd  powl                          
-200027d0  resetCause                    
-00003f61  scalbn                        
-00003f61  scalbnl                       
-00005975  sprintf                       
-000034c9  sqrt                          
-000034c9  sqrtl                         
-00006011  strchr                        
-00006065  strlen                        
-00006079  wcslen                        
+200027e0  resetCause                    
+000043cd  scalbn                        
+000043cd  scalbnl                       
+0000629d  sprintf                       
+00003935  sqrt                          
+00003935  sqrtl                         
+00006a29  strchr                        
+00006a7d  strlen                        
+00006a91  wcslen                        
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -577,161 +639,177 @@ address   name
 00001000  __STACK_SIZE                  
 00001000  __SYSMEM_SIZE                 
 0000168d  UARTvprintf                   
-000019e1  BMP388_parse_calib_data       
-00001cfd  main                          
-00002001  BMP388_compensate_pressure    
-0000250d  BMP388_begin                  
-00002779  BMP388_user_i2c_read          
-00002b25  BMP388_showData               
-00002cdd  __aeabi_dsub                  
-00002ce7  __aeabi_dadd                  
-00002e95  BMP388_reset                  
-00003035  BMP388_set_config             
-000031d5  UARTStdioIntHandler           
-0000335d  GPIOPadConfigSet              
-000034c9  sqrt                          
-000034c9  sqrtl                         
-0000375d  UARTStdioConfig               
-00003895  __aeabi_ddiv                  
-000039cb  __aeabi_idiv0                 
-000039cb  __aeabi_ldiv0                 
-000039cd  I2C_AddressBruteForcer        
-00003c1d  BMP388_user_i2c_write         
-00003d35  SysCtlClockGet                
-00003e4d  UARTwrite                     
-00003f61  ldexp                         
-00003f61  ldexpl                        
-00003f61  scalbn                        
-00003f61  scalbnl                       
-00004071  BMP388_get_sensor_data        
-0000417d  I2C_writeSingleReg            
-0000427d  __aeabi_dmul                  
-00004379  SysCtlClockSet                
-0000446d  BMX160_setMagnConf            
-000045e9  BMP388_compensate_data        
-00004699  BMP388_get_calib_data         
-00004745  BMP388_set_regs               
-000047e9  __aeabi_memcpy                
-000047e9  __aeabi_memcpy4               
-000047e9  __aeabi_memcpy8               
-000047e9  memcpy                        
-00004885  __aeabi_uldivmod              
-0000491d  BMX160_softReset              
-00004a45  BMP388_Init                   
-00004ad1  BMP388_get_regs               
-00004b59  __aeabi_cdcmpeq               
-00004b59  __aeabi_cdcmple               
-00004bdf  __aeabi_cdrcmple              
-00004c65  PCF8574A_Read                 
-00004ce9  UART0_STDIO_Init              
-00004d69  BMP388_readAltitude           
-00004de5  __aeabi_memclr                
-00004de5  __aeabi_memclr4               
-00004de5  __aeabi_memclr8               
-00004de7  __aeabi_memset                
-00004de7  __aeabi_memset4               
-00004de7  __aeabi_memset8               
-00004ded  memset                        
-00004e61  BMP388_readCalibratedAltitude 
-00004ed9  I2C0_Init                     
-00004f51  BMP388_readSeaLevel           
-00004fc1  BMP388_compensate_temperature 
-0000509d  __aeabi_d2f                   
-0000510b  BMP388_parse_sensor_data      
-00005179  I2C_ReadByte                  
-000051e5  IntEnable                     
-0000524d  __TI_decompress_lzss          
-000052b5  BMP388_readTemperature        
-0000531d  frexp                         
-0000531d  frexpl                        
-00005381  BMP388_readPressure           
-000053e5  BMX160_writeBmxReg            
-00005449  __error__                     
-000054ad  PCF8574A_Write                
-00005563  __TI_ltoa                     
-000055b7  BMX160_defaultParamSettg      
-0000565d  GPIOPinConfigure              
-000056a9  I2CMasterInitExpClk           
-000056f5  SWITCH_Init                   
-00005741  SYSTICK_Delay                 
-0000578d  UARTFlushTx                   
-000057d9  atoi                          
-00005825  __aeabi_d2iz                  
-0000586d  __TI_auto_init_nobinit_nopinit
-000058b1  BMX160_wakeUp                 
-00005935  __aeabi_uidiv                 
-00005935  __aeabi_uidivmod              
-00005975  sprintf                       
-000059b5  PCF8574A_Init                 
-00005a6d  SystemInitialize              
-00005aa9  UARTgetc                      
-00005ae5  BMP388_read_all_regs          
-00005b21  SysCtlPeripheralReady         
-00005b59  SysFlag_Check                 
-00005b91  UART0_STDIO_IntHandler        
-00005bc9  __aeabi_f2d                   
-00005c01  BMX160_softResetWorker        
-00005c39  IntRegister                   
-00005c6d  LED_LEDInit                   
-00005ca1  SysCtlPeripheralEnable        
-00005cd5  SysFlag_Clear                 
-00005d09  SysFlag_Set                   
-00005d3d  UARTFlushRx                   
-00005d71  _c_int00_noargs               
-00005da5  __aeabi_i2d                   
-00005dd3  GPIODirModeSet                
-00005e2d  UARTEchoSet                   
-00005e59  SWITCH_SW1_Pressed            
-00005e7d  SWITCH_SW2_Pressed            
-00005ea1  UARTprintf                    
-00005ec5  SysTick_Init                  
-00005ee5  __aeabi_ui2d                  
-00005f05  SysTickIntRegister            
-00005f21  memccpy                       
-00005f3d  GPIOPinTypeGPIOOutput         
-00005f57  copysign                      
-00005f57  copysignl                     
-00005f71  BMP388_set_i2c_addr           
-00005f89  UARTIntRegister               
-00005fb9  GPIOPinTypeI2C                
-00005fcf  GPIOPinTypeI2CSCL             
-00005fe5  GPIOPinTypeUART               
-00005ffb  I2CMasterErr                  
-00006011  strchr                        
-00006029  SysCtlResetCauseClear         
-0000603d  SysTickEnable                 
-00006051  SysTickIntEnable              
-00006065  strlen                        
-00006079  wcslen                        
-0000608d  SysClk_Init                   
-0000609d  SysTickPeriodSet              
-000060ad  __TI_decompress_none          
-000060bb  BMP388_user_delay_ms          
-000060c9  SysCtlResetCauseGet           
-000060d5  SysFlag_Init                  
-000060e1  __TI_zero_init                
-000060ed  I2CMasterEnable               
-000060f7  SysTick_IntHandler            
-00006101  UARTIntStatus                 
-00006115  I2CMasterBusy                 
-0000611d  I2CMasterSlaveAddrSet         
-00006125  UARTIntEnable                 
-0000612d  __aeabi_errno_addr            
-00006135  GPIOPinRead                   
-0000613b  ResetISR                      
-00006141  SysCtlDelay                   
-00006147  UARTClockSourceSet            
-0000614d  I2CMasterControl              
-00006151  I2CMasterDataGet              
-00006155  I2CMasterDataPut              
-00006159  _system_pre_init              
-0000615d  C$$EXIT                       
-0000615d  abort                         
-00006160  _ctypes_                      
-00006468  __TI_Handler_Table_Base       
-00006474  __TI_Handler_Table_Limit      
-00006490  __TI_CINIT_Base               
-000064a8  __TI_CINIT_Limit              
+000019e1  main                          
+00001d0d  BMP388_parse_calib_data       
+00002029  BMP388_compensate_pressure    
+00002535  BMP388_begin                  
+000027a1  BMX160_getAllData             
+000029d1  BMX160_showData               
+00002bc9  BMP388_user_i2c_read          
+00002da5  BMP388_showData               
+00003149  __aeabi_dsub                  
+00003153  __aeabi_dadd                  
+00003301  BMP388_reset                  
+000034a1  BMP388_set_config             
+00003641  UARTStdioIntHandler           
+000037c9  GPIOPadConfigSet              
+00003935  sqrt                          
+00003935  sqrtl                         
+00003bc9  UARTStdioConfig               
+00003d01  __aeabi_ddiv                  
+00003e37  _nop                          
+00003e39  I2C_AddressBruteForcer        
+00004089  BMP388_user_i2c_write         
+000041a1  SysCtlClockGet                
+000042b9  UARTwrite                     
+000043cd  ldexp                         
+000043cd  ldexpl                        
+000043cd  scalbn                        
+000043cd  scalbnl                       
+000044dd  BMP388_get_sensor_data        
+000045e9  I2C_writeSingleReg            
+000046e9  aligned_alloc                 
+000046e9  memalign                      
+000047e9  BMX160_Init                   
+000048e5  __aeabi_dmul                  
+000049e1  SysCtlClockSet                
+00004ad5  BUZZ_SM                       
+00004bc5  BMX160_setMagnConf            
+00004c8b  __aeabi_idiv0                 
+00004c8b  __aeabi_ldiv0                 
+00004c8d  BMX160_begin                  
+00004e01  BMP388_compensate_data        
+00004eb1  BMP388_get_calib_data         
+00004f5d  BMP388_set_regs               
+00005001  __aeabi_memcpy                
+00005001  __aeabi_memcpy4               
+00005001  __aeabi_memcpy8               
+00005001  memcpy                        
+0000509d  __aeabi_uldivmod              
+00005135  BMP388_Init                   
+000051c9  BMX160_softReset              
+000052f1  BMP388_get_regs               
+00005379  __aeabi_cdcmpeq               
+00005379  __aeabi_cdcmple               
+000053ff  __aeabi_cdrcmple              
+00005485  PCF8574A_Read                 
+00005509  UART0_STDIO_Init              
+00005589  BMP388_readAltitude           
+00005605  __aeabi_memclr                
+00005605  __aeabi_memclr4               
+00005605  __aeabi_memclr8               
+00005607  __aeabi_memset                
+00005607  __aeabi_memset4               
+00005607  __aeabi_memset8               
+0000560d  memset                        
+00005681  BMP388_readCalibratedAltitude 
+000056f9  I2C0_Init                     
+00005771  BMP388_readSeaLevel           
+00005851  BMP388_compensate_temperature 
+0000592d  __aeabi_d2f                   
+0000599b  BMP388_parse_sensor_data      
+00005a09  I2C_ReadByte                  
+00005a75  IntEnable                     
+00005add  __TI_decompress_lzss          
+00005b45  BMP388_readTemperature        
+00005bad  frexp                         
+00005bad  frexpl                        
+00005c11  BMP388_readPressure           
+00005c75  BMX160_writeBmxReg            
+00005cd9  __error__                     
+00005d3d  PCF8574A_Write                
+00005d9d  I2C_readReg                   
+00005e49  __TI_ltoa                     
+00005e9d  BMX160_defaultParamSettg      
+00005f41  GPIOPinConfigure              
+00005f8d  I2CMasterInitExpClk           
+00005fd9  SWITCH_Init                   
+00006025  SYSTICK_Delay                 
+00006071  UARTFlushTx                   
+000060bd  atoi                          
+00006109  __aeabi_d2iz                  
+00006151  SystemInitialize              
+00006195  __TI_auto_init_nobinit_nopinit
+000061d9  BMX160_wakeUp                 
+0000625d  __aeabi_uidiv                 
+0000625d  __aeabi_uidivmod              
+0000629d  sprintf                       
+000062dd  PCF8574A_Init                 
+00006359  BUZZ_BUZZER                   
+000063d1  UARTgetc                      
+0000640d  BMP388_read_all_regs          
+00006449  SysCtlPeripheralReady         
+00006481  SysFlag_Check                 
+000064b9  UART0_STDIO_IntHandler        
+000064f1  __aeabi_f2d                   
+00006529  BMX160_softResetWorker        
+00006561  IntRegister                   
+00006595  LED_LEDInit                   
+000065c9  SysCtlPeripheralEnable        
+000065fd  SysFlag_Clear                 
+00006631  SysFlag_Set                   
+00006665  UARTFlushRx                   
+00006699  _c_int00_noargs               
+000066cd  init_Buzzer                   
+00006701  __aeabi_i2d                   
+00006731  BUZZ_BUZZ                     
+0000675d  GPIODirModeSet                
+000067b5  UARTEchoSet                   
+00006809  BMX160_readReg                
+0000682f  BMX160_scan                   
+00006855  SWITCH_SW1_Pressed            
+00006879  SWITCH_SW2_Pressed            
+0000689d  UARTprintf                    
+000068c1  SysTick_Init                  
+000068e1  __aeabi_ui2d                  
+00006901  SysTickIntRegister            
+00006939  memccpy                       
+00006955  GPIOPinTypeGPIOOutput         
+0000696f  copysign                      
+0000696f  copysignl                     
+00006989  BMP388_set_i2c_addr           
+000069a1  UARTIntRegister               
+000069d1  GPIOPinTypeI2C                
+000069e7  GPIOPinTypeI2CSCL             
+000069fd  GPIOPinTypeUART               
+00006a13  I2CMasterErr                  
+00006a29  strchr                        
+00006a41  SysCtlResetCauseClear         
+00006a55  SysTickEnable                 
+00006a69  SysTickIntEnable              
+00006a7d  strlen                        
+00006a91  wcslen                        
+00006aa5  SysClk_Init                   
+00006ab5  SysTickPeriodSet              
+00006ac5  __TI_decompress_none          
+00006ad3  BMP388_user_delay_ms          
+00006ae1  SysCtlResetCauseGet           
+00006aed  SysFlag_Init                  
+00006af9  __TI_zero_init                
+00006b05  I2CMasterEnable               
+00006b0f  SysTick_IntHandler            
+00006b19  UARTIntStatus                 
+00006b2d  I2CMasterBusy                 
+00006b35  I2CMasterSlaveAddrSet         
+00006b3d  UARTIntEnable                 
+00006b45  __aeabi_errno_addr            
+00006b4d  malloc                        
+00006b55  GPIOPinRead                   
+00006b5b  GPIOPinWrite                  
+00006b61  ResetISR                      
+00006b67  SysCtlDelay                   
+00006b6d  UARTClockSourceSet            
+00006b73  I2CMasterControl              
+00006b77  I2CMasterDataGet              
+00006b7b  I2CMasterDataPut              
+00006b7f  _system_pre_init              
+00006b83  C$$EXIT                       
+00006b83  abort                         
+00006b88  _ctypes_                      
+00006eb0  __TI_Handler_Table_Base       
+00006ebc  __TI_Handler_Table_Limit      
+00006ed0  __TI_CINIT_Base               
+00006ee8  __TI_CINIT_Limit              
 20000000  __start___llvm_prf_cnts       
 20000000  __stop___llvm_prf_cnts        
 20000000  g_pfnRAMVectors               
@@ -740,11 +818,21 @@ address   name
 20001270  __STACK_END                   
 20001270  _sys_memory                   
 20002670  dev                           
-200027c8  Obmx160                       
-200027cc  g_uiSysFlags                  
-200027d0  resetCause                    
-200027d4  BMP388_addr                   
-200027f4  errno                         
+200027cc  Oaccel                        
+200027d0  Obmx160                       
+200027d4  Ogyro                         
+200027d8  Omagn                         
+200027dc  g_uiSysFlags                  
+200027e0  resetCause                    
+200027e4  buzDuration                   
+200027e6  count                         
+200027e8  pauseTime                     
+200027ea  BMP388_addr                   
+20002808  _lock                         
+2000280c  _unlock                       
+20002818  accelRange                    
+2000281c  gyroRange                     
+20002820  errno                         
 ffffffff  __TI_pprof_out_hndl           
 ffffffff  __TI_prof_data_size           
 ffffffff  __TI_prof_data_start          
@@ -754,4 +842,4 @@ ffffffff  binit
 UNDEFED   __mpu_init                    
 UNDEFED   _system_post_cinit            
 
-[184 symbols]
+[210 symbols]

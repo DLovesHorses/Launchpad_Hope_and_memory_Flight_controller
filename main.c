@@ -22,10 +22,9 @@
 #include "local_include/i2c.h"
 
 //#include "local_include/MPU9250.h"
-//#include "local_include/BUZZER/buzzer.h"
+#include "local_include/BUZZER/buzzer.h"
 #include "local_include/BMX160/BMX160.h"
 #include "local_include/BMP388/BMP388.h"
-
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -68,8 +67,8 @@ void SystemInitialize(void)
 
     PCF8574A_Init();
     // MPU9250_Init();
-    // BMX160_Init();
-    // init_Buzzer();
+    BMX160_Init();
+    init_Buzzer();
     BMP388_Init();
 
 }
@@ -97,10 +96,12 @@ int main(void)
             // systick is expired
             SysFlag_Clear(SYSFLAG_SYS_TICK);
 
+            BUZZ_SM(BUZZ_SM_CALLED_FROM_MAIN);
+
             static uint16_t sensorDataSampleTimeCounter = 0;
             if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
-                //BMX160_showData();
+                BMX160_showData();
                 BMP388_showData();
                 sensorDataSampleTimeCounter = 0;
             }
@@ -271,14 +272,15 @@ int main(void)
 
             if (SWITCH_SW1_Pressed())
             {
-
+                //BUZZ_BUZZ(ON);
+                BUZZ_BUZZER(BUZZ_DUR_MEDIUM, BUZZ_REP_TIME_3, BUZZ_PAUSE_TIME_1000);
             }
 
             if (SWITCH_SW2_Pressed())
             {
-
+                //BUZZ_BUZZ(OFF);
+                BUZZ_BUZZER(BUZZ_DUR_LONG_LONG, BUZZ_REP_TIME_5, BUZZ_PAUSE_TIME_500);
             }
-
 
         }
         else

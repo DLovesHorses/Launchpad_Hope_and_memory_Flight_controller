@@ -48,6 +48,8 @@ main.obj: ../local_include/uart.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 main.obj: ../local_include/i2c.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
+main.obj: ../local_include/BUZZER/buzzer.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
 main.obj: ../local_include/BMX160/BMX160.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/led.h
@@ -170,6 +172,10 @@ C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/
 ../local_include/i2c.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
+
+../local_include/BUZZER/buzzer.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
 
 ../local_include/BMX160/BMX160.h:
 

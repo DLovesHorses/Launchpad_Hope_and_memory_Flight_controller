@@ -14,6 +14,9 @@
 #include "local_Include/i2c.h"
 
 // global variables and externs
+uint16_t buzDuration;
+uint16_t count;
+uint16_t pauseTime;
 
 /*
  *
@@ -38,15 +41,14 @@ void init_Buzzer(void)
     {
     }
 
-    GPIOPadConfigSet(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_STRENGTH_4MA, GPIO_PIN_TYPE_STD);
+    GPIOPadConfigSet(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_STRENGTH_4MA,
+    GPIO_PIN_TYPE_STD);
     // configure PC7 as output pin
     GPIOPinTypeGPIOOutput(GPIO_PORTC_BASE, GPIO_PIN_7);
 
     return;
 
 }
-
-
 
 /*
  *
@@ -60,15 +62,150 @@ void init_Buzzer(void)
  *
  *
  */
-void BUZZ_BUZZ(bool buzzTone){
+void BUZZ_BUZZ(bool buzzTone)
+{
 
-    if(buzzTone == ON){
+    if (buzzTone == ON)
+    {
         // turn on Buzzer.
         GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_PIN_7);
     }
-    else{
+    else
+    {
         GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, OFF);
     }
 
 }
-// Function definitions.
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void BUZZ_BUZZER(uint16_t duration, uint8_t repTime, uint16_t pauseIntervalTime)
+{
+
+    buzDuration     = duration;           // duration of Buzz
+    count           = repTime;            // number of time to repeat
+    pauseTime       = pauseIntervalTime;  // number of ms to wait after each BUZZ.
+
+    BUZZ_SM(BUZZ_SM_CALLED_FROM_BUZZ);
+
+}
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void BUZZ_SM(bool callerID)
+{
+
+    static uint8_t curState = BUZZ_OFF;
+    static uint8_t nextState = BUZZ_OFF;
+    static uint8_t stepCount = 0;
+
+    static uint16_t on_time;
+    static uint16_t pause_time;
+
+    if (callerID == BUZZ_SM_CALLED_FROM_MAIN)
+    {
+        // decrement pauseTime by 1
+
+    }
+
+    if (callerID == BUZZ_SM_CALLED_FROM_BUZZ)
+    {
+
+        curState = BUZZ_ON;
+        stepCount = count - 1;
+
+    }
+
+    switch (nextState)
+    {
+
+    case BUZZ_OFF:
+    {
+        // check if the SM needs to transition to BUZ_ON
+        if (curState == BUZZ_ON)
+        {
+            nextState = BUZZ_ON;
+            on_time = buzDuration;
+            BUZZ_BUZZ(ON);
+            curState = BUZZ_OFF;
+        }
+
+        break;
+    }
+
+    case BUZZ_ON:
+    {
+        if (on_time > 0)
+        {
+            on_time--;
+        }
+
+        else
+        {
+            // goto BUZZ_PAUSE state
+            nextState = BUZZ_PAUSE;
+            pause_time = pauseTime;
+            BUZZ_BUZZ(OFF);
+        }
+
+        break;
+    }
+
+    case BUZZ_PAUSE:
+    {
+        if (pause_time > 0)
+        {
+            pause_time--;
+            // do nothing (remain in BUZZ_PAUSE state)
+        }
+        else
+        {
+            // current pass complete, decrement count
+            if (stepCount != 0)
+            {
+                stepCount--;
+            }
+            else{
+                stepCount = 0;
+            }
+
+            // if more pass remaining, goto BUZZ_ON and repeat
+            if (stepCount >= 1)
+            {
+                nextState = BUZZ_ON;
+                on_time = buzDuration;
+                BUZZ_BUZZ(ON);
+            }
+
+            // else, goto BUZZ_OFF state
+            else
+            {
+                nextState = BUZZ_OFF;
+            }
+
+        }
+        break;
+    }
+
+    }
+
+}
