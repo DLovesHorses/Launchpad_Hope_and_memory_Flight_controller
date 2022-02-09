@@ -773,6 +773,10 @@ struct bmp3_dev
 
 void BMP388_Init(void);                                 // implemented
 int8_t BMP388_begin(void);                              // implemented
+
+void BMP388_Int_Configure(void);
+void BMP388_Int_Handler(void);
+
 void BMP388_showData(void);
 float BMP388_readTemperature(void);                     // implemented
 float BMP388_readPressure(void);                        // implemented

@@ -101,8 +101,14 @@ int main(void)
             static uint16_t sensorDataSampleTimeCounter = 0;
             if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
-                BMX160_showData();
-                BMP388_showData();
+                // BMX160_showData();
+                // BMP388_showData();
+
+                // for debug only
+                uint8_t data[8] = { 0 };
+                uint8_t reg_addr = 0x11;
+                uint8_t length = 1; // 0x11
+                BMP388_get_regs(reg_addr, data, length);
                 sensorDataSampleTimeCounter = 0;
             }
 

@@ -45,7 +45,85 @@ uint8_t BMP388_addr;
  */
 
 // Function definitions.
+
 /*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void BMP388_Int_Handler(void){
+
+#ifdef DEBUG
+        UARTprintf("BMP388 Interrupt Called.\n");
+        BUZZ_BUZZER(BUZZ_DUR_SHORT, BUZZ_REP_TIME_1, BUZZ_PAUSE_TIME_100);
+#endif
+
+        return;
+
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * Configures PC6 as BMP388 Interrupt line.
+ *
+ *
+ */
+
+void BMP388_Int_Configure(void){
+
+    // enable GPIO port C
+
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
+
+    // set-up pin 6 as input
+
+    GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_6);
+
+
+    // set interrupt type to detect BOTH_EDGES
+
+    GPIOIntTypeSet(GPIO_PORTC_BASE, GPIO_PIN_6, GPIO_HIGH_LEVEL);
+
+    // register BMP388_Int_Handler() as interrupt handler
+
+    GPIOIntRegister(GPIO_PORTC_BASE, BMP388_Int_Handler);
+
+    // enable GPIO interrupts for PC6
+
+    GPIOIntEnable(GPIO_PORTC_BASE, GPIO_INT_PIN_6);
+
+}
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *
  *
  *
@@ -188,6 +266,9 @@ int8_t BMP388_begin(void)
     // configure device
 
     rslt = BMP388_set_config();
+
+    // set-up the interrupt system
+    BMP388_Int_Configure();
 
     // next call is for debug purpose only: to ensure config is properly set
      BMP388_read_all_regs();
@@ -342,6 +423,21 @@ int8_t BMP388_set_config(void)
     {
 #ifdef DEBUG
         UARTprintf("FAILED: ODR register [0x%x] of BMP388.\n", reg_addr);
+#endif
+        return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
+    }
+
+
+    // configure interrupts
+
+    reg_addr = BMP3_INT_CTRL_ADDR;
+    uint8_t int_ctrl_data = 0x42;
+    rslt = BMP388_set_regs(&reg_addr, &int_ctrl_data, 1);
+
+    if (rslt != BMP3_OK)
+    {
+#ifdef DEBUG
+        UARTprintf("FAILED: INT_CTRL register [0x%x] of BMP388.\n", reg_addr);
 #endif
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
@@ -1508,8 +1604,8 @@ void BMP388_read_all_regs(void)
     //breakpoint at next line,
     // step-over the program in debug mode
     // read the contents of returned values in debug variables tab.
-    reg_addr = 0x1B;
-    length = 6; // B, C, D, E, F
+    reg_addr = 0x19;
+    length = 6; // 9, A, B, C, D
     BMP388_get_regs(reg_addr, data, length);
 
     return;
