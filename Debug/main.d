@@ -63,14 +63,6 @@ main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integratio
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdlib.h
 main.obj: ../local_include/BMP388/BMP388.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/led.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/uart.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/i2c.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysTick.h
-main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stddef.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_ints.h
@@ -202,22 +194,6 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdlib.h:
 ../local_include/BMP388/BMP388.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/led.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/uart.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/i2c.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/SysTick.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stddef.h:
 

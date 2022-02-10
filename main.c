@@ -96,13 +96,31 @@ int main(void)
             // systick is expired
             SysFlag_Clear(SYSFLAG_SYS_TICK);
 
-            BUZZ_SM(BUZZ_SM_CALLED_FROM_MAIN);
+            BUZZ_SM(BUZZ_SM_CALLED_FROM_MAIN); // don't remove. It is necessary for Buzzer state machine
+
+            /*
+             *
+             *
+             *
+             *
+             * Operation to do if BMP388 Data-Ready int was sent.
+             */
+            if (SysFlag_Check(BMP388_DRDY_INT))
+            {
+                // clear the flag
+                SysFlag_Clear(BMP388_DRDY_INT);
+                BMP388_showData();
+#ifdef DEBUG
+                BUZZ_BUZZER(BUZZ_DUR_SHORT, BUZZ_REP_TIME_1,
+                            BUZZ_PAUSE_TIME_100);
+#endif
+            }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
             if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
-                // BMX160_showData();
-                // BMP388_showData();
+                BMX160_showData();
+                BMP388_showData();
 
                 // for debug only
                 uint8_t data[8] = { 0 };
@@ -279,13 +297,15 @@ int main(void)
             if (SWITCH_SW1_Pressed())
             {
                 //BUZZ_BUZZ(ON);
-                BUZZ_BUZZER(BUZZ_DUR_MEDIUM, BUZZ_REP_TIME_3, BUZZ_PAUSE_TIME_1000);
+                BUZZ_BUZZER(BUZZ_DUR_MEDIUM, BUZZ_REP_TIME_3,
+                BUZZ_PAUSE_TIME_1000);
             }
 
             if (SWITCH_SW2_Pressed())
             {
                 //BUZZ_BUZZ(OFF);
-                BUZZ_BUZZER(BUZZ_DUR_LONG_LONG, BUZZ_REP_TIME_5, BUZZ_PAUSE_TIME_500);
+                BUZZ_BUZZER(BUZZ_DUR_LONG_LONG, BUZZ_REP_TIME_5,
+                BUZZ_PAUSE_TIME_500);
             }
 
         }

@@ -10,10 +10,7 @@
 
 // Includes
 #include "local_Include/global.h"
-#include "local_Include/led.h"
-#include "local_Include/uart.h"
-#include "local_Include/i2c.h"
-#include "local_Include/SysTick.h"
+
 
 // from DFRobot library
 
@@ -198,6 +195,11 @@ extern "C" {
 #define BMP3_SLEEP_MODE             (0x00)      // values for 'mode' bit field in PWR_CTRL (0x1B) reg
 #define BMP3_FORCED_MODE            (0x01)      // BMP3_PWR_CTRL_ADDR
 #define BMP3_NORMAL_MODE            (0x03)
+
+// interrupt status
+#define BMP3_INT_DRDY_SET           (0x08)      // value of Int Status Reg (0x11)
+#define BMP3_INT_FIFO_FULL_SET      (0x02)
+#define BMP3_INT_FWM_SET            (0x01)
 
 /**\name FIFO related macros */
 /**\name FIFO enable  */

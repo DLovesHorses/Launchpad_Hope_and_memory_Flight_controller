@@ -118,7 +118,7 @@ void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite)
     }
 
     I2CMasterDataPut(I2C0_BASE, regAddr);
-    I2CMasterControl(I2C0_BASE, I2C_START | I2C_RUN ); // IDLE -> Transmit (S-(SA+W)-ACK-REG-ACK-)
+    I2CMasterControl(I2C0_BASE, I2C_START | I2C_RUN); // IDLE -> Transmit (S-(SA+W)-ACK-REG-ACK-)
 
     // wait if bus is busy
     while (I2CMasterBusy(I2C0_BASE))
@@ -135,14 +135,19 @@ void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite)
 
     }
 
-    if(I2CMasterErr(I2C0_BASE) == I2C_MASTER_ERR_NONE){
+    if (I2CMasterErr(I2C0_BASE) == I2C_MASTER_ERR_NONE)
+    {
 #ifdef DEBUG
-        UARTprintf("I2C : Successfully written register : 0x%x with value: 0x%x\n", regAddr, byteToWrite);
+        UARTprintf(
+                "I2C : Successfully written register : 0x%x with value: 0x%x\n",
+                regAddr, byteToWrite);
 #endif
     }
-    else{
+    else
+    {
 #ifdef DEBUG
-        UARTprintf("I2C : Failed writing register : 0x%x with value: 0x%x\n", regAddr, byteToWrite);
+        UARTprintf("I2C : Failed writing register : 0x%x with value: 0x%x\n",
+                   regAddr, byteToWrite);
 #endif
     }
 }
@@ -159,15 +164,21 @@ bool I2C_AddressBruteForcer(uint8_t knownReg, uint8_t knownValue)
     UARTprintf("\n\nTarget Register: %X \n", knownReg);
     UARTprintf("\n\nKnown Value: %X \n", knownValue);
 
-    for (testAddr = 0x00; testAddr < 0xFF; testAddr++)
+    /* invalid address range:
+     * https://www.i2c-bus.org/addressing/
+     */
+    for (testAddr = 0x08; testAddr < 0xFF; testAddr++)
     {
-        I2C_ReadByte(testAddr, knownReg, dataReceived);
-
-        if (dataReceived[0] == knownValue)
+        if (testAddr != 0x38 || (testAddr >= 0x78 && testAddr <= 0x7F)) // for PCF
         {
-            found = 1;
-            UARTprintf("\nSlave address found: %x\n", testAddr);
-            return found;
+            I2C_ReadByte(testAddr, knownReg, dataReceived);
+
+            if (dataReceived[0] == knownValue)
+            {
+                found = 1;
+                UARTprintf("\nSlave address found: %x\n", testAddr);
+                return found;
+            }
         }
     }
 

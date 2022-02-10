@@ -12,6 +12,11 @@
 // Includes
 #include "BMP388.h"
 #include "local_include/BUZZER/buzzer.h"
+#include "local_Include/led.h"
+#include "local_Include/uart.h"
+#include "local_Include/i2c.h"
+#include "local_Include/SysTick.h"
+#include "local_Include/SysFlag.h"
 
 // global variables and externs
 struct bmp3_dev dev;
@@ -45,7 +50,6 @@ uint8_t BMP388_addr;
  */
 
 // Function definitions.
-
 /*
  *
  *
@@ -61,14 +65,34 @@ uint8_t BMP388_addr;
  *
  */
 
-void BMP388_Int_Handler(void){
+void BMP388_Int_Handler(void)
+{
+    // read the interrupt status register
+
+    int8_t rslt = BMP3_E_NULL_PTR;
+    uint8_t status;   // slave address
+    rslt = BMP388_get_regs(BMP3_INT_STATUS_REG_ADDR, &status, 1);
+
+    /* Proceed if everything is fine until now */
+    if (rslt != BMP3_OK)
+    {
 
 #ifdef DEBUG
-        UARTprintf("BMP388 Interrupt Called.\n");
-        BUZZ_BUZZER(BUZZ_DUR_SHORT, BUZZ_REP_TIME_1, BUZZ_PAUSE_TIME_100);
+        UARTprintf("FAILED: Reading INT_STATUS reg from BMP388\n");
 #endif
 
         return;
+    }
+
+    // Set DRDY flag is data-ready interrupt is set.
+    if (status && BMP3_INT_DRDY_SET)
+    {
+        SysFlag_Set(BMP388_DRDY_INT);
+
+
+    }
+
+    return;
 
 }
 
@@ -90,7 +114,8 @@ void BMP388_Int_Handler(void){
  *
  */
 
-void BMP388_Int_Configure(void){
+void BMP388_Int_Configure(void)
+{
 
     // enable GPIO port C
 
@@ -99,7 +124,6 @@ void BMP388_Int_Configure(void){
     // set-up pin 6 as input
 
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_6);
-
 
     // set interrupt type to detect BOTH_EDGES
 
@@ -271,7 +295,7 @@ int8_t BMP388_begin(void)
     BMP388_Int_Configure();
 
     // next call is for debug purpose only: to ensure config is properly set
-     BMP388_read_all_regs();
+    BMP388_read_all_regs();
 
     if (rslt != BMP3_OK)
     {
@@ -308,7 +332,7 @@ int8_t BMP388_begin(void)
  //  Used to select the settings user needs to change
  uint16_t settings_sel;
 
-//  Select the pressure and temperature sensor to be enabled
+ //  Select the pressure and temperature sensor to be enabled
  dev.settings.press_en = BMP3_ENABLE;
  dev.settings.temp_en = BMP3_ENABLE;
 
@@ -427,7 +451,6 @@ int8_t BMP388_set_config(void)
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
 
-
     // configure interrupts
 
     reg_addr = BMP3_INT_CTRL_ADDR;
@@ -441,8 +464,6 @@ int8_t BMP388_set_config(void)
 #endif
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
-
-
 
     return rslt;
 

@@ -18,6 +18,8 @@
 #define SYSFLAG_UART0_TX       1
 #define SYSFLAG_UART0_RX       2
 
+#define BMP388_DRDY_INT        10
+
 // Macros
 
 // Bit-Band Alias
