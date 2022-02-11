@@ -23,6 +23,8 @@ local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_gpio.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_types.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_i2c.h
+local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_ints.h
+local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/interrupt.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/debug.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/sysctl.h
@@ -32,6 +34,7 @@ local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/rom
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h
+local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/timer.h
 local_Include/onBoardSwitch.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
 
 ../local_Include/onBoardSwitch.c:
@@ -80,6 +83,10 @@ C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_memmap.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_i2c.h:
 
+C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_ints.h:
+
+C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/interrupt.h:
+
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/debug.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/gpio.h:
@@ -97,6 +104,8 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h:
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h:
+
+C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/timer.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
 

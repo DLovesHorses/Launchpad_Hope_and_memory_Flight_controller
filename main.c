@@ -25,6 +25,7 @@
 #include "local_include/BUZZER/buzzer.h"
 #include "local_include/BMX160/BMX160.h"
 #include "local_include/BMP388/BMP388.h"
+#include "local_include/OrangeRX/OrangeRX.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -63,13 +64,15 @@ void SystemInitialize(void)
     SWITCH_Init();
 
     UART0_STDIO_Init();
-    I2C0_Init();
+    //I2C0_Init();
 
-    PCF8574A_Init();
-    // MPU9250_Init();
-    BMX160_Init();
-    init_Buzzer();
-    BMP388_Init();
+    // PCF8574A_Init();
+    // MPU9250_Init(); // don't use
+    // BMX160_Init();
+    // init_Buzzer();
+    //BMP388_Init();
+
+    OrangeRX_Init();
 
 }
 
@@ -119,8 +122,8 @@ int main(void)
             static uint16_t sensorDataSampleTimeCounter = 0;
             if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
-                BMX160_showData();
-                BMP388_showData();
+                // BMX160_showData();
+                // BMP388_showData();
 
                 // for debug only
                 uint8_t data[8] = { 0 };

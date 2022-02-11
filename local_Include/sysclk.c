@@ -21,4 +21,6 @@ void SysClk_Init(void)
     // 80 MHz
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
     SYSCTL_XTAL_16MHZ);
+
+    //IntMasterEnable();
 }
