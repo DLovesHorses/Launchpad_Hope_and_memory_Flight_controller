@@ -20,6 +20,7 @@
 // global variables and externs
 
 Orange_RX_Channel_Frequency_Data rx_data;
+uint8_t frameGapChNo = 0;
 // Function definitions.
 
 /*
@@ -118,20 +119,127 @@ void OrangeRX_Init(void)
 void OrangeRX_showData(void)
 {
 
-    double dataToShow = 0;
     char cBuffer[256];
     cBuffer[0] = '\0';
 
-    sprintf(cBuffer,
-            "(Ch. 1 : %5f, Ch.2 : %5f, Ch.3 : %5f, Ch.4 : %5f, Ch.5 : %5f, Ch.6 : %5f, Frame_Gap : %5f",
-            rx_data.ch1_freq, rx_data.ch2_freq, rx_data.ch3_freq,
-            rx_data.ch4_freq, rx_data.ch5_freq, rx_data.ch6_freq,
-            rx_data.frame_gap_freq);
+    UARTprintf(
+            "Channel # \t     \t \t \t Physical \t \t \t \t \t \t Logical \n\n");
+    uint8_t count = 0;
+    for (count = 0; count < 7; count++)
+    {
 
-    UARTprintf("%s\n\n", cBuffer);
+        /*// Only logical channel data
+         sprintf(cBuffer,
+         "Ch. [%1d] \t -> \t Freq:    %5f , \t period:    %10f \n",
+         count, *(rx_data.pFreq_Ch[count]), *(rx_data.pPeriod_Ch[count]));
+         */
+
+        /*// only Physical channel data
+
+        sprintf(cBuffer,
+         "Ch. [%1d] \t -> \t Freq:    %5f , \t period:    %10f \n",
+         count, rx_data.ch_freq[count], rx_data.ch_period[count], );
+
+         */
+
+        // both
+        sprintf(cBuffer,
+                "Ch. [%1d] \t -> \t Freq:    %05f , \t period:    %05f \t \t Freq:    %05f , \t period:    %05f \n",
+                count, rx_data.ch_freq[count], rx_data.ch_period[count],
+                *(rx_data.pFreq_Ch[count]), *(rx_data.pPeriod_Ch[count]));
+
+        UARTprintf("%s", cBuffer);
+        cBuffer[0] = '\0';
+    }
+
+    UARTprintf("\nMax Period Channel = %d", frameGapChNo);
+    UARTprintf("\n\n");
+    /*
+     sprintf(cBuffer, "Ch.1 : \t %5f \n", rx_data.ch1_freq);
+     "Ch.1 : \t %5f \nCh.2 : \t %5f \nCh.3 : \t %5f \nCh.4 : \t %5f \nCh.5 : \t %5f \nCh.6 : %5f \nFrame_Gap : %5f",
+     rx_data.ch1_freq, rx_data.ch2_freq, rx_data.ch3_freq,
+     rx_data.ch4_freq, rx_data.ch5_freq, rx_data.ch6_freq,
+     rx_data.frame_gap_freq);
+
+     UARTprintf("%s\n\n", cBuffer);
+     */
 
     // Channel 1
     //dataToShow = rx_data.ch1_freq;
     //sprintf(cBuffer,"Channel 1:")
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * This function arranges the received data in logical order.
+ * the trick is that the frequency of FRAME_GAP will always be minimum
+ * that is, the period is always maximum, as it can be observed in oscilloscope.
+
+ * compare the just received frame and then rearrange the pointers
+ * so that the first pointer points to the channel with max period (or min freq),
+ * the second pointer points to the value just next (CH_1 logically), and so on.
+
+ *
+ *
+ *
+ *
+ */
+
+void OrangeRX_receivedChannelReorganizer(void)
+{
+
+    // Part 1: Goal: point to the channel containing max. period
+    uint8_t count = 0;
+    double maxPeriod = 0; // assume that 0 has the max.
+    //double *pFrameGapCh = &(rx_data.ch_period[0]); // initially point to first channel <Frame_GAP>
+
+    // find the max. period among the acquired data
+    for (count = 0; count < 7; count++)
+    {
+
+        if (rx_data.ch_period[count] > maxPeriod)
+        {
+            maxPeriod = rx_data.ch_period[count];
+            //pFrameGapCh = &(rx_data.ch_period[count]);
+            frameGapChNo = count;
+        }
+    }
+
+    /* now, frameGapChNo contains the physical channel number
+     * of the channel holding the data from logical frame gap channel
+     * using this, and a little bit of magic, point appropriate
+     * pointers to their respective logical channels.
+     *
+     * That is, pointer assignment will be such that:
+     * pPeriod_Ch[0] = FRAME_GAP
+     * pPeriod_Ch[1] = CH_1
+     * pPeriod_Ch[2] = CH_2
+     * pPeriod_Ch[3] = CH_3
+     * pPeriod_Ch[4] = CH_4
+     * pPeriod_Ch[5] = CH_5
+     * pPeriod_Ch[6] = CH_6
+     *
+     *
+     */
+
+    // start the magic
+    for (count = 0; count < 7; count++)
+    {
+        rx_data.pPeriod_Ch[count] = &rx_data.ch_period[(frameGapChNo + count)
+                % 7];
+        rx_data.pFreq_Ch[count] = &rx_data.ch_freq[(frameGapChNo + count) % 7];
+    }
+    // that's it!...
+    // now the channels are logically organized in desired order.
+
+    // from now on, use only pPeriod_Ch variable whenever you want to access the data.
 
 }

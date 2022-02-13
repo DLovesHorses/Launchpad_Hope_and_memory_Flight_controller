@@ -168,39 +168,47 @@ int main(void)
 
                 case FRAME_GAP_SELECT:
                 {
-                    rx_data.frame_gap_freq = frequency;
+                    rx_data.ch_period[0] = period;
+                    rx_data.ch_freq[0] = frequency;
                     break;
                 }
 
 
                 case CH_1_SELECT:
                 {
-                    rx_data.ch1_freq = frequency;
+                    rx_data.ch_period[1] = period;
+                    rx_data.ch_freq[1] = frequency;
+
                     break;
                 }
                 case CH_2_SELECT:
                 {
-                    rx_data.ch2_freq = frequency;
+                    rx_data.ch_period[2] = period;
+                    rx_data.ch_freq[2] = frequency;
                     break;
                 }
                 case CH_3_SELECT:
                 {
-                    rx_data.ch3_freq = frequency;
+                    rx_data.ch_period[3] = period;
+                    rx_data.ch_freq[3] = frequency;
                     break;
                 }
                 case CH_4_SELECT:
                 {
-                    rx_data.ch4_freq = frequency;
+                    rx_data.ch_period[4] = period;
+                    rx_data.ch_freq[4] = frequency;
                     break;
                 }
                 case CH_5_SELECT:
                 {
-                    rx_data.ch5_freq = frequency;
+                    rx_data.ch_period[5] = period;
+                    rx_data.ch_freq[5] = frequency;
                     break;
                 }
                 case CH_6_SELECT:
                 {
-                    rx_data.ch6_freq = frequency;
+                    rx_data.ch_period[6] = period;
+                    rx_data.ch_freq[6] = frequency;
                     break;
                 }
 
@@ -221,7 +229,10 @@ int main(void)
                 channelSelect++;
 
                 if(channelSelect == INVALID_CHANNEL){
+
+                    OrangeRX_receivedChannelReorganizer();
                     channelSelect = FRAME_GAP_SELECT;        // Store content of next frame starting from FRAME_GAP for next round.
+
                 }
 
 
@@ -392,7 +403,7 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 500) // 2 seconds
+            if (sensorDataSampleTimeCounter == 1000) // 2 seconds
             {
                 // BMX160_showData();
                 // BMP388_showData();
