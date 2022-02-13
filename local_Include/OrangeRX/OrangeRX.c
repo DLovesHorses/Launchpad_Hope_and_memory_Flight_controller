@@ -14,10 +14,12 @@
 #include "local_Include/led.h"
 #include "local_Include/uart.h"
 #include "local_Include/i2c.h"
+#include "local_Include/SysFlag.h"
 #include "local_Include/BUZZER/buzzer.h"
 
 // global variables and externs
 
+Orange_RX_Channel_Frequency_Data rx_data;
 // Function definitions.
 
 /*
@@ -32,29 +34,7 @@ void OrangeRX_IntHandler(void)
 {
 
     TimerIntClear(WTIMER5_BASE, TIMER_CAPA_EVENT);
-    static bool ledState = 0;
-    ledState = ledState ^ 0x01;
-
-    static uint32_t firstMeasure = 0;
-    static uint32_t secondMeasure = 0;
-    uint32_t        difference = 0;
-
-
-
-    firstMeasure = secondMeasure;
-    secondMeasure = TimerValueGet(WTIMER5_BASE, TIMER_A);
-
-#ifdef DEBUG
-    //BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_4,
-    // BUZZ_PAUSE_TIME_100);
-
-    difference = (uint32_t) (secondMeasure - firstMeasure);
-
-    char cBuffer[100];
-    sprintf(cBuffer, "Time between edges: %d. \n\n", difference);
-    UARTprintf("%s", cBuffer);
-    LED_LED1(ledState);
-#endif
+    SysFlag_Set(Orange_RX_INT);
 
     TimerIntEnable(WTIMER5_BASE, TIMER_CAPA_EVENT);
 
@@ -93,7 +73,7 @@ void OrangeRX_Init(void)
     TimerConfigure(WTIMER5_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_CAP_TIME));
     TimerLoadSet(WTIMER5_BASE,
     TIMER_A,
-                 0xFFFF);
+                 TM4C_CLK_RATE);
     TimerMatchSet(WTIMER5_BASE,
     TIMER_A,
                   0x00);
@@ -101,7 +81,7 @@ void OrangeRX_Init(void)
     // Configure Timer events (detect both edges)
     TimerControlEvent(WTIMER5_BASE,
     TIMER_A,
-                      TIMER_EVENT_BOTH_EDGES);
+                      TIMER_EVENT_POS_EDGE);
 
     // Configure interrupts that fires when the
     // level of external signal changes (when edge occours).
@@ -117,4 +97,41 @@ void OrangeRX_Init(void)
     TimerEnable(WTIMER5_BASE, TIMER_A);
 
     return;
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * This function shows individual channel data from receiver.
+ */
+
+void OrangeRX_showData(void)
+{
+
+    double dataToShow = 0;
+    char cBuffer[256];
+    cBuffer[0] = '\0';
+
+    sprintf(cBuffer,
+            "(Ch. 1 : %5f, Ch.2 : %5f, Ch.3 : %5f, Ch.4 : %5f, Ch.5 : %5f, Ch.6 : %5f, Frame_Gap : %5f",
+            rx_data.ch1_freq, rx_data.ch2_freq, rx_data.ch3_freq,
+            rx_data.ch4_freq, rx_data.ch5_freq, rx_data.ch6_freq,
+            rx_data.frame_gap_freq);
+
+    UARTprintf("%s\n\n", cBuffer);
+
+    // Channel 1
+    //dataToShow = rx_data.ch1_freq;
+    //sprintf(cBuffer,"Channel 1:")
+
 }

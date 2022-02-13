@@ -32,6 +32,8 @@
 
 // global variables and externs
 
+extern Orange_RX_Channel_Frequency_Data rx_data;        // Received channel frequency content.
+
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
 {
@@ -106,6 +108,276 @@ int main(void)
              *
              *
              *
+             *
+             *
+             *
+             *
+             *
+             * Operation to do if cPPM channel data received.
+             */
+
+            if (SysFlag_Check(Orange_RX_INT))
+            {
+                SysFlag_Clear(Orange_RX_INT);
+
+                // Channel order:
+                // <CH_1> - <CH_2> - <CH_3> - <CH_4> - <CH_5> - <CH_6> - <Frame_GAP> - Repeat
+
+                // Each signal has 2 (+ve) going edge.
+                // Therefore, one Frame will have:      2 * 7 / 2 = 7 (+ve edges)
+
+                /*
+                 * Signal                   :               (+ve) edge. no
+                 *
+                 *
+                 * Frame_GAP                :               1 - 2
+                 * CH_1                     :               2 - 3
+                 * CH_2                     :               3 - 4
+                 * CH_3                     :               4 - 5
+                 * CH_4                     :               5 - 6
+                 * CH_5                     :               6 - 7
+                 * CH_6                     :               7 - 1
+                 *
+                 *
+                 *
+                 */
+
+                // channel to store frequency value to.
+                // NOTE: The first data will be invalid. Therefore, we need to wait until the second +ve edge is detected.
+                static uint8_t channelSelect = 0;
+
+                static uint32_t firstPulse_y = 0;
+                static uint32_t secondPulse_y  = 0;
+
+                firstPulse_y  = secondPulse_y ;
+                secondPulse_y  = TimerValueGet(WTIMER5_BASE, TIMER_A);
+
+                double firstPulse_x = (double) (1 - (double)firstPulse_y / (double) TM4C_CLK_RATE);
+                double secondPulse_x = (double) (1 - (double)secondPulse_y / (double) TM4C_CLK_RATE);
+
+
+                double period = secondPulse_x - firstPulse_x;
+
+                if(firstPulse_x > secondPulse_x){
+                    period = (1.0f - firstPulse_x) + secondPulse_x;
+                }
+
+                double frequency = 1/period;
+
+                switch(channelSelect){
+
+                case FRAME_GAP_SELECT:
+                {
+                    rx_data.frame_gap_freq = frequency;
+                    break;
+                }
+
+
+                case CH_1_SELECT:
+                {
+                    rx_data.ch1_freq = frequency;
+                    break;
+                }
+                case CH_2_SELECT:
+                {
+                    rx_data.ch2_freq = frequency;
+                    break;
+                }
+                case CH_3_SELECT:
+                {
+                    rx_data.ch3_freq = frequency;
+                    break;
+                }
+                case CH_4_SELECT:
+                {
+                    rx_data.ch4_freq = frequency;
+                    break;
+                }
+                case CH_5_SELECT:
+                {
+                    rx_data.ch5_freq = frequency;
+                    break;
+                }
+                case CH_6_SELECT:
+                {
+                    rx_data.ch6_freq = frequency;
+                    break;
+                }
+
+
+
+
+
+                default:{
+#ifdef DEBUG
+                    UARTprintf("Failed: Reading channel data. Invalid Channel to store value to.\n");
+#endif
+                    break;
+                }
+                }
+
+
+                // increment channelSelect to prepare it for next call.
+                channelSelect++;
+
+                if(channelSelect == INVALID_CHANNEL){
+                    channelSelect = FRAME_GAP_SELECT;        // Store content of next frame starting from FRAME_GAP for next round.
+                }
+
+
+
+
+
+
+/*                                                      // <- Working! very good.
+
+
+
+                static uint32_t firstPulse_y = 0;
+                static uint32_t secondPulse_y  = 0;
+
+                firstPulse_y  = secondPulse_y ;
+                secondPulse_y  = TimerValueGet(WTIMER5_BASE, TIMER_A);
+
+                double firstPulse_x = (double) (1 - (double)firstPulse_y / (double) TM4C_CLK_RATE);
+                double secondPulse_x = (double) (1 - (double)secondPulse_y / (double) TM4C_CLK_RATE);
+
+
+                double period = secondPulse_x - firstPulse_x;
+
+                if(firstPulse_x > secondPulse_x){
+                    period = (1.0f - firstPulse_x) + secondPulse_x;
+                }
+
+                double frequency = 1/period;
+
+                char cBuffer[100];
+                //sprintf(cBuffer, "first -> %6f    second -> %6f     \n period -> %10f      frequency -> %10f\n\n", firstPulse_x, secondPulse_x,  period, frequency);
+                sprintf(cBuffer, "Freq: %10f\n", frequency);
+                UARTprintf("%s", cBuffer);
+
+*/
+                /*
+                static uint32_t count = 1;
+
+                static uint32_t firstPulse_y = 0;
+                static uint32_t secondPulse_y = 0;
+                static uint32_t thirdPulse_y = 0;
+
+                static double firstPulse_x = 0;
+                static double secondPulse_x = 0;
+                static double thirdPulse_x = 0;
+
+                switch (count)
+                {
+                case 1:
+                {
+                    // save the first pulse value
+                    firstPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                    firstPulse_x = (double) (1
+                            - (double) firstPulse_y / (double) TM4C_CLK_RATE);
+                    count++;
+                    break;
+                }
+                case 2:
+                {
+                    // save the first pulse value
+                    secondPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                    secondPulse_x = (double) (1
+                            - (double) secondPulse_y / (double) TM4C_CLK_RATE);
+                    count++;
+                    break;
+                }
+                case 3:
+                {
+                    // save the first pulse value
+                    thirdPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                    thirdPulse_x = (double) (1
+                            - (double) thirdPulse_y / (double) TM4C_CLK_RATE);
+                    count++;
+                    break;
+                }
+
+                case 4:
+                {
+                    // display data
+
+                    double period =
+                            (thirdPulse_x - firstPulse_x) > 0 ?
+                                    (thirdPulse_x - firstPulse_x) :
+                                    (firstPulse_x - thirdPulse_x);
+                    double duty =
+                            (secondPulse_x - firstPulse_x) > 0 ?
+                                    (secondPulse_x - firstPulse_x) :
+                                    (firstPulse_x - secondPulse_x);
+                    duty = duty / period;
+
+                    char cBuffer[100];
+                    sprintf(cBuffer,
+                            "first -> %10f     second -> %10f     third -> %10f.  period -> %10f, duty -> %10.f \n\n",
+                            firstPulse_x, secondPulse_x, thirdPulse_x, period,
+                            duty);
+                    UARTprintf("%s", cBuffer);
+                    count = 1;
+                    break;
+                }
+
+                default:
+                {
+                    // do nothing
+                    break;
+                }
+                }
+*/
+
+                /*              static bool callState = 0;          // <- working, but bad
+                 callState = callState ^ 0x01;
+
+                 static uint32_t firstMeasure = 0;
+                 static uint32_t secondMeasure = 0;
+                 int32_t difference = 0;
+
+                 if (callState == 1)
+                 {
+                 firstMeasure = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                 }
+                 else
+                 {
+
+                 //firstMeasure = secondMeasure;
+                 secondMeasure = TimerValueGet(WTIMER5_BASE, TIMER_A);
+
+                 #ifdef DEBUG
+                 //BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_4,
+                 // BUZZ_PAUSE_TIME_100);
+
+                 difference = (int32_t) firstMeasure
+                 - (int32_t) secondMeasure;
+
+                 double period = (double) difference / (double)TM4C_CLK_RATE;
+                 double frequency = (double) 1/period;
+
+                 char cBuffer[100];
+                 //sprintf(cBuffer, "Time between edges:  %d  ->  %f Seconds \n\n", difference, us_timeScale);
+
+                 sprintf(cBuffer,
+                 "first -> %10d second -> %10d        difference -> %10d     period -> %10f    frequency -> %10f\n\n",
+                 firstMeasure, secondMeasure, difference, period, frequency);
+                 UARTprintf("%s", cBuffer);
+
+                 #endif
+                 }
+                 LED_LED1(callState);
+
+
+
+                 */
+            }
+            /*
+             *
+             *
+             *
+             *
              * Operation to do if BMP388 Data-Ready int was sent.
              */
             if (SysFlag_Check(BMP388_DRDY_INT))
@@ -115,15 +387,16 @@ int main(void)
                 BMP388_showData();
 #ifdef DEBUG
                 BUZZ_BUZZER(BUZZ_DUR_SHORT, BUZZ_REP_TIME_1,
-                            BUZZ_PAUSE_TIME_100);
+                BUZZ_PAUSE_TIME_100);
 #endif
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 1000) // 2 seconds
+            if (sensorDataSampleTimeCounter == 500) // 2 seconds
             {
                 // BMX160_showData();
                 // BMP388_showData();
+                OrangeRX_showData();
 
                 // for debug only
                 uint8_t data[8] = { 0 };
