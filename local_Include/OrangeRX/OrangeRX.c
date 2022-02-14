@@ -19,8 +19,11 @@
 
 // global variables and externs
 
-Orange_RX_Channel_Frequency_Data rx_data;
+Orange_RX_Channel_Data rx_data;
 uint8_t frameGapChNo = 0;
+
+Orange_RX_Channel_Text rx_text;
+
 // Function definitions.
 
 /*
@@ -97,6 +100,79 @@ void OrangeRX_Init(void)
     // Finally, enable Timer
     TimerEnable(WTIMER5_BASE, TIMER_A);
 
+    // define channel text
+
+    rx_text.ch_text[0] = "CH 0 : Frame Gap";
+    rx_text.ch_text[1] = "CH 1 : Aileron \t";
+    rx_text.ch_text[2] = "CH 2 : Elevator";
+    rx_text.ch_text[3] = "CH 3 : Throttle";
+    rx_text.ch_text[4] = "CH 4 : Rudder \t";
+    rx_text.ch_text[5] = "CH 5 : Switch A";
+    rx_text.ch_text[6] = "CH 6 : Switch F";
+
+    // alternative text
+    rx_text.ch_text_alt[0] = "CH [0]";
+    rx_text.ch_text_alt[1] = "CH [1]";
+    rx_text.ch_text_alt[2] = "CH [2]";
+    rx_text.ch_text_alt[3] = "CH [3]";
+    rx_text.ch_text_alt[4] = "CH [4]";
+    rx_text.ch_text_alt[5] = "CH [5]";
+    rx_text.ch_text_alt[6] = "CH [6]";
+
+    // load low time constants into structure element for later convenience.
+    rx_data.ch_low_time[1] = ORANGE_RX_CH_1_LOW_TIME;
+    rx_data.ch_low_time[2] = ORANGE_RX_CH_2_LOW_TIME;
+    rx_data.ch_low_time[3] = ORANGE_RX_CH_3_LOW_TIME;
+    rx_data.ch_low_time[4] = ORANGE_RX_CH_4_LOW_TIME;
+    rx_data.ch_low_time[5] = ORANGE_RX_CH_5_LOW_TIME;
+    rx_data.ch_low_time[6] = ORANGE_RX_CH_6_LOW_TIME;
+
+    rx_data.ch_high_time[1] = ORANGE_RX_CH_1_HIGH_TIME;
+    rx_data.ch_high_time[2] = ORANGE_RX_CH_2_HIGH_TIME;
+    rx_data.ch_high_time[3] = ORANGE_RX_CH_3_HIGH_TIME;
+    rx_data.ch_high_time[4] = ORANGE_RX_CH_4_HIGH_TIME;
+    rx_data.ch_high_time[5] = ORANGE_RX_CH_5_HIGH_TIME;
+    rx_data.ch_high_time[6] = ORANGE_RX_CH_6_HIGH_TIME;
+
+    return;
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * This function shows normalized and actual data of individual channel from receiver.
+ *
+ */
+
+void OrangeRX_showActData(void)
+{
+
+    // extract data first before showing
+    OrangeRX_extractData();
+
+    char cBuffer[512];
+    cBuffer[0] = '\0';
+
+    uint8_t count;
+
+    UARTprintf(
+            "Channel #-> \t Normalized Data (0-100%%) \t \t Actual Data (-100%% to +100%%)\n\n");
+    for (count = 1; count < 7; count++)
+    {
+        sprintf(cBuffer, "%s \t -> \t \t %3.2f %% \t \t \t \t %3.0f \n",
+                rx_text.ch_text_alt[count], rx_data.ch_nom_data[count],
+                rx_data.ch_act_data[count]);
+        UARTprintf("%s", cBuffer);
+        cBuffer[0] = '\0';
+    }
+
+    UARTprintf("\n\n");
     return;
 }
 
@@ -113,13 +189,13 @@ void OrangeRX_Init(void)
  *
  *
  *
- * This function shows individual channel data from receiver.
+ * This function shows raw data of individual channel from receiver.
  */
 
-void OrangeRX_showData(void)
+void OrangeRX_showRawData(void)
 {
 
-    char cBuffer[256];
+    char cBuffer[512];
     cBuffer[0] = '\0';
 
     UARTprintf(
@@ -136,7 +212,7 @@ void OrangeRX_showData(void)
 
         /*// only Physical channel data
 
-        sprintf(cBuffer,
+         sprintf(cBuffer,
          "Ch. [%1d] \t -> \t Freq:    %5f , \t period:    %10f \n",
          count, rx_data.ch_freq[count], rx_data.ch_period[count], );
 
@@ -144,14 +220,17 @@ void OrangeRX_showData(void)
 
         // both
         sprintf(cBuffer,
-                "Ch. [%1d] \t -> \t Freq:    %05f , \t period:    %05f \t \t Freq:    %05f , \t period:    %05f \n",
-                count, rx_data.ch_freq[count], rx_data.ch_period[count],
-                *(rx_data.pFreq_Ch[count]), *(rx_data.pPeriod_Ch[count]));
+                "%s \t -> \t Freq:    %05f , \t period:    %05f \t \t Freq:    %05f , \t period:    %05f \n",
+                rx_text.ch_text_alt[count], rx_data.ch_freq[count],
+                rx_data.ch_period[count], *(rx_data.pFreq_Ch[count]),
+                *(rx_data.pPeriod_Ch[count]));
 
         UARTprintf("%s", cBuffer);
         cBuffer[0] = '\0';
     }
 
+
+    UARTprintf("\n\n");
     UARTprintf("\nMax Period Channel = %d", frameGapChNo);
     UARTprintf("\n\n");
     /*
@@ -167,6 +246,8 @@ void OrangeRX_showData(void)
     // Channel 1
     //dataToShow = rx_data.ch1_freq;
     //sprintf(cBuffer,"Channel 1:")
+
+    return;
 }
 
 /*
@@ -243,3 +324,27 @@ void OrangeRX_receivedChannelReorganizer(void)
     // from now on, use only pPeriod_Ch variable whenever you want to access the data.
 
 }
+
+void OrangeRX_extractData(void)
+{
+
+    uint8_t count;
+
+    // normalize received data in [0-100%]
+    for (count = 1; count < 7; count++)
+    {
+
+        rx_data.ch_nom_data[count] = (((*(rx_data.pPeriod_Ch[count]))
+                - rx_data.ch_low_time[count])
+                / (rx_data.ch_high_time[count] - rx_data.ch_low_time[count]))
+                * 100;
+    }
+
+    // calculate actual data in [-100% - 100%]
+    for (count = 1; count < 7; count++)
+    {
+        rx_data.ch_act_data[count] = (2 * rx_data.ch_nom_data[count]) - 100;
+    }
+
+}
+

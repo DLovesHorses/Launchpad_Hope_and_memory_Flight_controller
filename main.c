@@ -32,7 +32,7 @@
 
 // global variables and externs
 
-extern Orange_RX_Channel_Frequency_Data rx_data;        // Received channel frequency content.
+extern Orange_RX_Channel_Data rx_data;        // Received channel frequency content.
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -403,11 +403,12 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 1000) // 2 seconds
+            if (sensorDataSampleTimeCounter == 1000) // 1 seconds
             {
                 // BMX160_showData();
                 // BMP388_showData();
-                OrangeRX_showData();
+                // OrangeRX_showRawData();
+                OrangeRX_showActData();
 
                 // for debug only
                 uint8_t data[8] = { 0 };
@@ -430,7 +431,7 @@ int main(void)
 
                 case 'a':
                 {
-
+                    OrangeRX_showActData();
                     break;
                 }
 
