@@ -32,15 +32,27 @@
 
 // Macros
 
-enum MOTOR_ID{
+enum MOTOR_GROUP{
     MOTOR_ONE = 0,
     MOTOR_TWO,
     MOTOR_THREE,
     MOTOR_FOUR,
-    MOTOR_ALL,
-    MOTOR_ONE_THREE,
-    MOTOR_TWO_FOUR
+    MOTOR_ONE_THREE,            // Front two motors
+    MOTOR_TWO_FOUR,             // back two motors
+    MOTOR_ONE_TWO,              // Left two motors
+    MOTOR_THREE_FOUR,           // Right two motors
+    MOTOR_ONE_FOUR,             // Clock-wise motor pair
+    MOTOR_TWO_THREE,            // CCW motor pair
+    MOTOR_ALL                   // All motors
 };
+
+typedef struct{
+    uint8_t motor_one;      // keeps track of the duty of motor one
+    uint8_t motor_two;      // keeps track of the duty of motor two
+    uint8_t motor_three;    // keeps track of the duty of motor three
+    uint8_t motor_four;     // keeps track of the duty of motor four
+
+}MOTOR_DUTY_TRACKER;
 
 
 // Function prototypes

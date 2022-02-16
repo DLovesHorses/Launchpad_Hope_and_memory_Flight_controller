@@ -14,7 +14,7 @@
 #include "local_Include/i2c.h"
 
 // global variables and externs
-
+MOTOR_DUTY_TRACKER dutyOf;
 // Function definitions.
 
 void PWM_Init(void)
@@ -54,10 +54,10 @@ void PWM_Init(void)
     Motor_setDuty(MOTOR_FOUR, 10);  // 10% duty on PB7
 
     /*
-     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, MOTOR_ONE_INIT_DUTY);     // PA6 duty
-     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, MOTOR_TWO_INIT_DUTY);     // PA7 duty
-     PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, MOTOR_THREE_INIT_DUTY);   // PB6 duty
-     PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, MOTOR_FOUR_INIT_DUTY);    // PB7 duty
+     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, MOTOR_ONE_INIT_DUTY);     // PA6 duty (Motor 1, CW)
+     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, MOTOR_TWO_INIT_DUTY);     // PA7 duty (Motor 2, CCW)
+     PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, MOTOR_THREE_INIT_DUTY);   // PB6 duty (Motor 3, CCW)
+     PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, MOTOR_FOUR_INIT_DUTY);    // PB7 duty (Motor 4, CW)
      */
     // M1PWM2 : Generator 1 -> PWM_OUT_2 -> PA6
     // M1PWM3 : Generator 1 -> PWM_OUT_3 -> PA7
@@ -104,10 +104,10 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         duty = 98;
     }
 
-    if (duty < 1){
+    if (duty < 1)
+    {
         duty = 1;
     }
-
 
     uint32_t convDuty = (uint32_t) ((duty * PWM_GEN_PERIOD_TICK) / 100);
 
@@ -115,51 +115,120 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
     {
     case MOTOR_ONE:
     {
-        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, convDuty);    // PA6 duty
+        dutyOf.motor_one = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one);    // PA6 duty (Motor 1, CW)
+
         break;
     }
 
     case MOTOR_TWO:
     {
-        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, convDuty);   // PA7 duty
+        dutyOf.motor_two = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two);   // PA7 duty (Motor 2, CCW)
+
         break;
     }
 
     case MOTOR_THREE:
     {
-        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, convDuty);   // PB6 duty
+        dutyOf.motor_three = convDuty;
+
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three);   // PB6 duty (Motor 3, CCW)
+
         break;
     }
 
     case MOTOR_FOUR:
     {
-        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, convDuty);   // PB7 duty
-        break;
-    }
+        dutyOf.motor_four = convDuty;
 
-    case MOTOR_ALL:
-    {
-        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, convDuty);   // PA6 duty
-        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, convDuty);   // PA7 duty
-        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, convDuty);   // PB6 duty
-        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, convDuty);   // PB7 duty
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four);   // PB7 duty (Motor 4, CW)
+
         break;
     }
 
     case MOTOR_ONE_THREE:
     {
-        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, convDuty);   // PA6 duty
-        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, convDuty);   // PB6 duty
+        dutyOf.motor_one = convDuty;
+        dutyOf.motor_three = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one);   // PA6 duty (Motor 1, CW)
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three);   // PB6 duty (Motor 3, CCW)
+
         break;
     }
 
     case MOTOR_TWO_FOUR:
     {
-        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, convDuty);   // PA7 duty
-        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, convDuty);   // PB7 duty
+        dutyOf.motor_two = convDuty;
+        dutyOf.motor_four = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two);   // PA7 duty (Motor 2, CCW)
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four);   // PB7 duty (Motor 4, CW)
+
         break;
     }
 
+    case MOTOR_ONE_TWO:
+    {
+        dutyOf.motor_one = convDuty;
+        dutyOf.motor_two = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one);   // PA6 duty (Motor 1, CW)
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two);   // PA7 duty (Motor 2, CCW)
+
+        break;
+    }
+
+    case MOTOR_THREE_FOUR:
+    {
+        dutyOf.motor_three = convDuty;
+        dutyOf.motor_four = convDuty;
+
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three);   // PB6 duty (Motor 3, CCW)
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four);   // PB7 duty (Motor 4, CW)
+
+        break;
+    }
+
+    case MOTOR_ONE_FOUR:
+    {
+        dutyOf.motor_one = convDuty;
+        dutyOf.motor_four = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one);   // PA6 duty (Motor 1, CW)
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four);   // PB7 duty (Motor 4, CW)
+
+        break;
+    }
+
+    case MOTOR_TWO_THREE:
+    {
+        dutyOf.motor_two = convDuty;
+        dutyOf.motor_three = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two);   // PA7 duty (Motor 2, CCW)
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three);   // PB6 duty (Motor 3, CCW)
+
+        break;
+    }
+
+    case MOTOR_ALL:
+    {
+        dutyOf.motor_one = convDuty;
+        dutyOf.motor_two = convDuty;
+        dutyOf.motor_three = convDuty;
+        dutyOf.motor_four = convDuty;
+
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one);   // PA6 duty (Motor 1, CW)
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two);   // PA7 duty (Motor 2, CCW)
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three);   // PB6 duty (Motor 3, CCW)
+        PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four);   // PB7 duty (Motor 4, CW)
+
+        break;
+    }
     default:
     {
         // do nothing
