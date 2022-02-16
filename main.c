@@ -26,6 +26,7 @@
 #include "local_include/BMX160/BMX160.h"
 #include "local_include/BMP388/BMP388.h"
 #include "local_include/OrangeRX/OrangeRX.h"
+#include "local_include/PWM/PWM.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -75,6 +76,7 @@ void SystemInitialize(void)
     //BMP388_Init();
 
     OrangeRX_Init();
+	PWM_Init();
 
 }
 
@@ -408,7 +410,7 @@ int main(void)
                 // BMX160_showData();
                 // BMP388_showData();
                 // OrangeRX_showRawData();
-                OrangeRX_showActData();
+                // OrangeRX_showActData();
 
                 // for debug only
                 uint8_t data[8] = { 0 };
@@ -428,7 +430,39 @@ int main(void)
 
                 switch (charRec)
                 {
+					
+                case '+':
+                {
+                    static uint8_t duty = 5;
+                    Motor_setDuty(MOTOR_ONE, duty);     // PA6
+                    Motor_setDuty(MOTOR_TWO, duty);     // PA7
+                    Motor_setDuty(MOTOR_THREE, duty);   // PB6
+                    Motor_setDuty(MOTOR_FOUR, duty);    // PB7
 
+                    if (duty < 99)
+                    {
+                        duty++;
+                    }
+
+                    break;
+                }
+
+                case '-':
+                {
+                    static uint8_t duty = 95;
+                    Motor_setDuty(MOTOR_ONE, duty);     // PA6
+                    Motor_setDuty(MOTOR_TWO, duty);     // PA7
+                    Motor_setDuty(MOTOR_THREE, duty);   // PB6
+                    Motor_setDuty(MOTOR_FOUR, duty);    // PB7
+
+                    if (duty != 3)
+                    {
+                        duty--;
+                    }
+
+                    break;
+                }
+				
                 case 'a':
                 {
                     OrangeRX_showActData();
@@ -595,7 +629,11 @@ int main(void)
                 BUZZ_BUZZER(BUZZ_DUR_LONG_LONG, BUZZ_REP_TIME_5,
                 BUZZ_PAUSE_TIME_500);
             }
-
+			
+			
+            OrangeRX_extractData();
+            uint8_t duty = (uint8_t) (rx_data.ch_nom_data[3]);
+            Motor_setDuty(MOTOR_ALL, duty);
         }
         else
         {
