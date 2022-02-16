@@ -34,6 +34,7 @@ main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/systick.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/uart.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/timer.h
+main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/pwm.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
 main.obj: ../local_include/SysFlag.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
@@ -68,6 +69,8 @@ main.obj: ../local_include/BMP388/BMP388.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stddef.h
 main.obj: ../local_include/OrangeRX/OrangeRX.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
+main.obj: ../local_include/PWM/PWM.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_uart.h
@@ -140,6 +143,8 @@ C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/i2c.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/timer.h:
 
+C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/pwm.h:
+
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
 
 ../local_include/SysFlag.h:
@@ -207,6 +212,10 @@ C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stddef.h:
 
 ../local_include/OrangeRX/OrangeRX.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
+
+../local_include/PWM/PWM.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
 

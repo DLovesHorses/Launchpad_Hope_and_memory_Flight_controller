@@ -199,7 +199,7 @@ void OrangeRX_showRawData(void)
     cBuffer[0] = '\0';
 
     UARTprintf(
-            "Channel # \t     \t \t \t Physical \t \t \t \t \t \t Logical \n\n");
+            "Channel # \t     \t \t \t Physical \t \t \t \t \t Logical \n\n");
     uint8_t count = 0;
     for (count = 0; count < 7; count++)
     {
@@ -220,7 +220,7 @@ void OrangeRX_showRawData(void)
 
         // both
         sprintf(cBuffer,
-                "%s \t -> \t Freq:    %05f , \t period:    %05f \t \t Freq:    %05f , \t period:    %05f \n",
+                "%s \t -> \t Freq:    %05f , \t period:    %05f \t Freq:    %05f , \t period:    %05f \n",
                 rx_text.ch_text_alt[count], rx_data.ch_freq[count],
                 rx_data.ch_period[count], *(rx_data.pFreq_Ch[count]),
                 *(rx_data.pPeriod_Ch[count]));
@@ -343,7 +343,7 @@ void OrangeRX_extractData(void)
     // calculate actual data in [-100% - 100%]
     for (count = 1; count < 7; count++)
     {
-        rx_data.ch_act_data[count] = (2 * rx_data.ch_nom_data[count]) - 100;
+        rx_data.ch_act_data[count] = (2 * floor(rx_data.ch_nom_data[count])) - 100;
     }
 
 }

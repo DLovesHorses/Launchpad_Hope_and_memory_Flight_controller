@@ -21,6 +21,7 @@
 #include "driverlib/uart.h"
 #include "driverlib/i2c.h"
 #include "driverlib/timer.h"
+#include "driverlib/pwm.h"
 
 #include "utils/uartstdio.h"
 
