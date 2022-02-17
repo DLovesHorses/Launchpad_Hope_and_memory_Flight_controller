@@ -33,7 +33,7 @@
 
 // global variables and externs
 
-extern Orange_RX_Channel_Data rx_data;        // Received channel frequency content.
+extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -76,7 +76,7 @@ void SystemInitialize(void)
     //BMP388_Init();
 
     OrangeRX_Init();
-	PWM_Init();
+    PWM_Init();
 
 }
 
@@ -150,24 +150,27 @@ int main(void)
                 static uint8_t channelSelect = 0;
 
                 static uint32_t firstPulse_y = 0;
-                static uint32_t secondPulse_y  = 0;
+                static uint32_t secondPulse_y = 0;
 
-                firstPulse_y  = secondPulse_y ;
-                secondPulse_y  = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                firstPulse_y = secondPulse_y;
+                secondPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
 
-                double firstPulse_x = (double) (1 - (double)firstPulse_y / (double) TM4C_CLK_RATE);
-                double secondPulse_x = (double) (1 - (double)secondPulse_y / (double) TM4C_CLK_RATE);
-
+                double firstPulse_x = (double) (1
+                        - (double) firstPulse_y / (double) TM4C_CLK_RATE);
+                double secondPulse_x = (double) (1
+                        - (double) secondPulse_y / (double) TM4C_CLK_RATE);
 
                 double period = secondPulse_x - firstPulse_x;
 
-                if(firstPulse_x > secondPulse_x){
+                if (firstPulse_x > secondPulse_x)
+                {
                     period = (1.0f - firstPulse_x) + secondPulse_x;
                 }
 
-                double frequency = 1/period;
+                double frequency = 1 / period;
 
-                switch(channelSelect){
+                switch (channelSelect)
+                {
 
                 case FRAME_GAP_SELECT:
                 {
@@ -175,7 +178,6 @@ int main(void)
                     rx_data.ch_freq[0] = frequency;
                     break;
                 }
-
 
                 case CH_1_SELECT:
                 {
@@ -215,134 +217,127 @@ int main(void)
                     break;
                 }
 
-
-
-
-
-                default:{
+                default:
+                {
 #ifdef DEBUG
-                    UARTprintf("Failed: Reading channel data. Invalid Channel to store value to.\n");
+                    UARTprintf(
+                            "Failed: Reading channel data. Invalid Channel to store value to.\n");
 #endif
                     break;
                 }
                 }
 
-
                 // increment channelSelect to prepare it for next call.
                 channelSelect++;
 
-                if(channelSelect == INVALID_CHANNEL){
+                if (channelSelect == INVALID_CHANNEL)
+                {
 
                     OrangeRX_receivedChannelReorganizer();
-                    channelSelect = FRAME_GAP_SELECT;        // Store content of next frame starting from FRAME_GAP for next round.
+                    channelSelect = FRAME_GAP_SELECT; // Store content of next frame starting from FRAME_GAP for next round.
 
                 }
 
+                /*                                                      // <- Working! very good.
 
 
 
+                 static uint32_t firstPulse_y = 0;
+                 static uint32_t secondPulse_y  = 0;
+
+                 firstPulse_y  = secondPulse_y ;
+                 secondPulse_y  = TimerValueGet(WTIMER5_BASE, TIMER_A);
+
+                 double firstPulse_x = (double) (1 - (double)firstPulse_y / (double) TM4C_CLK_RATE);
+                 double secondPulse_x = (double) (1 - (double)secondPulse_y / (double) TM4C_CLK_RATE);
 
 
-/*                                                      // <- Working! very good.
+                 double period = secondPulse_x - firstPulse_x;
 
+                 if(firstPulse_x > secondPulse_x){
+                 period = (1.0f - firstPulse_x) + secondPulse_x;
+                 }
 
+                 double frequency = 1/period;
 
-                static uint32_t firstPulse_y = 0;
-                static uint32_t secondPulse_y  = 0;
+                 char cBuffer[100];
+                 //sprintf(cBuffer, "first -> %6f    second -> %6f     \n period -> %10f      frequency -> %10f\n\n", firstPulse_x, secondPulse_x,  period, frequency);
+                 sprintf(cBuffer, "Freq: %10f\n", frequency);
+                 UARTprintf("%s", cBuffer);
 
-                firstPulse_y  = secondPulse_y ;
-                secondPulse_y  = TimerValueGet(WTIMER5_BASE, TIMER_A);
-
-                double firstPulse_x = (double) (1 - (double)firstPulse_y / (double) TM4C_CLK_RATE);
-                double secondPulse_x = (double) (1 - (double)secondPulse_y / (double) TM4C_CLK_RATE);
-
-
-                double period = secondPulse_x - firstPulse_x;
-
-                if(firstPulse_x > secondPulse_x){
-                    period = (1.0f - firstPulse_x) + secondPulse_x;
-                }
-
-                double frequency = 1/period;
-
-                char cBuffer[100];
-                //sprintf(cBuffer, "first -> %6f    second -> %6f     \n period -> %10f      frequency -> %10f\n\n", firstPulse_x, secondPulse_x,  period, frequency);
-                sprintf(cBuffer, "Freq: %10f\n", frequency);
-                UARTprintf("%s", cBuffer);
-
-*/
+                 */
                 /*
-                static uint32_t count = 1;
+                 static uint32_t count = 1;
 
-                static uint32_t firstPulse_y = 0;
-                static uint32_t secondPulse_y = 0;
-                static uint32_t thirdPulse_y = 0;
+                 static uint32_t firstPulse_y = 0;
+                 static uint32_t secondPulse_y = 0;
+                 static uint32_t thirdPulse_y = 0;
 
-                static double firstPulse_x = 0;
-                static double secondPulse_x = 0;
-                static double thirdPulse_x = 0;
+                 static double firstPulse_x = 0;
+                 static double secondPulse_x = 0;
+                 static double thirdPulse_x = 0;
 
-                switch (count)
-                {
-                case 1:
-                {
-                    // save the first pulse value
-                    firstPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
-                    firstPulse_x = (double) (1
-                            - (double) firstPulse_y / (double) TM4C_CLK_RATE);
-                    count++;
-                    break;
-                }
-                case 2:
-                {
-                    // save the first pulse value
-                    secondPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
-                    secondPulse_x = (double) (1
-                            - (double) secondPulse_y / (double) TM4C_CLK_RATE);
-                    count++;
-                    break;
-                }
-                case 3:
-                {
-                    // save the first pulse value
-                    thirdPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
-                    thirdPulse_x = (double) (1
-                            - (double) thirdPulse_y / (double) TM4C_CLK_RATE);
-                    count++;
-                    break;
-                }
+                 switch (count)
+                 {
+                 case 1:
+                 {
+                 // save the first pulse value
+                 firstPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                 firstPulse_x = (double) (1
+                 - (double) firstPulse_y / (double) TM4C_CLK_RATE);
+                 count++;
+                 break;
+                 }
+                 case 2:
+                 {
+                 // save the first pulse value
+                 secondPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                 secondPulse_x = (double) (1
+                 - (double) secondPulse_y / (double) TM4C_CLK_RATE);
+                 count++;
+                 break;
+                 }
+                 case 3:
+                 {
+                 // save the first pulse value
+                 thirdPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
+                 thirdPulse_x = (double) (1
+                 - (double) thirdPulse_y / (double) TM4C_CLK_RATE);
+                 count++;
+                 break;
+                 }
 
-                case 4:
-                {
-                    // display data
+                 case 4:
+                 {
+                 // display data
 
-                    double period =
-                            (thirdPulse_x - firstPulse_x) > 0 ?
-                                    (thirdPulse_x - firstPulse_x) :
-                                    (firstPulse_x - thirdPulse_x);
-                    double duty =
-                            (secondPulse_x - firstPulse_x) > 0 ?
-                                    (secondPulse_x - firstPulse_x) :
-                                    (firstPulse_x - secondPulse_x);
-                    duty = duty / period;
+                 double period =
+                 (thirdPulse_x - firstPulse_x) > 0 ?
+                 (thirdPulse_x - firstPulse_x) :
+                 (firstPulse_x - thirdPulse_x);
+                 double duty =
+                 (secondPulse_x - firstPulse_x) > 0 ?
+                 (secondPulse_x - firstPulse_x) :
+                 (firstPulse_x - secondPulse_x);
+                 duty = duty / period;
 
-                    char cBuffer[100];
-                    sprintf(cBuffer,
-                            "first -> %10f     second -> %10f     third -> %10f.  period -> %10f, duty -> %10.f \n\n",
-                            firstPulse_x, secondPulse_x, thirdPulse_x, period,
-                            duty);
-                    UARTprintf("%s", cBuffer);
-                    count = 1;
-                    break;
-                }
+                 char cBuffer[100];
+                 sprintf(cBuffer,
+                 "first -> %10f     second -> %10f     third -> %10f.  period -> %10f, duty -> %10.f \n\n",
+                 firstPulse_x, secondPulse_x, thirdPulse_x, period,
+                 duty);
+                 UARTprintf("%s", cBuffer);
+                 count = 1;
+                 break;
+                 }
 
-                default:
-                {
-                    // do nothing
-                    break;
-                }
-                }
-*/
+                 default:
+                 {
+                 // do nothing
+                 break;
+                 }
+                 }
+                 */
 
                 /*              static bool callState = 0;          // <- working, but bad
                  callState = callState ^ 0x01;
@@ -431,7 +426,7 @@ int main(void)
 
                 switch (charRec)
                 {
-					
+
                 case '+':
                 {
                     static uint8_t duty = 5;
@@ -463,7 +458,7 @@ int main(void)
 
                     break;
                 }
-				
+
                 case 'a':
                 {
                     OrangeRX_showActData();
@@ -499,85 +494,89 @@ int main(void)
 
                 case 'p':
                 {
-                    motorSelect++;
 
-                    UARTprintf("Motor selected: ");
-                    switch(motorSelect){
+                    motorSelect++;
+                    if (motorSelect == (MOTOR_ALL + 1))
+                    {
+                        motorSelect = MOTOR_ONE; // wrap around;
+                    }
+
+                    UARTprintf("Motor selected \t: ");
+                    switch (motorSelect)
+                    {
                     case MOTOR_ONE:
                     {
-                        UARTprintf("MOTOR_ONE\n");
+                        UARTprintf("MOTOR_ONE \t \t -> \t Motor_1_Fine_Tune\n");
                         break;
                     }
 
                     case MOTOR_TWO:
                     {
-                        UARTprintf("MOTOR_TWO\n");
+                        UARTprintf("MOTOR_TWO \t \t -> \t Motor_2_Fine_Tune\n");
                         break;
                     }
 
                     case MOTOR_THREE:
                     {
-                        UARTprintf("MOTOR_THREE\n");
+                        UARTprintf(
+                                "MOTOR_THREE \t \t -> \t Motor_3_Fine_Tune\n");
                         break;
                     }
 
                     case MOTOR_FOUR:
                     {
-                        UARTprintf("MOTOR_FOUR\n");
+                        UARTprintf(
+                                "MOTOR_FOUR  \t \t -> \t Motor_4_Fine_Tune\n");
                         break;
                     }
 
                     case MOTOR_ONE_THREE:
                     {
-                        UARTprintf("MOTOR_ONE_THREE \n");
+                        UARTprintf("MOTOR_ONE_THREE \t -> \t Forward \n");
                         break;
                     }
 
                     case MOTOR_TWO_FOUR:
                     {
-                        UARTprintf("MOTOR_TWO_FOUR \n");
+                        UARTprintf("MOTOR_TWO_FOUR \t -> \t Backward\n");
                         break;
                     }
 
                     case MOTOR_ONE_TWO:
                     {
-                        UARTprintf("MOTOR_ONE_TWO \n");
+                        UARTprintf("MOTOR_ONE_TWO \t -> \t Move Left \n");
                         break;
                     }
 
                     case MOTOR_THREE_FOUR:
                     {
-                        UARTprintf("MOTOR_THREE_FOUR \n");
+                        UARTprintf("MOTOR_THREE_FOUR \t -> \t Move Right  \n");
                         break;
                     }
 
                     case MOTOR_ONE_FOUR:
                     {
-                        UARTprintf("MOTOR_ONE_FOUR \n");
+                        UARTprintf("MOTOR_ONE_FOUR \t -> \t Turn Left  \n");
                         break;
                     }
 
                     case MOTOR_TWO_THREE:
                     {
-                        UARTprintf("MOTOR_TWO_THREE \n");
+                        UARTprintf("MOTOR_TWO_THREE \t -> \t Turn Right  \n");
                         break;
                     }
 
                     case MOTOR_ALL:
                     {
-                        UARTprintf("MOTOR_ALL \n");
+                        UARTprintf("MOTOR_ALL \t \t -> \t Go up/down  \n");
                         break;
                     }
-
+                        motorSelect++;
                     default:
                     {
                         motorSelect = MOTOR_ONE;
                         UARTprintf("MOTOR_ONE \n");
                     }
-                    }
-
-                    if(motorSelect == (MOTOR_ALL + 1)){
-                        motorSelect = MOTOR_ONE; // wrap around;
                     }
 
                     break;
@@ -716,8 +715,7 @@ int main(void)
                 BUZZ_BUZZER(BUZZ_DUR_LONG_LONG, BUZZ_REP_TIME_5,
                 BUZZ_PAUSE_TIME_500);
             }
-			
-			
+
             OrangeRX_extractData();
             uint8_t duty = (uint8_t) (rx_data.ch_nom_data[3]);
             Motor_setDuty(motorSelect, duty);
