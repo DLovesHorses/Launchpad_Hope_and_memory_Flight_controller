@@ -92,6 +92,7 @@ int main(void)
 {
     SystemInitialize();
     unsigned char charRec = '\0';
+    uint8_t motorSelect = MOTOR_ALL;
     UARTprintf("System Clock: %d Hz\n", SysCtlClockGet());
     // Loop forever.
     //
@@ -496,6 +497,92 @@ int main(void)
                     break;
                 }
 
+                case 'p':
+                {
+                    motorSelect++;
+
+                    UARTprintf("Motor selected: ");
+                    switch(motorSelect){
+                    case MOTOR_ONE:
+                    {
+                        UARTprintf("MOTOR_ONE\n");
+                        break;
+                    }
+
+                    case MOTOR_TWO:
+                    {
+                        UARTprintf("MOTOR_TWO\n");
+                        break;
+                    }
+
+                    case MOTOR_THREE:
+                    {
+                        UARTprintf("MOTOR_THREE\n");
+                        break;
+                    }
+
+                    case MOTOR_FOUR:
+                    {
+                        UARTprintf("MOTOR_FOUR\n");
+                        break;
+                    }
+
+                    case MOTOR_ONE_THREE:
+                    {
+                        UARTprintf("MOTOR_ONE_THREE \n");
+                        break;
+                    }
+
+                    case MOTOR_TWO_FOUR:
+                    {
+                        UARTprintf("MOTOR_TWO_FOUR \n");
+                        break;
+                    }
+
+                    case MOTOR_ONE_TWO:
+                    {
+                        UARTprintf("MOTOR_ONE_TWO \n");
+                        break;
+                    }
+
+                    case MOTOR_THREE_FOUR:
+                    {
+                        UARTprintf("MOTOR_THREE_FOUR \n");
+                        break;
+                    }
+
+                    case MOTOR_ONE_FOUR:
+                    {
+                        UARTprintf("MOTOR_ONE_FOUR \n");
+                        break;
+                    }
+
+                    case MOTOR_TWO_THREE:
+                    {
+                        UARTprintf("MOTOR_TWO_THREE \n");
+                        break;
+                    }
+
+                    case MOTOR_ALL:
+                    {
+                        UARTprintf("MOTOR_ALL \n");
+                        break;
+                    }
+
+                    default:
+                    {
+                        motorSelect = MOTOR_ONE;
+                        UARTprintf("MOTOR_ONE \n");
+                    }
+                    }
+
+                    if(motorSelect == (MOTOR_ALL + 1)){
+                        motorSelect = MOTOR_ONE; // wrap around;
+                    }
+
+                    break;
+                }
+
                 case 'w':
                 {
 
@@ -633,7 +720,7 @@ int main(void)
 			
             OrangeRX_extractData();
             uint8_t duty = (uint8_t) (rx_data.ch_nom_data[3]);
-            Motor_setDuty(MOTOR_ALL, duty);
+            Motor_setDuty(motorSelect, duty);
         }
         else
         {

@@ -47,10 +47,10 @@ enum MOTOR_GROUP{
 };
 
 typedef struct{
-    uint8_t motor_one;      // keeps track of the duty of motor one
-    uint8_t motor_two;      // keeps track of the duty of motor two
-    uint8_t motor_three;    // keeps track of the duty of motor three
-    uint8_t motor_four;     // keeps track of the duty of motor four
+    uint32_t motor_one;      // keeps track of the duty of motor one
+    uint32_t motor_two;      // keeps track of the duty of motor two
+    uint32_t motor_three;    // keeps track of the duty of motor three
+    uint32_t motor_four;     // keeps track of the duty of motor four
 
 }MOTOR_DUTY_TRACKER;
 
