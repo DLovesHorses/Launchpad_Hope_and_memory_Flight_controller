@@ -165,9 +165,9 @@ void OrangeRX_showActData(void)
             "Channel #-> \t Normalized Data (0-100%%) \t \t Actual Data (-100%% to +100%%)\n\n");
     for (count = 1; count < 7; count++)
     {
-        sprintf(cBuffer, "%s \t -> \t \t %3.2f %% \t \t \t \t %3.0f \n",
+        sprintf(cBuffer, "%s \t -> \t \t %3.2f %% \t \t \t \t %3.2f \t -> %d\n",
                 rx_text.ch_text_alt[count], rx_data.ch_nom_data[count],
-                rx_data.ch_act_data[count]);
+                rx_data.ch_act_data[count], rx_data.dataOfCh[count]);
         UARTprintf("%s", cBuffer);
         cBuffer[0] = '\0';
     }
@@ -338,12 +338,37 @@ void OrangeRX_extractData(void)
                 - rx_data.ch_low_time[count])
                 / (rx_data.ch_high_time[count] - rx_data.ch_low_time[count]))
                 * 100;
+        //rx_data.ch_nom_data[count] = floor(rx_data.ch_nom_data[count]);
+
+        if(rx_data.ch_nom_data[count] > 100){
+            rx_data.ch_nom_data[count] = 100;
+        }
+
+        if(rx_data.ch_nom_data[count] < 0){
+            rx_data.ch_nom_data[count] = 0;
+        }
+
+        rx_data.dataOfCh[count] = trunc(rx_data.ch_nom_data[count]);
+
     }
 
     // calculate actual data in [-100% - 100%]
     for (count = 1; count < 7; count++)
     {
-        rx_data.ch_act_data[count] = (2 * floor(rx_data.ch_nom_data[count])) - 100;
+        rx_data.ch_act_data[count] = (2 * rx_data.ch_nom_data[count]) - 100;
+
+        rx_data.ch_act_data[count] = round(rx_data.ch_act_data[count]);
+
+
+        if(rx_data.ch_act_data[count] > 100){
+            rx_data.ch_act_data[count] = 100;
+        }
+
+        if(rx_data.ch_act_data[count] < -100){
+            rx_data.ch_act_data[count] = -100;
+        }
+
+
     }
 
 }

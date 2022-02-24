@@ -31,3 +31,6 @@
 
 #define ON true
 #define OFF false
+
+#define TRUE true
+#define FALSE false

@@ -30,6 +30,8 @@
 #define MOTOR_FOUR_INIT_DUTY    80          // change it to 0 on final version
 
 
+
+
 // Macros
 
 enum MOTOR_GROUP{
@@ -59,4 +61,5 @@ typedef struct{
 void PWM_Init(void);
 
 void Motor_setDuty(uint8_t motorID, uint8_t duty);
+
 

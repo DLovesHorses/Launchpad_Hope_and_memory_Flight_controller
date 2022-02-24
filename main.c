@@ -34,6 +34,7 @@
 // global variables and externs
 
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
+extern uint8_t motorSelect;
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -92,7 +93,7 @@ int main(void)
 {
     SystemInitialize();
     unsigned char charRec = '\0';
-    uint8_t motorSelect = MOTOR_ALL;
+
     UARTprintf("System Clock: %d Hz\n", SysCtlClockGet());
     // Loop forever.
     //
@@ -401,7 +402,7 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 1000) // 1 seconds
+            if (sensorDataSampleTimeCounter == 100) // 1 seconds
             {
                 // BMX160_showData();
                 // BMP388_showData();
@@ -571,7 +572,7 @@ int main(void)
                         UARTprintf("MOTOR_ALL \t \t -> \t Go up/down  \n");
                         break;
                     }
-                        motorSelect++;
+
                     default:
                     {
                         motorSelect = MOTOR_ONE;
@@ -716,9 +717,15 @@ int main(void)
                 BUZZ_PAUSE_TIME_500);
             }
 
+          /*    // test individual degree of freedoms.
+               // Press 'p' to change DOF to test.
             OrangeRX_extractData();
             uint8_t duty = (uint8_t) (rx_data.ch_nom_data[3]);
             Motor_setDuty(motorSelect, duty);
+          */
+
+
+
         }
         else
         {

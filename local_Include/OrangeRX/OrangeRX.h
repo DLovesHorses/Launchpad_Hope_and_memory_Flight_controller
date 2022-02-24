@@ -36,6 +36,16 @@
 #define ORANGE_RX_CH_5_HIGH_TIME        0.002061f    // High time for Channel 5
 #define ORANGE_RX_CH_6_HIGH_TIME        0.002055f    // High time for Channel 6
 
+#define AILERON                         1           // Channel 1
+#define ELEVATOR                        2           // Channel 2
+#define THROTTLE                        3           // Channel 3
+#define RUDDER                          4           // Channel 4
+#define MODE_SELECTOR                   5           // Channel 5
+#define E_STOP                          6           // Channel 6
+
+
+
+#define AILERON_MID                     50
 
 
 
@@ -52,6 +62,7 @@ typedef struct
     double ch_high_time[7];     // 100 %
     double ch_nom_data[7];      // normalized data [0-100%]     ; element [0] is not used.
     double ch_act_data[7];      // actual data [-100% - 100%]   ; element [0] is not used.
+    int8_t dataOfCh[7];         // Use this array for application use ; element [0] is not used.
     double ch_freq[7];      // [0] -> Frame_gap, [1] -> CH_1 ... so on
     double ch_period[7];    // same as above
 
