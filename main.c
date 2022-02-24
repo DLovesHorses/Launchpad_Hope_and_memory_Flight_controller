@@ -402,12 +402,13 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 100) // 1 seconds
+            if (sensorDataSampleTimeCounter == 1000) // 1 seconds
             {
                 // BMX160_showData();
                 // BMP388_showData();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
+                 Motor_ManMixer();
 
                 // for debug only
                 uint8_t data[8] = { 0 };

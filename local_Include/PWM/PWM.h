@@ -29,6 +29,8 @@
 #define MOTOR_THREE_INIT_DUTY   80          // change it to 0 on final version
 #define MOTOR_FOUR_INIT_DUTY    80          // change it to 0 on final version
 
+#define RC_STICK_LOW_RANGE_THRESHOLD        49
+#define RC_STICK_HIGH_RANGE_THRESHOLD       53
 
 
 
@@ -49,6 +51,7 @@ enum MOTOR_GROUP{
 };
 
 typedef struct{
+    uint32_t motor_duty[4];
     uint32_t motor_one;      // keeps track of the duty of motor one
     uint32_t motor_two;      // keeps track of the duty of motor two
     uint32_t motor_three;    // keeps track of the duty of motor three
@@ -57,9 +60,36 @@ typedef struct{
 }MOTOR_DUTY_TRACKER;
 
 
+
+enum MOTOR_MOTIONS{
+    MOVE_UP = 0,    // 0
+    MOVE_RIGHT,     // 1
+    MOVE_FWD,       // 2
+    YAW_RIGHT,      // 3
+    MOVE_DOWN,      // 4
+    MOVE_LEFT,      // 5
+    MOVE_BKD,       // 6
+    YAW_LEFT        // 7
+};
+
+enum MOTORS_AVAILABLE{
+    M1 = 0,     // Motor 1
+    M2,         // Motor 2
+    M3,         // Motor 3
+    M4          // Motor 4
+};
+
+typedef struct{
+    uint8_t numOfDeductions[4]; // This holds the number of deductions to be done on individual motor throttle values for calculation of actual net duty
+                                // one variable for each motor
+} MOTOR_VARIABLES;
+
+
 // Function prototypes
 void PWM_Init(void);
 
 void Motor_setDuty(uint8_t motorID, uint8_t duty);
+
+void Motor_ManMixer(void);
 
 

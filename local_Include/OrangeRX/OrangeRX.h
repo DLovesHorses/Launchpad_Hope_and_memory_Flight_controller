@@ -36,6 +36,7 @@
 #define ORANGE_RX_CH_5_HIGH_TIME        0.002061f    // High time for Channel 5
 #define ORANGE_RX_CH_6_HIGH_TIME        0.002055f    // High time for Channel 6
 
+/*
 #define AILERON                         1           // Channel 1
 #define ELEVATOR                        2           // Channel 2
 #define THROTTLE                        3           // Channel 3
@@ -43,9 +44,12 @@
 #define MODE_SELECTOR                   5           // Channel 5
 #define E_STOP                          6           // Channel 6
 
+*/
 
 
 #define AILERON_MID                     50
+#define ELEVATOR_MID                    50
+#define RUDDER_MID                      50
 
 
 
@@ -100,6 +104,20 @@ enum channelSelectorEnum
     CH_5_SELECT,
     CH_6_SELECT,
     INVALID_CHANNEL
+};
+
+enum logicalChannles{
+    AILERON = 1,
+    ELEVATOR,
+    THROTTLE,
+    RUDDER,
+    MODE_SELECTOR,
+    E_STOP
+};
+
+enum MotionSelectState{
+    NOT_SELECTED = 0,
+    SELECTED
 };
 
 // Function prototypes
