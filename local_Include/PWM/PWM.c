@@ -31,10 +31,10 @@ const bool subtract_Motor[8][4] = { { 0, 0, 0, 0 },      // MOVE_UP [0]
 
 };
 
-float Channel_Tune_Variable[4] = { 1.0f,     // Aileron  (K2)
-        1.0f,     // Elevator (K3)
-        1.0f,     // Throttle (K1)
-        1.0f      // Rudder   (K4)
+float Channel_Tune_Variable[4] = { 1.0f,     // Aileron  [0] (K2)
+        2.0f,     // Elevator   [1] (K3)
+        3.0f,     // Rudder     [2] (K4)
+        4.0f      // Throttle   [3] (K1)
         };
 
 bool selected_Motion[8] = { NOT_SELECTED,  // MOVE_UP      [0]
@@ -285,6 +285,9 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
  *
  *
  *
+ * To really understand this code, you are recommended to read
+ * the report and the docs for this function.
+ *
  *
  *
  */
@@ -295,22 +298,26 @@ void Motor_ManMixer(void)
 // get Channle Data
     OrangeRX_extractData();
 
-// initially no motion is selected
+    // loop variables
     uint8_t count = 0;
     uint8_t i;
+
+// initially no motion is selected
     for (count = 0; count < 8; count++)
     {
         selected_Motion[count] = NOT_SELECTED;
     }
 
+    // assign decoded channel values [0-100%] to local variables.
     int8_t throttle_value = rx_data.dataOfCh[THROTTLE];
     int8_t aileron_value = rx_data.dataOfCh[AILERON];
     int8_t elevator_value = rx_data.dataOfCh[ELEVATOR];
     int8_t rudder_value = rx_data.dataOfCh[RUDDER];
 
+    // make sure that subtract_Motor is initialized.
     if (subtract_Motor[0][0] == 0)
     {
-        UARTprintf("");
+        UARTprintf(""); // this code does nothing, but is essential for debugging purposes.
     }
 
     // if throttle value is 0, shutdown
@@ -320,6 +327,10 @@ void Motor_ManMixer(void)
         dutyOf.motor_two = 0;
         dutyOf.motor_three = 0;
         dutyOf.motor_four = 0;
+
+        for(count = 0; count < 4; count++){
+            mixer.final_duty[count] = 0;
+        }
     }
 
     else
@@ -484,8 +495,8 @@ void Motor_ManMixer(void)
 
                 for (i = 0; i < mixer.numOfDeductions[count]; i++)
                 {
-                    if ((mixer.abs_diff[count][i]
-                            > *curMax) && (mixer.marked_slot[count][i] == NULL))
+                    if ((mixer.abs_diff[count][i] > *curMax)
+                            && (mixer.marked_slot[count][i] == NULL))
                     {
                         curMax = &(mixer.abs_diff[count][i]);
                         row_number = i;
@@ -499,7 +510,98 @@ void Motor_ManMixer(void)
 
         }
 
+        // For each motor, calculate the value to be deducted.
+
+        for (count = 0; count < 4; count++)
+        {
+
+            //get no. of deduction
+            uint8_t deductionNumber = mixer.numOfDeductions[count];
+
+            // intermediate deduction variables
+            int32_t m = 0;
+            int32_t n = 0;
+            int32_t p = 0;
+            int8_t final_deduction = 0;
+
+            if (deductionNumber == 1)
+            {
+
+                // calculate m
+                m = *(mixer.descending_abs_diff[count][0]);
+                m *= 2;
+                m *= throttle_value;
+                m /= 100;
+
+                // calculate final_deduction
+                final_deduction = m; // times tune variable (to be implemented in future).
+
+            }
+
+            if (deductionNumber == 2)
+            {
+
+                // calculate m
+                m = *(mixer.descending_abs_diff[count][0]);
+                m *= 2;
+                m *= throttle_value;
+                m /= 100;
+
+                // calculate n
+
+                n = *(mixer.descending_abs_diff[count][1]);
+                n *= 2;
+                n *= (throttle_value - m);
+                n /= 100;
+                n += m;
+
+                // calculate final_deduction
+                final_deduction = m + (n - m); // times tune variable (to be implemented in future).
+
+            }
+
+            if (deductionNumber == 3)
+            {
+
+                // calculate m
+                m = *(mixer.descending_abs_diff[count][0]);
+                m *= 2;
+                m *= throttle_value;
+                m /= 100;
+
+                // calculate n
+
+                n = *(mixer.descending_abs_diff[count][1]);
+                n *= 2;
+                n *= (throttle_value - m);
+                n /= 100;
+                n += m;
+
+                // calculate p
+
+                p = *(mixer.descending_abs_diff[count][2]);
+                p *= 2;
+                p *= (throttle_value - n);
+                p /= 100;
+                p += n;
+
+                // calculate final_deduction
+                final_deduction = m + (n - m) + (p - n); // times tune variable (to be implemented in future).
+
+            }
+
+            mixer.final_duty[count] = throttle_value - final_deduction;
+        }
+
     }
+
+
+    // modify the output.
+
+    for(count = 0; count < 4; count++){
+        Motor_setDuty(count, mixer.final_duty[count]);
+    }
+
 
 #ifdef DEBUG
     UARTprintf("Throttle: \t %d , \n", throttle_value);
@@ -540,6 +642,14 @@ void Motor_ManMixer(void)
                         *(mixer.descending_abs_diff[count][i]));
             }
         }
+    }
+
+    UARTprintf("\n\n");
+
+    UARTprintf("Final Output: \n");
+    for (count = 0; count < 4; count++){
+
+        UARTprintf("Motor %d : \t %d\n", (count + 1), mixer.final_duty[count]);
     }
 
     UARTprintf("\n\n");

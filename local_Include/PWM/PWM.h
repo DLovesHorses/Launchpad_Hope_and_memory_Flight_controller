@@ -88,6 +88,10 @@ typedef struct{
     int8_t abs_diff[4][3];
     int8_t *descending_abs_diff[4][3];
     bool marked_slot[4][3]; // used to mark slots that are already compared while sorting process
+
+    float *pMultipliers[4][3];  // keeps track of which multiplier value to use in final deduction calculations for each DOF and for each Motor.
+
+    uint8_t final_duty[4];      // final duty of each motor.
 } MOTOR_VARIABLES;
 
 

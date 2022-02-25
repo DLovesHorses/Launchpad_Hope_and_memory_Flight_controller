@@ -402,7 +402,7 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 500) // 1 seconds
+            if (sensorDataSampleTimeCounter == 100) // 1 seconds
             {
                 // BMX160_showData();
                 // BMP388_showData();
