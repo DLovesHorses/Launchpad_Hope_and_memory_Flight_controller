@@ -297,6 +297,7 @@ void Motor_ManMixer(void)
 
 // initially no motion is selected
     uint8_t count = 0;
+    uint8_t i;
     for (count = 0; count < 8; count++)
     {
         selected_Motion[count] = NOT_SELECTED;
@@ -306,7 +307,6 @@ void Motor_ManMixer(void)
     int8_t aileron_value = rx_data.dataOfCh[AILERON];
     int8_t elevator_value = rx_data.dataOfCh[ELEVATOR];
     int8_t rudder_value = rx_data.dataOfCh[RUDDER];
-
 
     if (subtract_Motor[0][0] == 0)
     {
@@ -387,6 +387,18 @@ void Motor_ManMixer(void)
         mixer.numOfDeductions[M3] = 0;
         mixer.numOfDeductions[M4] = 0;
 
+        // initialize pointer to individual DOF to null.
+        for (count = 0; count < 4; count++)
+        {
+            for (i = 0; i < 3; i++)
+            {
+                mixer.p[count][i] = NULL;
+                mixer.descending_abs_diff[count][i] = NULL;
+                mixer.marked_slot[count][i] = NULL;
+            }
+        }
+
+        // count and point individual DOF for each motor
         for (count = 0; count < 4; count++)
         {
             uint8_t dof = 0;
@@ -395,9 +407,96 @@ void Motor_ManMixer(void)
                 if ((selected_Motion[dof] == SELECTED)
                         && (subtract_Motor[dof][count] == SELECTED))
                 {
+                    switch (dof)
+                    {
+
+                    case MOVE_UP:
+                    case MOVE_DOWN:
+                    {
+                        // point to throttle
+                        mixer.p[count][mixer.numOfDeductions[count]] =
+                                &throttle_value;
+                        break;
+                    }
+
+                    case MOVE_RIGHT:
+                    case MOVE_LEFT:
+                    {
+                        // point to aileron
+                        mixer.p[count][mixer.numOfDeductions[count]] =
+                                &aileron_value;
+                        break;
+                    }
+
+                    case MOVE_FWD:
+                    case MOVE_BKD:
+                    {
+                        // point to elevator
+                        mixer.p[count][mixer.numOfDeductions[count]] =
+                                &elevator_value;
+                        break;
+                    }
+
+                    case YAW_RIGHT:
+                    case YAW_LEFT:
+                    {
+                        // point to rudder
+                        mixer.p[count][mixer.numOfDeductions[count]] =
+                                &rudder_value;
+                        break;
+                    }
+
+                    }
+
                     mixer.numOfDeductions[count]++;
                 }
             }
+        }
+
+        // for each motor, and for each valid DOF,
+        // calcultate |50 - DOF|
+
+        for (count = 0; count < 4; count++)
+        {
+            for (i = 0; i < mixer.numOfDeductions[count]; i++)
+            {
+                mixer.abs_diff[count][i] = abs(50 - *(mixer.p[count][i]));
+            }
+        }
+
+        // point the decending_abs_diff pointer to each DOF from max to min value of |50 - abs|
+
+        // for each motor, and until each dof is marked, sort in decending order.
+        for (count = 0; count < 4; count++)
+        {
+
+            uint8_t timesToLoop = mixer.numOfDeductions[count];
+            uint8_t descending_tracker = 0;
+
+            while (timesToLoop > 0)
+            {
+                timesToLoop--;
+                int8_t dummy = 0;
+                int8_t *curMax = &dummy;
+
+                uint8_t motor_number = count;
+                uint8_t row_number = 0;
+
+                for (i = 0; i < mixer.numOfDeductions[count]; i++)
+                {
+                    if ((mixer.abs_diff[count][i]
+                            > *curMax) && (mixer.marked_slot[count][i] == NULL))
+                    {
+                        curMax = &(mixer.abs_diff[count][i]);
+                        row_number = i;
+                    }
+                }
+
+                mixer.descending_abs_diff[count][descending_tracker] = curMax;
+                mixer.marked_slot[motor_number][row_number] = SELECTED;
+                descending_tracker++;
+            }
+
         }
 
     }
@@ -420,11 +519,31 @@ void Motor_ManMixer(void)
     UARTprintf("\n\n");
 
     UARTprintf("Number of deductions: \n");
-    for (count = 0; count < 4; count++){
-        UARTprintf("Motor %d: \t %d \n", (count+1), mixer.numOfDeductions[count]);
+    for (count = 0; count < 4; count++)
+    {
+        UARTprintf("Motor %d: \t %d \n", (count + 1),
+                   mixer.numOfDeductions[count]);
     }
 
     UARTprintf("\n\n");
+
+    for (count = 0; count < 4; count++)
+    {
+        for (i = 0; i < 3; i++)
+        {
+            if (mixer.p[count][i] != NULL)
+            {
+                UARTprintf(
+                        "Motor %d \t deduction %d -> %d \t Absolute: %d \t Descending: %d\n",
+                        (count + 1), i, *(mixer.p[count][i]),
+                        mixer.abs_diff[count][i],
+                        *(mixer.descending_abs_diff[count][i]));
+            }
+        }
+    }
+
+    UARTprintf("\n\n");
+
 #endif
 
 }

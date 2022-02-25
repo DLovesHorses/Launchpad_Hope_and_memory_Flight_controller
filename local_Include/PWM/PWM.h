@@ -82,6 +82,12 @@ enum MOTORS_AVAILABLE{
 typedef struct{
     uint8_t numOfDeductions[4]; // This holds the number of deductions to be done on individual motor throttle values for calculation of actual net duty
                                 // one variable for each motor
+
+    int8_t *p[4][3];        // pointer to [motor][individual_DOF]
+
+    int8_t abs_diff[4][3];
+    int8_t *descending_abs_diff[4][3];
+    bool marked_slot[4][3]; // used to mark slots that are already compared while sorting process
 } MOTOR_VARIABLES;
 
 
