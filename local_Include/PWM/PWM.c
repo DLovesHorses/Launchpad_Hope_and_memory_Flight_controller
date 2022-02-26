@@ -18,6 +18,8 @@
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
 uint8_t motorSelect = MOTOR_ALL;
 
+MOTOR_VARIABLES mixer;
+
 MOTOR_DUTY_TRACKER dutyOf;
 
 const bool subtract_Motor[8][4] = { { 0, 0, 0, 0 },      // MOVE_UP [0]
@@ -31,10 +33,11 @@ const bool subtract_Motor[8][4] = { { 0, 0, 0, 0 },      // MOVE_UP [0]
 
 };
 
-float Channel_Tune_Variable[4] = { 1.0f,     // Aileron  [0] (K2)
-        2.0f,     // Elevator   [1] (K3)
-        3.0f,     // Rudder     [2] (K4)
-        4.0f      // Throttle   [3] (K1)
+// NOTE :
+float Channel_Tune_Variable[4] = { 1.0f,     // this is 'a' // Aileron  [0] (K2)   // K2 = a% of k1
+        1.0f,     // this is 'e' // Elevator   [1] (K3)        // K3 = e% of k1
+        1.0f,     // this is 'r' // Rudder     [2] (K4)        // K4 = r% of k1
+        1.0f      // Throttle   [3] (K1)
         };
 
 bool selected_Motion[8] = { NOT_SELECTED,  // MOVE_UP      [0]
@@ -50,7 +53,6 @@ bool selected_Motion[8] = { NOT_SELECTED,  // MOVE_UP      [0]
 char *motion_string[8] = { "UP", "RIGHT", "Forward", "Rotate Right", "DOWN",
                            "LEFT", "Backward", "Rotate Left" };
 
-MOTOR_VARIABLES mixer;
 // Function definitions.
 
 void PWM_Init(void)
@@ -106,6 +108,11 @@ void PWM_Init(void)
 // Gen 0 of Module 0 controls PB6 and PB7
     PWMGenEnable(PWM1_BASE, PWM_GEN_1);
     PWMGenEnable(PWM0_BASE, PWM_GEN_0);
+
+    mixer.channelConstant[K1] = Channel_Tune_Variable[K1];  // Throttle constant
+    mixer.channelConstant[K2] = Channel_Tune_Variable[K2] * Channel_Tune_Variable[K1];   // Aileron constant (in terms of percentage of throttle_constant)
+    mixer.channelConstant[K3] = Channel_Tune_Variable[K3] * Channel_Tune_Variable[K1];  // Elevator constant (in terms of percentage of throttle_constant)
+    mixer.channelConstant[K4] = Channel_Tune_Variable[K4] * Channel_Tune_Variable[K1];   // Rudder constant (in terms of percentage of throttle_constant)
 
     UARTprintf("PWM 0 clock: 0x%x\n", SysCtlPWMClockGet());
     UARTprintf("PWM 0 Gen 0 Period : %d\n",
@@ -328,7 +335,8 @@ void Motor_ManMixer(void)
         dutyOf.motor_three = 0;
         dutyOf.motor_four = 0;
 
-        for(count = 0; count < 4; count++){
+        for (count = 0; count < 4; count++)
+        {
             mixer.final_duty[count] = 0;
         }
     }
@@ -403,7 +411,8 @@ void Motor_ManMixer(void)
         {
             for (i = 0; i < 3; i++)
             {
-                mixer.p[count][i] = NULL;
+                mixer.pChValue[count][i] = NULL;
+                mixer.pChConstant[count][i] = NULL;
                 mixer.descending_abs_diff[count][i] = NULL;
                 mixer.marked_slot[count][i] = NULL;
             }
@@ -424,9 +433,13 @@ void Motor_ManMixer(void)
                     case MOVE_UP:
                     case MOVE_DOWN:
                     {
-                        // point to throttle
-                        mixer.p[count][mixer.numOfDeductions[count]] =
+                        // point to throttle value
+                        mixer.pChValue[count][mixer.numOfDeductions[count]] =
                                 &throttle_value;
+
+                        // point to throttle constant
+                        mixer.pChConstant[count][mixer.numOfDeductions[count]] =
+                                &(mixer.channelConstant[K1]);
                         break;
                     }
 
@@ -434,8 +447,13 @@ void Motor_ManMixer(void)
                     case MOVE_LEFT:
                     {
                         // point to aileron
-                        mixer.p[count][mixer.numOfDeductions[count]] =
+                        mixer.pChValue[count][mixer.numOfDeductions[count]] =
                                 &aileron_value;
+
+                        // point to aileron constant
+                        mixer.pChConstant[count][mixer.numOfDeductions[count]] =
+                                &(mixer.channelConstant[K2]);
+
                         break;
                     }
 
@@ -443,8 +461,13 @@ void Motor_ManMixer(void)
                     case MOVE_BKD:
                     {
                         // point to elevator
-                        mixer.p[count][mixer.numOfDeductions[count]] =
+                        mixer.pChValue[count][mixer.numOfDeductions[count]] =
                                 &elevator_value;
+
+                        // point to elevator constant
+                        mixer.pChConstant[count][mixer.numOfDeductions[count]] =
+                                &(mixer.channelConstant[K3]);
+
                         break;
                     }
 
@@ -452,8 +475,13 @@ void Motor_ManMixer(void)
                     case YAW_LEFT:
                     {
                         // point to rudder
-                        mixer.p[count][mixer.numOfDeductions[count]] =
+                        mixer.pChValue[count][mixer.numOfDeductions[count]] =
                                 &rudder_value;
+
+                        // point to rudder constant
+                        mixer.pChConstant[count][mixer.numOfDeductions[count]] =
+                                &(mixer.channelConstant[K4]);
+
                         break;
                     }
 
@@ -471,7 +499,9 @@ void Motor_ManMixer(void)
         {
             for (i = 0; i < mixer.numOfDeductions[count]; i++)
             {
-                mixer.abs_diff[count][i] = abs(50 - *(mixer.p[count][i]));
+                mixer.abs_diff[count][i] = abs(
+                        50 - *(mixer.pChValue[count][i]));
+
             }
         }
 
@@ -488,7 +518,9 @@ void Motor_ManMixer(void)
             {
                 timesToLoop--;
                 int8_t dummy = 0;
+                float dummy_f = 0.0f;
                 int8_t *curMax = &dummy;
+                float *curConstantMax = &dummy_f;
 
                 uint8_t motor_number = count;
                 uint8_t row_number = 0;
@@ -499,11 +531,14 @@ void Motor_ManMixer(void)
                             && (mixer.marked_slot[count][i] == NULL))
                     {
                         curMax = &(mixer.abs_diff[count][i]);
+                        curConstantMax = (mixer.pChConstant[count][i]);
                         row_number = i;
                     }
                 }
 
                 mixer.descending_abs_diff[count][descending_tracker] = curMax;
+                mixer.descending_constant_matrix[count][descending_tracker] =
+                        curConstantMax;
                 mixer.marked_slot[motor_number][row_number] = SELECTED;
                 descending_tracker++;
             }
@@ -518,6 +553,11 @@ void Motor_ManMixer(void)
             //get no. of deduction
             uint8_t deductionNumber = mixer.numOfDeductions[count];
 
+            // Multipliers
+            float throttle_multiplier = mixer.channelConstant[K1];
+            float multiplier_0 = 0.0f;
+            float multiplier_1 = 0.0f;
+            float multiplier_2 = 0.0f;
             // intermediate deduction variables
             int32_t m = 0;
             int32_t n = 0;
@@ -533,8 +573,11 @@ void Motor_ManMixer(void)
                 m *= throttle_value;
                 m /= 100;
 
+                // assign multiplier from descending_constant matrix.
+                multiplier_0 = *(mixer.descending_constant_matrix[count][0]);
+
                 // calculate final_deduction
-                final_deduction = m; // times tune variable (to be implemented in future).
+                final_deduction = m * multiplier_0;
 
             }
 
@@ -555,9 +598,13 @@ void Motor_ManMixer(void)
                 n /= 100;
                 n += m;
 
-                // calculate final_deduction
-                final_deduction = m + (n - m); // times tune variable (to be implemented in future).
+                // assign multiplier from descending_constant matrix.
+                multiplier_0 = *(mixer.descending_constant_matrix[count][0]);
+                multiplier_1 = *(mixer.descending_constant_matrix[count][1]);
 
+                // calculate final_deduction
+                final_deduction = (m * multiplier_0);
+                final_deduction += ((n - m) * multiplier_1);
             }
 
             if (deductionNumber == 3)
@@ -585,23 +632,30 @@ void Motor_ManMixer(void)
                 p /= 100;
                 p += n;
 
+                // assign multiplier from descending_constant matrix.
+                multiplier_0 = *(mixer.descending_constant_matrix[count][0]);
+                multiplier_1 = *(mixer.descending_constant_matrix[count][1]);
+                multiplier_2 = *(mixer.descending_constant_matrix[count][2]);
+
                 // calculate final_deduction
-                final_deduction = m + (n - m) + (p - n); // times tune variable (to be implemented in future).
+                final_deduction = (m * multiplier_0);
+                final_deduction += ((n - m) * multiplier_1);
+                final_deduction += ((p - n) * multiplier_2);
+
 
             }
 
-            mixer.final_duty[count] = throttle_value - final_deduction;
+            mixer.final_duty[count] = (throttle_value * throttle_multiplier) - final_deduction;
         }
 
     }
 
-
     // modify the output.
 
-    for(count = 0; count < 4; count++){
+    for (count = 0; count < 4; count++)
+    {
         Motor_setDuty(count, mixer.final_duty[count]);
     }
-
 
 #ifdef DEBUG
     UARTprintf("Throttle: \t %d , \n", throttle_value);
@@ -633,11 +687,11 @@ void Motor_ManMixer(void)
     {
         for (i = 0; i < 3; i++)
         {
-            if (mixer.p[count][i] != NULL)
+            if (mixer.pChValue[count][i] != NULL)
             {
                 UARTprintf(
                         "Motor %d \t deduction %d -> %d \t Absolute: %d \t Descending: %d\n",
-                        (count + 1), i, *(mixer.p[count][i]),
+                        (count + 1), i, *(mixer.pChValue[count][i]),
                         mixer.abs_diff[count][i],
                         *(mixer.descending_abs_diff[count][i]));
             }
@@ -647,7 +701,8 @@ void Motor_ManMixer(void)
     UARTprintf("\n\n");
 
     UARTprintf("Final Output: \n");
-    for (count = 0; count < 4; count++){
+    for (count = 0; count < 4; count++)
+    {
 
         UARTprintf("Motor %d : \t %d\n", (count + 1), mixer.final_duty[count]);
     }

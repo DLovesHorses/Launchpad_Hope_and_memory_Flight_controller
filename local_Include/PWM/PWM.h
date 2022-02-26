@@ -79,17 +79,30 @@ enum MOTORS_AVAILABLE{
     M4          // Motor 4
 };
 
+
+enum MOTOR_CONSTANTS{
+    K2 = 0,     // Aileron constant
+    K3,         // Eletavor constant
+    K4,         // Rudder constant
+    K1          // Throttle constant
+};
+
 typedef struct{
+
+    float channelConstant[4];
     uint8_t numOfDeductions[4]; // This holds the number of deductions to be done on individual motor throttle values for calculation of actual net duty
                                 // one variable for each motor
 
-    int8_t *p[4][3];        // pointer to [motor][individual_DOF]
+    int8_t *pChValue[4][3];        // pointer to channel raw values [motor][individual_DOF]
+    float *pChConstant[4][3];
 
     int8_t abs_diff[4][3];
-    int8_t *descending_abs_diff[4][3];
+    int8_t *descending_abs_diff[4][3];  // used to keep track of descending DOF value for each motor.
+    float *descending_constant_matrix[4][3]; // used to keep track of constant for descending matrix.
     bool marked_slot[4][3]; // used to mark slots that are already compared while sorting process
 
-    float *pMultipliers[4][3];  // keeps track of which multiplier value to use in final deduction calculations for each DOF and for each Motor.
+    float multiplierMatrix[4][3];  // this matrix gets populated by which constants to use for the abs_diff DOF entry. (See notes to understand it better since it is difficult to articulate the concept in here.
+    // keeps track of which multiplier value to use in final deduction calculations for each DOF and for each Motor.
 
     uint8_t final_duty[4];      // final duty of each motor.
 } MOTOR_VARIABLES;
