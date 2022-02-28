@@ -165,6 +165,10 @@ int main(void)
 
                 if (firstPulse_x > secondPulse_x)
                 {
+                    // calculate actual period.
+                    // this is necessary in order to get the correct period if the
+                    // timer value is reset before receiving second pulse and after
+                    // receiveing first pulse.
                     period = (1.0f - firstPulse_x) + secondPulse_x;
                 }
 
