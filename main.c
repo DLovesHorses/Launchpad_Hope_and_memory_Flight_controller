@@ -238,158 +238,24 @@ int main(void)
                     channelSelect = FRAME_GAP_SELECT; // Store content of next frame starting from FRAME_GAP for next round.
 
                 }
-
-                /*                                                      // <- Working! very good.
-
-
-
-                 static uint32_t firstPulse_y = 0;
-                 static uint32_t secondPulse_y  = 0;
-
-                 firstPulse_y  = secondPulse_y ;
-                 secondPulse_y  = TimerValueGet(WTIMER5_BASE, TIMER_A);
-
-                 double firstPulse_x = (double) (1 - (double)firstPulse_y / (double) TM4C_CLK_RATE);
-                 double secondPulse_x = (double) (1 - (double)secondPulse_y / (double) TM4C_CLK_RATE);
-
-
-                 double period = secondPulse_x - firstPulse_x;
-
-                 if(firstPulse_x > secondPulse_x){
-                 period = (1.0f - firstPulse_x) + secondPulse_x;
-                 }
-
-                 double frequency = 1/period;
-
-                 char cBuffer[100];
-                 //sprintf(cBuffer, "first -> %6f    second -> %6f     \n period -> %10f      frequency -> %10f\n\n", firstPulse_x, secondPulse_x,  period, frequency);
-                 sprintf(cBuffer, "Freq: %10f\n", frequency);
-                 UARTprintf("%s", cBuffer);
-
-                 */
-                /*
-                 static uint32_t count = 1;
-
-                 static uint32_t firstPulse_y = 0;
-                 static uint32_t secondPulse_y = 0;
-                 static uint32_t thirdPulse_y = 0;
-
-                 static double firstPulse_x = 0;
-                 static double secondPulse_x = 0;
-                 static double thirdPulse_x = 0;
-
-                 switch (count)
-                 {
-                 case 1:
-                 {
-                 // save the first pulse value
-                 firstPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
-                 firstPulse_x = (double) (1
-                 - (double) firstPulse_y / (double) TM4C_CLK_RATE);
-                 count++;
-                 break;
-                 }
-                 case 2:
-                 {
-                 // save the first pulse value
-                 secondPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
-                 secondPulse_x = (double) (1
-                 - (double) secondPulse_y / (double) TM4C_CLK_RATE);
-                 count++;
-                 break;
-                 }
-                 case 3:
-                 {
-                 // save the first pulse value
-                 thirdPulse_y = TimerValueGet(WTIMER5_BASE, TIMER_A);
-                 thirdPulse_x = (double) (1
-                 - (double) thirdPulse_y / (double) TM4C_CLK_RATE);
-                 count++;
-                 break;
-                 }
-
-                 case 4:
-                 {
-                 // display data
-
-                 double period =
-                 (thirdPulse_x - firstPulse_x) > 0 ?
-                 (thirdPulse_x - firstPulse_x) :
-                 (firstPulse_x - thirdPulse_x);
-                 double duty =
-                 (secondPulse_x - firstPulse_x) > 0 ?
-                 (secondPulse_x - firstPulse_x) :
-                 (firstPulse_x - secondPulse_x);
-                 duty = duty / period;
-
-                 char cBuffer[100];
-                 sprintf(cBuffer,
-                 "first -> %10f     second -> %10f     third -> %10f.  period -> %10f, duty -> %10.f \n\n",
-                 firstPulse_x, secondPulse_x, thirdPulse_x, period,
-                 duty);
-                 UARTprintf("%s", cBuffer);
-                 count = 1;
-                 break;
-                 }
-
-                 default:
-                 {
-                 // do nothing
-                 break;
-                 }
-                 }
-                 */
-
-                /*              static bool callState = 0;          // <- working, but bad
-                 callState = callState ^ 0x01;
-
-                 static uint32_t firstMeasure = 0;
-                 static uint32_t secondMeasure = 0;
-                 int32_t difference = 0;
-
-                 if (callState == 1)
-                 {
-                 firstMeasure = TimerValueGet(WTIMER5_BASE, TIMER_A);
-                 }
-                 else
-                 {
-
-                 //firstMeasure = secondMeasure;
-                 secondMeasure = TimerValueGet(WTIMER5_BASE, TIMER_A);
-
-                 #ifdef DEBUG
-                 //BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_4,
-                 // BUZZ_PAUSE_TIME_100);
-
-                 difference = (int32_t) firstMeasure
-                 - (int32_t) secondMeasure;
-
-                 double period = (double) difference / (double)TM4C_CLK_RATE;
-                 double frequency = (double) 1/period;
-
-                 char cBuffer[100];
-                 //sprintf(cBuffer, "Time between edges:  %d  ->  %f Seconds \n\n", difference, us_timeScale);
-
-                 sprintf(cBuffer,
-                 "first -> %10d second -> %10d        difference -> %10d     period -> %10f    frequency -> %10f\n\n",
-                 firstMeasure, secondMeasure, difference, period, frequency);
-                 UARTprintf("%s", cBuffer);
-
-                 #endif
-                 }
-                 LED_LED1(callState);
-
-
-
-                 */
             }
+
             /*
+             *
+             *
+             *
+             *
+             *
+             *
+             *
              *
              *
              *
              *
              * Operation to do if BMP388 Data-Ready int was sent.
              */
+
+
             if (SysFlag_Check(BMP388_DRDY_INT))
             {
                 // clear the flag
@@ -589,30 +455,6 @@ int main(void)
 
                     // wake the BMX160
                     BMX160_wakeUp();
-#ifdef DEBUG
-
-                    /*
-                     uint8_t dataToRec;
-
-                     UARTprintf("\n MPU9250: WHO_AM_I command sending...\n");
-                     I2C_ReadByte(MPU9250_SA, MPU9250_WHO_AM_I, &dataToRec);
-
-                     UARTprintf("MPU9250: WHO_AM_I command response: %X\n",
-                     dataToRec);
-
-                     UARTprintf("\n AK8963: WHO_AM_I command sending...\n");
-                     I2C_ReadByte(AK8963_SA, AK8963_WIA, &dataToRec);
-
-                     UARTprintf("AK_8963: WHO_AM_I command response: %X\n",
-                     dataToRec);
-
-                     UARTprintf("\n BMP180: WHO_AM_I command sending...\n");
-                     I2C_ReadByte(BMP280_SA, BMP280_CHIP_ID, &dataToRec);
-
-                     UARTprintf("BMP180: WHO_AM_I command response: %X\n",
-                     dataToRec);
-                     */
-#endif
                     break;
 
                 }
