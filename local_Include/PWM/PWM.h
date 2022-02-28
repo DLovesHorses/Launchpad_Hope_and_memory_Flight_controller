@@ -35,7 +35,15 @@
 
 
 // Macros
-
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 enum MOTOR_GROUP{
     MOTOR_ONE = 0,
     MOTOR_TWO,
@@ -50,6 +58,16 @@ enum MOTOR_GROUP{
     MOTOR_ALL                   // All motors
 };
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 typedef struct{
     uint32_t motor_duty[4];
     uint32_t motor_one;      // keeps track of the duty of motor one
@@ -59,6 +77,17 @@ typedef struct{
 
 }MOTOR_DUTY_TRACKER;
 
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 
 enum MOTOR_MOTIONS{
@@ -71,7 +100,16 @@ enum MOTOR_MOTIONS{
     MOVE_BKD,       // 6
     YAW_LEFT        // 7
 };
-
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 enum MOTORS_AVAILABLE{
     M1 = 0,     // Motor 1
     M2,         // Motor 2
@@ -79,7 +117,16 @@ enum MOTORS_AVAILABLE{
     M4          // Motor 4
 };
 
-
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 enum MOTOR_CONSTANTS{
     K2 = 0,     // Aileron constant
     K3,         // Eletavor constant
@@ -87,6 +134,19 @@ enum MOTOR_CONSTANTS{
     K1          // Throttle constant
 };
 
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 typedef struct{
 
     float channelConstant[4];

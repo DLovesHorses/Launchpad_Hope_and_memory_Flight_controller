@@ -292,8 +292,87 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
  *
  *
  *
- * To really understand this code, you are recommended to read
+ * To really understand this code, please read
  * the report and the docs for this function.
+ *
+ *
+ * This function divides the operation of channel mixing
+ * into many small tasks. Many tasks involve tracking the
+ * values of the modified channel content to assist in the
+ * final calculation of the deduction values for each motor.
+ *
+ * Two types of values are tracked:
+ * 1. The modified Channel content for each DOF.
+ * 2. The associated channel constants for each DOF.
+ *
+ * Pre-mix tasks:
+ *
+ * Task 1:  Acquire the data from the received signal
+ *
+ * Task 2:  Make sure that initially no motion is selected.
+ *
+ * Task 3:  Check the value of Throttle channel.
+ *          If it is very low (less than 3) make duty of every motor '0' and exit.
+ *
+ *          It it is not low, enable the mixing algorithm.
+ *
+ *
+ * Mixing Algorithm tasks:
+ *
+ * Task 1:  Initialize the duty of each motor <- Throttle Value.
+ *
+ * Task 2:  Using the Motor_deduction table ( subtract_Motor[][])
+ *          and DOF selection table (selected_Motion[]),
+ *          note the motion that will be activated based on the
+ *          channel values.
+ *
+ * Task 3:  For each motor, make sure that initially the number of
+ *          deductions = '0'.
+ *
+ *
+ * Task 4:  Make sure that each tracking pointer is set to NULL
+ *          before continuing.
+ *
+ * Task 5:  For each motor, count and store the number of deductions
+ *          that will be done on the final duty of that motor.
+ *          These values will be stored in mixer.numOfDeductions[M#]
+ *          where '#' is motor number (1, 2, 3 or 4).
+ *
+ *          See notes to see it pictorially.
+ *
+ *
+ * Task 6:  For each motor and selected motion, track the
+ *          channel value using mixer.pChValue[][] pointers.
+ *
+ *          For each motor and selected motion, track the
+ *          channel multiplier constants using mixer.pChConstant[][] pointers.
+ *
+ *
+ * Task 7:  For each motor and noOfDeduction, calculate
+ *          absolute difference from mid-position ( |50 - *pChValue| )
+ *          and store it in mixer.abs_diff[][] array.
+ *
+ * Task 8:  For each motor, track each abs_diff value in
+ *          descending order. The tracker pointers are in
+ *          mixer.descending_abs_diff[][].
+ *
+ *          For each motor, track each channel Multiplier constant in
+ *          order that corresponds the descending order of
+ *          the abs_diff values. The tracker pointers are in
+ *          mixer.descending_constant_matrix[][].
+ *
+ *          See notes to understand it better.
+ *
+ *
+ * Task 9:  For each motor, calculate the value that will be
+ *          deducted and the final duty that will be the output.
+ *
+ *          Use the information of mixer.noOfDeduction to determine
+ *          which equation to use, and which intermediate variables
+ *          will determine the final deduction value.
+ *
+ * Task 10: For each motor, send the final calculated value to its output
+ *          (Set PWM duty).
  *
  *
  *
@@ -301,6 +380,8 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
 
 void Motor_ManMixer(void)
 {
+
+    // Pre-Mix tasks
 
 // get Channle Data
     OrangeRX_extractData();
@@ -343,7 +424,9 @@ void Motor_ManMixer(void)
 
     else
     {
-        // throttle value is in the low range
+        // Mixig Algorithm
+
+        // throttle value is active
         selected_Motion[MOVE_UP] = SELECTED;
 
         dutyOf.motor_one = throttle_value;

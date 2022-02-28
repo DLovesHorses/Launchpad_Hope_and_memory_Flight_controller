@@ -408,7 +408,7 @@ int main(void)
                 // BMP388_showData();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
-                 Motor_ManMixer();
+                Motor_ManMixer();
 
                 // for debug only
                 uint8_t data[8] = { 0 };
@@ -718,7 +718,7 @@ int main(void)
                 BUZZ_PAUSE_TIME_500);
             }
 
-          /*    // test individual degree of freedoms.
+           /*   // test individual degree of freedoms.
                // Press 'p' to change DOF to test.
             OrangeRX_extractData();
             uint8_t duty = (uint8_t) (rx_data.ch_nom_data[3]);
