@@ -22,6 +22,10 @@
 struct bmp3_dev dev;
 uint8_t BMP388_addr;
 
+float base_altitude = 0.0f;
+
+
+
 /*
  * settings to configure:
  *
@@ -180,8 +184,26 @@ void BMP388_Init(void)
     }
     else
     {
+
+        // take minimum of 100 altitude reading
+        // and store it in base altitude variable.
+
+        float intermediate_result = BMP388_readAltitude();
+        uint8_t count = 0;
+        float rslt = intermediate_result;
+        for(count = 0; count < 100; count++){
+            rslt = BMP388_readAltitude();
+            intermediate_result  = (rslt < intermediate_result) ? rslt : intermediate_result;
+        }
+
+        base_altitude = intermediate_result;
+
 #ifdef DEBUG
         UARTprintf("BMP388 Initialized...\n");
+
+        char buffer[80];
+        sprintf(buffer, "Base Altitude: %f", base_altitude);
+        UARTprintf("%s\n", buffer);
         BUZZ_BUZZER(BUZZ_DUR_SHORT, BUZZ_REP_TIME_3, BUZZ_PAUSE_TIME_100);
 #endif
     }
@@ -413,7 +435,7 @@ int8_t BMP388_set_config(void)
 
     // write config reg data
     reg_addr = BMP3_CONFIG_ADDR;
-    uint8_t config_data = 0x02;
+    uint8_t config_data = 0x0E;
     rslt = BMP388_set_regs(&reg_addr, &config_data, 1);
 
     if (rslt != BMP3_OK)
@@ -539,8 +561,8 @@ void BMP388_showData(void)
     charBuffer[0] = '\0';
 
     // data from BMP388_readAltitude
-    sprintf(charBuffer, "Alt.: \t \t  %7.3f \t (readAltitude)\n",
-            BMP388_readAltitude());
+    sprintf(charBuffer, "Alt.: \t \t  %7.3f \t (readAltitude) \t Base Altitude : %f\n",
+            BMP388_readAltitude() - base_altitude, base_altitude);
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 

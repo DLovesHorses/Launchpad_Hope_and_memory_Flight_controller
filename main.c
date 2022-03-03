@@ -68,17 +68,18 @@ void SystemInitialize(void)
     SWITCH_Init();
 
     UART0_STDIO_Init();
-    //I2C0_Init();
+    I2C0_Init();
 
-    // PCF8574A_Init();
+     PCF8574A_Init();
     // MPU9250_Init(); // don't use
-    // BMX160_Init();
-    // init_Buzzer();
-    //BMP388_Init();
+     BMX160_Init();
+    init_Buzzer();
+    BMP388_Init();
 
     OrangeRX_Init();
     PWM_Init();
 
+    // BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_2, BUZZ_PAUSE_TIME_500 );
 }
 
 //*****************************************************************************
@@ -272,13 +273,13 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 100) // 1 seconds
+            if (sensorDataSampleTimeCounter == 500) // 1 seconds
             {
-                // BMX160_showData();
-                // BMP388_showData();
+                 BMX160_showData();
+                 BMP388_showData();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
-                Motor_ManMixer();
+                // Motor_ManMixer();
 
                 // for debug only
                 uint8_t data[8] = { 0 };
@@ -458,7 +459,12 @@ int main(void)
                 {
 
                     // wake the BMX160
-                    BMX160_wakeUp();
+                    // BMX160_wakeUp();
+                    uint8_t reg = 0x44; //
+                    uint8_t data = 0;
+                    BMX160_readReg(reg, &data, 1);
+                    UARTprintf("BMX160: Reg: 0x%x \t -> \t Data: 0x%x", reg, data);
+                    UARTprintf("\n");
                     break;
 
                 }

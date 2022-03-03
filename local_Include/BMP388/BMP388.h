@@ -767,6 +767,9 @@ struct bmp3_dev
     struct bmp3_fifo *fifo;
 };
 
+
+
+
 // functions prototypes
 
 // interface functions

@@ -26,13 +26,13 @@
 
 // different Buz repeat counts
 #define BUZZ_REP_TIME_1             1
-#define BUZZ_REP_TIME_2             2
-#define BUZZ_REP_TIME_3             3
-#define BUZZ_REP_TIME_4             4
-#define BUZZ_REP_TIME_5             5
-#define BUZZ_REP_TIME_6             6
-#define BUZZ_REP_TIME_7             7
-#define BUZZ_REP_TIME_8             8
+#define BUZZ_REP_TIME_2             3
+#define BUZZ_REP_TIME_3             4
+#define BUZZ_REP_TIME_4             5
+#define BUZZ_REP_TIME_5             6
+#define BUZZ_REP_TIME_6             7
+#define BUZZ_REP_TIME_7             8
+#define BUZZ_REP_TIME_8             9
 
 // different Buz Pause intervals
 #define BUZZ_PAUSE_TIME_100         100     // 100 ms
