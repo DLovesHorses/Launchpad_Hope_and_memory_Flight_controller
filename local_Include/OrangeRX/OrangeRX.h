@@ -120,6 +120,11 @@ enum MotionSelectState{
     SELECTED
 };
 
+enum RxConnectionStatus{
+    NOT_CONNECTED = 0,
+    CONNECTED               // 1
+};
+
 // Function prototypes
 
 void OrangeRX_Init(void);
@@ -131,3 +136,5 @@ void OrangeRX_showActData(void);       // displays normalized and actual channel
 void OrangeRX_showRawData(void);    // show's frequency and period information
 
 void OrangeRX_receivedChannelReorganizer(void);
+
+bool OrangeRX_isConnected(void);

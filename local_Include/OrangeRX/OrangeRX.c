@@ -24,6 +24,8 @@ uint8_t frameGapChNo = 0;
 
 Orange_RX_Channel_Text rx_text;
 
+bool rx_connection_status = NOT_CONNECTED;
+
 // Function definitions.
 
 /*
@@ -371,5 +373,48 @@ void OrangeRX_extractData(void)
 
     }
 
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * Chencks if the Connection to transmitter is lost.
+ * This is a software solution. Hardware solution can also
+ * be implemented by extracting the LED signal of the reciever.
+ *
+ * Software solution works as follows.
+ *
+ * When the reveiver is connected, the frequency of the frame_gap
+ * channel should be above 70 when the throttle value is above 50.
+ *
+ * If this is not the case, that is, if the throttle value above 50,
+ * but the frequency of the frame_gap channel is below 70, that means
+ * that the receiver got disconnected.
+ *
+ */
+
+bool OrangeRX_isConnected(void){
+
+    // Frame_Gap frequency
+    double frameGapFreq = *(rx_data.pFreq_Ch[0]); // Channel 0 -> Frame_GAP.
+
+    // get throttle value
+    OrangeRX_extractData();
+    int8_t throttleValue = rx_data.dataOfCh[THROTTLE];
+
+
+    // main logic.
+    if(frameGapFreq < 70.0f && throttleValue > 50){
+        rx_connection_status = NOT_CONNECTED;
+        return rx_connection_status;
+    }
+
+    rx_connection_status = CONNECTED;
+    return rx_connection_status;
 }
 

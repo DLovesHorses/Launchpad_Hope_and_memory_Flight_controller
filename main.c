@@ -275,14 +275,24 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 150) // 1 seconds
+            if (sensorDataSampleTimeCounter == 1000) // 1 seconds
             {
                 // BMX160_showData();
                 // BMP388_showData();
-                // OrangeRX_showRawData();
+                 OrangeRX_showRawData();
                 // OrangeRX_showActData();
-                 Motor_ManMixer();
-                 PID_altitude_adjust();
+                //  Motor_ManMixer();
+               //  PID_altitude_adjust();
+
+                /*
+                 bool rx_status = OrangeRX_isConnected();
+                 if(rx_status == CONNECTED){
+                     UARTprintf("Rx is connected\n");
+                 }
+                 else{
+                     UARTprintf("Rx is not connected\n");
+                 }
+                */
 
                 // for debug only
                 uint8_t data[8] = { 0 };
