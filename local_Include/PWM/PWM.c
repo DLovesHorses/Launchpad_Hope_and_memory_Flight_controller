@@ -740,7 +740,7 @@ void Motor_ManMixer(void)
         Motor_setDuty(count, mixer.final_duty[count]);
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_DISABLE
     UARTprintf("Throttle: \t %d , \n", throttle_value);
     UARTprintf("Aileron: \t %d , \n", aileron_value);
     UARTprintf("Elevator: \t%d , \n", elevator_value);

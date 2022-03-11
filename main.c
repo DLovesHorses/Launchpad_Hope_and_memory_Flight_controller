@@ -27,6 +27,7 @@
 #include "local_include/BMP388/BMP388.h"
 #include "local_include/OrangeRX/OrangeRX.h"
 #include "local_include/PWM/PWM.h"
+#include "local_include/PID/PID.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -68,13 +69,13 @@ void SystemInitialize(void)
     SWITCH_Init();
 
     UART0_STDIO_Init();
-    I2C0_Init();
+    // I2C0_Init();
 
-     PCF8574A_Init();
+    // PCF8574A_Init();
     // MPU9250_Init(); // don't use
-     BMX160_Init();
-    init_Buzzer();
-    BMP388_Init();
+    // BMX160_Init();
+    // init_Buzzer();
+    // BMP388_Init();
 
     OrangeRX_Init();
     PWM_Init();
@@ -266,6 +267,7 @@ int main(void)
                 // clear the flag
                 SysFlag_Clear(BMP388_DRDY_INT);
                 BMP388_showData();
+                UARTprintf("\n\n");
 #ifdef DEBUG
                 BUZZ_BUZZER(BUZZ_DUR_SHORT, BUZZ_REP_TIME_1,
                 BUZZ_PAUSE_TIME_100);
@@ -273,13 +275,14 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 500) // 1 seconds
+            if (sensorDataSampleTimeCounter == 150) // 1 seconds
             {
-                 BMX160_showData();
-                 BMP388_showData();
+                // BMX160_showData();
+                // BMP388_showData();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
-                // Motor_ManMixer();
+                 Motor_ManMixer();
+                 PID_altitude_adjust();
 
                 // for debug only
                 uint8_t data[8] = { 0 };

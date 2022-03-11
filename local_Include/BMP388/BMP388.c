@@ -24,8 +24,6 @@ uint8_t BMP388_addr;
 
 float base_altitude = 0.0f;
 
-
-
 /*
  * settings to configure:
  *
@@ -92,7 +90,6 @@ void BMP388_Int_Handler(void)
     if (status && BMP3_INT_DRDY_SET)
     {
         SysFlag_Set(BMP388_DRDY_INT);
-
 
     }
 
@@ -191,9 +188,11 @@ void BMP388_Init(void)
         float intermediate_result = BMP388_readAltitude();
         uint8_t count = 0;
         float rslt = intermediate_result;
-        for(count = 0; count < 100; count++){
+        for (count = 0; count < 100; count++)
+        {
             rslt = BMP388_readAltitude();
-            intermediate_result  = (rslt < intermediate_result) ? rslt : intermediate_result;
+            intermediate_result =
+                    (rslt < intermediate_result) ? rslt : intermediate_result;
         }
 
         base_altitude = intermediate_result;
@@ -546,37 +545,102 @@ void BMP388_showData(void)
 {
     char charBuffer[80];
     charBuffer[0] = '\0';
+    /*
+     UARTprintf("Data from BMP388: \n\n");
+     // data from BMP388_readPressure
+     sprintf(charBuffer, "Pressure: \t %7.3f \t (readPressure)\n",
+     BMP388_readPressure());
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
 
-    UARTprintf("Data from BMP388: \n\n");
-    // data from BMP388_readPressure
-    sprintf(charBuffer, "Pressure: \t %7.3f \t (readPressure)\n",
-            BMP388_readPressure());
+     // data from BMP388_readTemperature
+     sprintf(charBuffer, "Temperature: \t %7.3f \t (readTemperature)\n",
+     BMP388_readTemperature());
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+
+     // data from BMP388_readAltitude
+     sprintf(charBuffer, "Alt.: \t \t  %7.3f \t (readAltitude) \t Base Altitude : %f\n",
+     BMP388_readAltitude() - base_altitude, base_altitude);
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+
+     // data from BMP388_readCalibratedAltitude
+     sprintf(charBuffer, "Calib. Alt.: \t %7.3f \t (readCalibratedAltitude)\n",
+     BMP388_readCalibratedAltitude(1031.25));
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+
+     // data from BMP388_readSeaLevel
+     sprintf(charBuffer, "Sea Level: \t %7.3f \t (readSeaLevel)\n\n",
+     BMP388_readSeaLevel(102));
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+
+     */
+
+    // Display Just Altitude. (and altitude process variable)
+    static float prevReading = 0.0f;
+
+    float curReading = BMP388_readAltitude();
+    float curBaselineReading = curReading - base_altitude;
+    int16_t alt_process_variable = (int16_t) (100 * curBaselineReading);
+
+    float high_limit;
+    float low_limit;
+
+    if(prevReading > 0.05f){
+        high_limit  = prevReading + 0.05;
+        low_limit   = prevReading - 0.05;
+    }
+    else if(prevReading < -0.05f){
+        high_limit  = prevReading + 0.05;
+        low_limit   = prevReading - 0.05;
+    }
+    else{
+        high_limit    = 0.05f;
+        low_limit     = -0.05f;
+    }
+
+
+    if (curBaselineReading <= low_limit
+            || curBaselineReading >= high_limit)
+    {
+        prevReading = curBaselineReading;
+    }
+
+
+    // Height process variable conditioning.
+
+    int16_t pv_height = 0;
+
+    // lower limit  : 0 cm
+    //pv_height = alt_process_variable < 0 ? 0 : alt_process_variable;
+    if(alt_process_variable >= 0 && alt_process_variable <= 100){
+        pv_height = alt_process_variable;
+    }
+    else{
+        if (alt_process_variable < 0){
+            pv_height = 0;
+        }
+        else if(alt_process_variable > 100){
+            pv_height = 100;
+        }
+    }
+
+
+
+    // upper limit  : 100 cm
+    //pv_height = alt_process_variable > 100 ? 100 : alt_process_variable;
+
+
+    sprintf(charBuffer, "\nAlt.(drifted): %4.2f, \t (stable): %4.2f, \t Height: %d cm (PV: %d cm)\n",
+            curBaselineReading, prevReading, alt_process_variable, pv_height);
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 
-    // data from BMP388_readTemperature
-    sprintf(charBuffer, "Temperature: \t %7.3f \t (readTemperature)\n",
-            BMP388_readTemperature());
-    UARTprintf("%s", charBuffer);
-    charBuffer[0] = '\0';
 
-    // data from BMP388_readAltitude
-    sprintf(charBuffer, "Alt.: \t \t  %7.3f \t (readAltitude) \t Base Altitude : %f\n",
-            BMP388_readAltitude() - base_altitude, base_altitude);
-    UARTprintf("%s", charBuffer);
-    charBuffer[0] = '\0';
 
-    // data from BMP388_readCalibratedAltitude
-    sprintf(charBuffer, "Calib. Alt.: \t %7.3f \t (readCalibratedAltitude)\n",
-            BMP388_readCalibratedAltitude(1031.25));
-    UARTprintf("%s", charBuffer);
-    charBuffer[0] = '\0';
-
-    // data from BMP388_readSeaLevel
-    sprintf(charBuffer, "Sea Level: \t %7.3f \t (readSeaLevel)\n\n",
-            BMP388_readSeaLevel(102));
-    UARTprintf("%s", charBuffer);
-    charBuffer[0] = '\0';
 
     return;
 }

@@ -524,7 +524,7 @@ void BMX160_showData(void)
 
     char printBuffer[252] = "";
 
-
+/*
      UARTprintf("\n\nData from BMX160: \n\n");
      sprintf(printBuffer, "Accel: ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", accRaw.x, accRaw.y, accRaw.z, accData.x, accData.y, accData.z );
      UARTprintf("%s", printBuffer);
@@ -542,7 +542,7 @@ void BMX160_showData(void)
      printBuffer[0] = '\0';
 
      UARTprintf("\n\n");
-
+*/
 
 
     /*
@@ -561,23 +561,23 @@ void BMX160_showData(void)
      */
 
 
-/*
+
      // just mag
 
       float heading_angle = 90 - (atan(magData.y/ magData.x) * 180 / (2 * acos(0.0)));
      sprintf(printBuffer, "( %6.3f, %6.3f, %6.3f ) -> %6.3f .\n", magData.x, magData.y, magData.z, heading_angle );
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
-*/
 
-/*
+
+      /*
     // calculate heading angle
 
      float heading_angle = 90 - (atan(magData.y/ magData.x) * 180 / (2 * acos(0.0)));
      sprintf(printBuffer, "%3.1f\n", heading_angle);
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
-*/
+      */
 
 #endif
 
