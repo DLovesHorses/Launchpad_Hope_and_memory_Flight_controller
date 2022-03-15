@@ -20,6 +20,7 @@
 
 #define BMP388_DRDY_INT         10
 #define Orange_RX_INT           20
+#define SONAR_TRIG_INT       30
 
 // Macros
 

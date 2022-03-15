@@ -119,4 +119,5 @@ local_Include \
 local_Include/OrangeRX \
 local_Include/PID \
 local_Include/PWM \
+local_Include/SONAR \
 

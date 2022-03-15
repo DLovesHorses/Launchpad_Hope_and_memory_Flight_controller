@@ -27,6 +27,7 @@ ORDERED_OBJS += \
 "./local_Include/OrangeRX/OrangeRX.obj" \
 "./local_Include/PID/PID.obj" \
 "./local_Include/PWM/PWM.obj" \
+"./local_Include/SONAR/SONAR.obj" \
 "../DroneProject_ccs.cmd" \
 $(GEN_CMDS__FLAG) \
 -l"C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/ccs/Debug/driverlib.lib" \
@@ -47,6 +48,7 @@ RMDIR := RMDIR /S/Q
 -include local_Include/OrangeRX/subdir_vars.mk
 -include local_Include/PID/subdir_vars.mk
 -include local_Include/PWM/subdir_vars.mk
+-include local_Include/SONAR/subdir_vars.mk
 -include subdir_rules.mk
 -include local_Include/BMP388/subdir_rules.mk
 -include local_Include/BMX160/subdir_rules.mk
@@ -55,6 +57,7 @@ RMDIR := RMDIR /S/Q
 -include local_Include/OrangeRX/subdir_rules.mk
 -include local_Include/PID/subdir_rules.mk
 -include local_Include/PWM/subdir_rules.mk
+-include local_Include/SONAR/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -187,8 +190,8 @@ DroneProject.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\BMP388\BMP388.obj" "local_Include\BMX160\BMX160.obj" "local_Include\BUZZER\buzzer.obj" "local_Include\MPU9250.obj" "local_Include\SampleTemplate.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\i2c.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" "local_Include\OrangeRX\OrangeRX.obj" "local_Include\PID\PID.obj" "local_Include\PWM\PWM.obj" 
-	-$(RM) "main.d" "startup_ccs.d" "local_Include\BMP388\BMP388.d" "local_Include\BMX160\BMX160.d" "local_Include\BUZZER\buzzer.d" "local_Include\MPU9250.d" "local_Include\SampleTemplate.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\i2c.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" "local_Include\OrangeRX\OrangeRX.d" "local_Include\PID\PID.d" "local_Include\PWM\PWM.d" 
+	-$(RM) "main.obj" "startup_ccs.obj" "local_Include\BMP388\BMP388.obj" "local_Include\BMX160\BMX160.obj" "local_Include\BUZZER\buzzer.obj" "local_Include\MPU9250.obj" "local_Include\SampleTemplate.obj" "local_Include\SysFlag.obj" "local_Include\SysTick.obj" "local_Include\i2c.obj" "local_Include\led.obj" "local_Include\onBoardSwitch.obj" "local_Include\sysclk.obj" "local_Include\uart.obj" "local_Include\OrangeRX\OrangeRX.obj" "local_Include\PID\PID.obj" "local_Include\PWM\PWM.obj" "local_Include\SONAR\SONAR.obj" 
+	-$(RM) "main.d" "startup_ccs.d" "local_Include\BMP388\BMP388.d" "local_Include\BMX160\BMX160.d" "local_Include\BUZZER\buzzer.d" "local_Include\MPU9250.d" "local_Include\SampleTemplate.d" "local_Include\SysFlag.d" "local_Include\SysTick.d" "local_Include\i2c.d" "local_Include\led.d" "local_Include\onBoardSwitch.d" "local_Include\sysclk.d" "local_Include\uart.d" "local_Include\OrangeRX\OrangeRX.d" "local_Include\PID\PID.d" "local_Include\PWM\PWM.d" "local_Include\SONAR\SONAR.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

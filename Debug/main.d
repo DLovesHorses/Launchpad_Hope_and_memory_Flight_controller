@@ -74,6 +74,8 @@ main.obj: ../local_include/PWM/PWM.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
 main.obj: ../local_include/PID/PID.h
 main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
+main.obj: ../local_include/SONAR/SONAR.h
+main.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_uart.h
 
@@ -222,6 +224,10 @@ C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
 
 ../local_include/PID/PID.h:
+
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
+
+../local_include/SONAR/SONAR.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_Include/global.h:
 

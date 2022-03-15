@@ -28,6 +28,7 @@
 #include "local_include/OrangeRX/OrangeRX.h"
 #include "local_include/PWM/PWM.h"
 #include "local_include/PID/PID.h"
+#include "local_include/SONAR/SONAR.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -79,6 +80,7 @@ void SystemInitialize(void)
 
     OrangeRX_Init();
     PWM_Init();
+    SONAR_Init();
 
     // BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_2, BUZZ_PAUSE_TIME_500 );
 }
@@ -279,7 +281,7 @@ int main(void)
             {
                 // BMX160_showData();
                 // BMP388_showData();
-                 OrangeRX_showRawData();
+                // OrangeRX_showRawData();
                 // OrangeRX_showActData();
                 //  Motor_ManMixer();
                //  PID_altitude_adjust();
@@ -521,6 +523,27 @@ int main(void)
 #endif
                     break;
                 }
+
+                case 'T':
+                {
+                    static bool trigState = HIGH;   // First call : High
+                    SONAR_Trigger(trigState, TRIG_TIMER_DIV_1_S);
+
+                    UARTprintf("Trig State: %d \n", trigState);
+                    //trigState ^= 0x01;
+                    break;
+                }
+
+                case 'U':
+                {
+                    static bool trigState = HIGH;   // First call : High
+                    SONAR_Trigger(trigState, TRIG_TIMER_DIV_100_US);
+
+                    UARTprintf("Trig State: %d \n", trigState);
+                    //trigState ^= 0x01;
+                    break;
+                }
+
                 case '1':
                 {
 #ifdef DEBUG
