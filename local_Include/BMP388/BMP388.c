@@ -616,6 +616,9 @@ void BMP388_showData(void)
 
     // lower limit  : 0 cm
     //pv_height = alt_process_variable < 0 ? 0 : alt_process_variable;
+
+    pv_height = alt_process_variable; // Just for debug. Remove it in final production code.
+    /*
     if(alt_process_variable >= 0 && alt_process_variable <= 100){
         pv_height = alt_process_variable;
     }
@@ -627,6 +630,7 @@ void BMP388_showData(void)
             pv_height = 100;
         }
     }
+    */
 
 
 
@@ -638,6 +642,8 @@ void BMP388_showData(void)
             curBaselineReading, prevReading, alt_process_variable, pv_height);
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
+
+
 
 
 

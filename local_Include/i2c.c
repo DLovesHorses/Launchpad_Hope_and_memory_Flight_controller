@@ -36,6 +36,7 @@ void I2C0_Init(void)
 
     I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), // bFast true: 400 kHz, bFast False: 100 kHz
                         true);
+    I2CMasterGlitchFilterConfigSet(I2C0_BASE, I2C_MASTER_GLITCH_FILTER_32);
 
 #ifdef DEBUG
     // DEBUG: <Component> | <File>   | <Routine> |   <Operation> | <Status>  |   <Data>
@@ -103,7 +104,10 @@ void I2C_ReadByte(uint8_t slaveAddr, uint32_t regAddr, uint8_t *puiData) // work
      UARTprintf("\n");
      #endif
      */
-    return;
+
+
+        return;
+
 }
 
 void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite)

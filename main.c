@@ -70,17 +70,17 @@ void SystemInitialize(void)
     SWITCH_Init();
 
     UART0_STDIO_Init();
-    // I2C0_Init();
+     I2C0_Init();
 
-    // PCF8574A_Init();
+     PCF8574A_Init();
     // MPU9250_Init(); // don't use
-    // BMX160_Init();
-    // init_Buzzer();
-    // BMP388_Init();
+     BMX160_Init();
+     init_Buzzer();
+     BMP388_Init();
 
-    OrangeRX_Init();
-    PWM_Init();
-    SONAR_Init();
+     OrangeRX_Init();
+     PWM_Init();
+    // SONAR_Init();
 
     // BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_2, BUZZ_PAUSE_TIME_500 );
 }
@@ -277,16 +277,16 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 1000) // 1 seconds
+            if (sensorDataSampleTimeCounter == 150) // 1 seconds
             {
-                // BMX160_showData();
-                // BMP388_showData();
+                 BMX160_showData();
+                 BMP388_showData();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
-                //  Motor_ManMixer();
-               //  PID_altitude_adjust();
+                 // Motor_ManMixer();
+                 PID_altitude_adjust();
 
-                /*
+
                  bool rx_status = OrangeRX_isConnected();
                  if(rx_status == CONNECTED){
                      UARTprintf("Rx is connected\n");
@@ -294,7 +294,8 @@ int main(void)
                  else{
                      UARTprintf("Rx is not connected\n");
                  }
-                */
+
+
 
                 // for debug only
                 uint8_t data[8] = { 0 };
@@ -492,6 +493,12 @@ int main(void)
                 case 'G':
                 {
 
+                    break;
+                }
+
+                case 'P':
+                {
+                    PWM_Init();
                     break;
                 }
 

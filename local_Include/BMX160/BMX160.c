@@ -22,6 +22,7 @@
 
 // Includes
 #include "BMX160.h"
+#include "local_Include/BMP388/BMP388.h"
 
 // global variables and externs
 
@@ -95,10 +96,15 @@ bool BMX160_scan(void)
 {
     // Call Bruteforcer.
 
-    uint8_t knownReg = BMX160_CHIP_ID_ADDR;
-    uint8_t knownValue = BMX160_CHIP_ID;
+    //uint8_t knownReg = BMX160_CHIP_ID_ADDR;
+    //uint8_t knownValue = BMX160_CHIP_ID;
 
-    if (I2C_AddressBruteForcer(knownReg, knownValue) == 1)
+    uint8_t ReceivedChipId = 0;
+    I2C_ReadByte(BMX160_SA, BMX160_CHIP_ID_ADDR, &ReceivedChipId);
+    //BMP388_user_i2c_read(BMX160_SA, BMX160_CHIP_ID_ADDR, ReceivedChipId, 1);
+
+    //if (I2C_AddressBruteForcer(knownReg, knownValue) == 1)
+    if(ReceivedChipId == BMX160_CHIP_ID)
     {
         return true;
     }
@@ -524,7 +530,7 @@ void BMX160_showData(void)
 
     char printBuffer[252] = "";
 
-/*
+// /*
      UARTprintf("\n\nData from BMX160: \n\n");
      sprintf(printBuffer, "Accel: ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", accRaw.x, accRaw.y, accRaw.z, accData.x, accData.y, accData.z );
      UARTprintf("%s", printBuffer);
@@ -542,7 +548,7 @@ void BMX160_showData(void)
      printBuffer[0] = '\0';
 
      UARTprintf("\n\n");
-*/
+// */
 
 
     /*
@@ -561,14 +567,14 @@ void BMX160_showData(void)
      */
 
 
-
+     /*
      // just mag
 
       float heading_angle = 90 - (atan(magData.y/ magData.x) * 180 / (2 * acos(0.0)));
      sprintf(printBuffer, "( %6.3f, %6.3f, %6.3f ) -> %6.3f .\n", magData.x, magData.y, magData.z, heading_angle );
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
-
+    */
 
       /*
     // calculate heading angle
