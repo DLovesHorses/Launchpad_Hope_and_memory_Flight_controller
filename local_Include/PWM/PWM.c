@@ -380,6 +380,9 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
 
 void Motor_ManMixer(void)
 {
+    if(OrangeRX_isConnected() == NOT_CONNECTED){
+        return;
+    }
 
     // Pre-Mix tasks
 
@@ -740,7 +743,7 @@ void Motor_ManMixer(void)
         Motor_setDuty(count, mixer.final_duty[count]);
     }
 
-#ifdef DEBUG_DISABLE
+#ifdef DEBUG_DISABLED
     UARTprintf("Throttle: \t %d , \n", throttle_value);
     UARTprintf("Aileron: \t %d , \n", aileron_value);
     UARTprintf("Elevator: \t%d , \n", elevator_value);
@@ -781,7 +784,7 @@ void Motor_ManMixer(void)
         }
     }
 
-    UARTprintf("\n\n");
+    //UARTprintf("\n\n");
 
     UARTprintf("Final Output: \n");
     for (count = 0; count < 4; count++)

@@ -434,7 +434,7 @@ int8_t BMP388_set_config(void)
 
     // write config reg data
     reg_addr = BMP3_CONFIG_ADDR;
-    uint8_t config_data = 0x0E;
+    uint8_t config_data = 0x0E;     // IIR Filter coefficient = 127 (Max Filtering).
     rslt = BMP388_set_regs(&reg_addr, &config_data, 1);
 
     if (rslt != BMP3_OK)
@@ -643,6 +643,7 @@ void BMP388_showData(void)
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 
+    UARTprintf("\n\n");
 
 
 

@@ -177,7 +177,31 @@ void OrangeRX_showActData(void)
     UARTprintf("\n\n");
     return;
 }
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
+void OrangeRX_showStatus(void){
+
+    bool rx_status = OrangeRX_isConnected();
+    if(rx_status == CONNECTED){
+        UARTprintf("Rx is connected\n");
+    }
+    else{
+        UARTprintf("Rx is not connected\n");
+    }
+
+    return;
+}
 /*
  *
  *

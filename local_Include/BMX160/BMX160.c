@@ -23,6 +23,7 @@
 // Includes
 #include "BMX160.h"
 #include "local_Include/BMP388/BMP388.h"
+#include "local_Include/SystemAttitude/LPF.h"
 
 // global variables and externs
 
@@ -104,7 +105,7 @@ bool BMX160_scan(void)
     //BMP388_user_i2c_read(BMX160_SA, BMX160_CHIP_ID_ADDR, ReceivedChipId, 1);
 
     //if (I2C_AddressBruteForcer(knownReg, knownValue) == 1)
-    if(ReceivedChipId == BMX160_CHIP_ID)
+    if (ReceivedChipId == BMX160_CHIP_ID)
     {
         return true;
     }
@@ -461,6 +462,23 @@ void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
         magRaw->x = x;
         magRaw->y = y;
         magRaw->z = z;
+
+        // apply LPF on raw values and save it in same variable
+        static LOW_PASS_FILTER mag_low_pass[3] = { { .Fc = 53.05f }, // Cut-off freq for X axis
+                { .Fc = 53.05f },   // Cut-off freq for Y axis
+                { .Fc = 53.05f },   // Cut-off freq for Z axis
+                };
+
+        float dt = 1.0f / (5 * 2.0f * PI * mag_low_pass[0].Fc);
+        //float dt = 0.000600f;
+        magn->x_LPF = applyLPF(&mag_low_pass[0], magRaw->x, dt) * BMX160_MAGN_UT_LSB; // filtered magnetic field X_axis
+
+        dt = 1.0f / (5 * 2.0f * PI * mag_low_pass[1].Fc);
+        magn->y_LPF = applyLPF(&mag_low_pass[1], magRaw->y, dt) * BMX160_MAGN_UT_LSB; // filtered magnetic field X_axis
+
+        dt = 1.0f / (5 * 2.0f * PI * mag_low_pass[2].Fc);
+        magn->z_LPF = applyLPF(&mag_low_pass[2], magRaw->z, dt) * BMX160_MAGN_UT_LSB; // filtered magnetic field X_axis
+
     }
     if (gyro)
     {
@@ -474,19 +492,54 @@ void BMX160_getAllData(sBmx160SensorData_t *magn, sBmx160SensorData_t *gyro,
         gyroRaw->x = x;
         gyroRaw->y = y;
         gyroRaw->z = z;
+
+        // apply LPF on raw values and save it in same variable
+        static LOW_PASS_FILTER gyro_low_pass[3] = { { .Fc = 53.05f }, // Cut-off freq for X axis
+                { .Fc = 53.05f },   // Cut-off freq for Y axis
+                { .Fc = 53.05f },   // Cut-off freq for Z axis
+                };
+
+        float dt = 1.0f / (5 * 2.0f * PI * gyro_low_pass[0].Fc);
+        //float dt = 0.000600f;
+        gyro->x_LPF = applyLPF(&gyro_low_pass[0], gyroRaw->x, dt) * gyroRange; // filtered rotational acceleration X_axis
+
+        dt = 1.0f / (5 * 2.0f * PI * gyro_low_pass[1].Fc);
+        gyro->y_LPF = applyLPF(&gyro_low_pass[1], gyroRaw->y, dt) * gyroRange; // filtered rotational acceleration X_axis
+
+        dt = 1.0f / (5 * 2.0f * PI * gyro_low_pass[2].Fc);
+        gyro->z_LPF = applyLPF(&gyro_low_pass[2], gyroRaw->z, dt) * gyroRange; // filtered rotational acceleration X_axis
+
     }
     if (accel)
     {
-        x = (int16_t) (((uint16_t) data[15] << 8) | data[14]);
-        y = (int16_t) (((uint16_t) data[17] << 8) | data[16]);
-        z = (int16_t) (((uint16_t) data[19] << 8) | data[18]);
-        accel->x = x * accelRange;
-        accel->y = y * accelRange;
-        accel->z = z * accelRange;
+        x = (int16_t) (((uint16_t) data[15] << 8) | data[14]);      // raw X
+        y = (int16_t) (((uint16_t) data[17] << 8) | data[16]);      // raw Y
+        z = (int16_t) (((uint16_t) data[19] << 8) | data[18]);      // raw Z
+
+        accel->x = x * accelRange;  // unfiltered converted X
+        accel->y = y * accelRange;  // unfiltered converted Y
+        accel->z = z * accelRange;  // unfiltered converted Z
 
         accRaw->x = x;
         accRaw->y = y;
         accRaw->z = z;
+
+        // apply LPF on raw values and save it in same variable
+        static LOW_PASS_FILTER acc_low_pass[3] = { { .Fc = 53.05f }, // Cut-off freq for X axis
+                { .Fc = 53.05f },   // Cut-off freq for Y axis
+                { .Fc = 53.05f },   // Cut-off freq for Z axis
+                };
+
+        float dt = 1.0f / (5 * 2.0f * PI * acc_low_pass[0].Fc);
+        //float dt = 0.000600f;
+        accel->x_LPF = applyLPF(&acc_low_pass[0], accRaw->x, dt) * accelRange; // filtered acceleration X_axis
+
+        dt = 1.0f / (5 * 2.0f * PI * acc_low_pass[1].Fc);
+        accel->y_LPF = applyLPF(&acc_low_pass[1], accRaw->y, dt) * accelRange; // filtered acceleration X_axis
+
+        dt = 1.0f / (5 * 2.0f * PI * acc_low_pass[2].Fc);
+        accel->z_LPF = applyLPF(&acc_low_pass[2], accRaw->z, dt) * accelRange; // filtered acceleration X_axis
+
     }
 }
 
@@ -530,34 +583,61 @@ void BMX160_showData(void)
 
     char printBuffer[252] = "";
 
-// /*
+    // all data
+    UARTprintf("\n\nData from BMX160: \n\n");
+    UARTprintf(
+            "-Device-   -Raw Data (Field Measurement)-   -Unfiltered calculated data- \t -Filtered Data-\n\n");
+    sprintf(printBuffer,
+            "Accel: ( %5d, %5d, %5d ) -> \t ( %6.3f, %6.3f, %6.3f ) \t -> \t ( %6.3f, %6.3f, %6.3f ) \n",
+            accRaw.x, accRaw.y, accRaw.z, accData.x, accData.y, accData.z,
+            accData.x_LPF, accData.y_LPF, accData.z_LPF);
+    UARTprintf("%s", printBuffer);
+    printBuffer[0] = '\0';
+
+    sprintf(printBuffer,
+            "Gyro : ( %5d, %5d, %5d ) -> \t ( %6.3f, %6.3f, %6.3f ) \t -> \t ( %6.3f, %6.3f, %6.3f ) \n",
+            gyroRaw.x, gyroRaw.y, gyroRaw.z, gyroData.x, gyroData.y, gyroData.z,
+            gyroData.x_LPF, gyroData.y_LPF, gyroData.z_LPF);
+    UARTprintf("%s", printBuffer);
+    printBuffer[0] = '\0';
+
+    sprintf(printBuffer,
+            "Mag  : ( %5d, %5d, %5d ) -> \t ( %6.3f, %6.3f, %6.3f ) -> \t ( %6.3f, %6.3f, %6.3f ) \n",
+            magRaw.x, magRaw.y, magRaw.z, magData.x, magData.y, magData.z,
+            magData.x_LPF, magData.y_LPF, magData.z_LPF);
+    UARTprintf("%s", printBuffer);
+    printBuffer[0] = '\0';
+
+    UARTprintf("\n\n");
+
+    /*// Raw and filtered
      UARTprintf("\n\nData from BMX160: \n\n");
-     sprintf(printBuffer, "Accel: ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", accRaw.x, accRaw.y, accRaw.z, accData.x, accData.y, accData.z );
+     sprintf(printBuffer, "Accel: ( %6.3f, %6.3f, %6.3f ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", accData.x, accData.y, accData.z, accData.x_LPF, accData.y_LPF, accData.z_LPF );
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
 
 
-     sprintf(printBuffer, "Gyro : ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", gyroRaw.x, gyroRaw.y, gyroRaw.z, gyroData.x, gyroData.y, gyroData.z );
+     sprintf(printBuffer, "Gyro : ( %6.3f, %6.3f, %6.3f ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n", gyroData.x, gyroData.y, gyroData.z, gyroData.x_LPF, gyroData.y_LPF, gyroData.z_LPF );
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
 
 
 
-     sprintf(printBuffer, "Mag  : ( %7d, %7d, %7d ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n\n", magRaw.x, magRaw.y, magRaw.z, magData.x, magData.y, magData.z );
+     sprintf(printBuffer, "Mag  : ( %6.3f, %6.3f, %6.3f ) \t -> \t ( %6.3f, %6.3f, %6.3f ).\n\n", magData.x, magData.y, magData.z, magData.x_LPF, magData.y_LPF, magData.z_LPF );
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
 
      UARTprintf("\n\n");
-// */
 
+     */
 
     /*
-    // just acc
-    sprintf(printBuffer, "( %6.3f, %6.3f, %6.3f ).\n", accData.x, accData.y,
-            accData.z);
-    UARTprintf("%s", printBuffer);
-    printBuffer[0] = '\0';
-    */
+     // just acc
+     sprintf(printBuffer, "( %6.3f, %6.3f, %6.3f ).\n", accData.x, accData.y,
+     accData.z);
+     UARTprintf("%s", printBuffer);
+     printBuffer[0] = '\0';
+     */
 
     /*
      // just gyro
@@ -566,24 +646,23 @@ void BMX160_showData(void)
      printBuffer[0] = '\0';
      */
 
-
-     /*
+    /*
      // just mag
 
-      float heading_angle = 90 - (atan(magData.y/ magData.x) * 180 / (2 * acos(0.0)));
+     float heading_angle = 90 - (atan(magData.y/ magData.x) * 180 / (2 * acos(0.0)));
      sprintf(printBuffer, "( %6.3f, %6.3f, %6.3f ) -> %6.3f .\n", magData.x, magData.y, magData.z, heading_angle );
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
-    */
+     */
 
-      /*
-    // calculate heading angle
+    /*
+     // calculate heading angle
 
      float heading_angle = 90 - (atan(magData.y/ magData.x) * 180 / (2 * acos(0.0)));
      sprintf(printBuffer, "%3.1f\n", heading_angle);
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
-      */
+     */
 
 #endif
 

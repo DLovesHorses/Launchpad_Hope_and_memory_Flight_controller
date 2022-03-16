@@ -281,19 +281,14 @@ int main(void)
             {
                  BMX160_showData();
                  BMP388_showData();
+                 OrangeRX_showStatus();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
-                 // Motor_ManMixer();
-                 PID_altitude_adjust();
+                  Motor_ManMixer();
+                // PID_altitude_adjust();
 
 
-                 bool rx_status = OrangeRX_isConnected();
-                 if(rx_status == CONNECTED){
-                     UARTprintf("Rx is connected\n");
-                 }
-                 else{
-                     UARTprintf("Rx is not connected\n");
-                 }
+
 
 
 

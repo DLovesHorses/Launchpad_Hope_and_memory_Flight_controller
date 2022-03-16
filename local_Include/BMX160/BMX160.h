@@ -692,9 +692,13 @@ typedef struct
  */
 typedef struct
 {
-    float x; /**< X-axis sensor data */
-    float y; /**< Y-axis sensor data */
-    float z; /**< Z-axis sensor data */
+    float x; /**< X-axis unfiltered sensor data */
+    float y; /**< Y-axis unfiltered sensor data */
+    float z; /**< Z-axis unfiltered sensor data */
+
+    float x_LPF; /**< X-axis filtered sensor data */
+    float y_LPF; /**< Y-axis filtered sensor data */
+    float z_LPF; /**< Z-axis filtered sensor data */
     uint32_t sensortime; /**< sensor time */
 } sBmx160SensorData_t;
 

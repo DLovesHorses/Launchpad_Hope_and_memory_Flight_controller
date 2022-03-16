@@ -138,3 +138,4 @@ void OrangeRX_showRawData(void);    // show's frequency and period information
 void OrangeRX_receivedChannelReorganizer(void);
 
 bool OrangeRX_isConnected(void);
+void OrangeRX_showStatus(void);
