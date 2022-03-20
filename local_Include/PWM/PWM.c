@@ -16,6 +16,8 @@
 
 // global variables and externs
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
+
+bool  PWM_state = NOT_INITIALIZED;
 uint8_t motorSelect = MOTOR_ALL;
 
 MOTOR_VARIABLES mixer;
@@ -120,7 +122,31 @@ void PWM_Init(void)
     UARTprintf("PWM 0 Gen 0 Pulse width : %d\n",
                PWMPulseWidthGet(PWM0_BASE, PWM_OUT_0));
 
+    PWM_state = INITIALIZED;
+
 }
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void PWM_showState(void){
+
+    if( PWM_state  == INITIALIZED){
+        UARTprintf("PWM  initialized. \n");
+    }
+    else{
+        UARTprintf("PWM not initialized. \n");
+    }
+
+    return;
+}
+
 
 /*
  *
@@ -373,6 +399,30 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
  *
  * Task 10: For each motor, send the final calculated value to its output
  *          (Set PWM duty).
+ *
+ *
+ *
+ */
+void MOTOR_showDuty(void){
+
+    uint8_t count = 0;
+    for(count = 0; count < 4 ; count++){
+        UARTprintf(" Motor : \t %d \t -> \t %d . \n", ( count + 1 ) , mixer.final_duty[count]);
+    }
+    UARTprintf("\n\n");
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *
  *
  *

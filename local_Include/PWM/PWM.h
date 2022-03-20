@@ -8,6 +8,9 @@
  * Date         :   2022-02-15
  */
 
+#ifndef PWM_LOCK_
+#define PWM_LOCK_
+
 // Includes
 #include "local_Include/global.h"
 
@@ -174,5 +177,9 @@ void PWM_Init(void);
 void Motor_setDuty(uint8_t motorID, uint8_t duty);
 
 void Motor_ManMixer(void);
+void MOTOR_showDuty(void);
+
+void PWM_showState(void);
 
 
+#endif /* PWM_LOCK */

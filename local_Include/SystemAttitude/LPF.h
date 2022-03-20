@@ -11,6 +11,9 @@
 
 // Includes
 
+#ifndef LPF_LOCK_
+#define LPF_LOCK_
+
 #include "local_Include/global.h"
 
 // Defines
@@ -32,3 +35,5 @@ typedef struct {
 // Function prototypes
 float applyLPF(LOW_PASS_FILTER *low_pass, float input, float dt);
 
+
+#endif /* LPF_LOCK */

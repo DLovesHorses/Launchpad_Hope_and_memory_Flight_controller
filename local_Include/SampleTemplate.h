@@ -11,8 +11,13 @@
 
 // Includes
 
+#ifndef SAMPLE_LOCK_
+#define SAMPLE_LOCK_
+
 #include "local_Include/global.h"
 
+
+#endif /* SAMPLE_LOCK */
 // Defines
 
 

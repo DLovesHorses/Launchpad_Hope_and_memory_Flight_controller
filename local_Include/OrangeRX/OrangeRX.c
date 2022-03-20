@@ -19,6 +19,8 @@
 
 // global variables and externs
 
+bool ORANGE_state = NOT_INITIALIZED;
+
 Orange_RX_Channel_Data rx_data;
 uint8_t frameGapChNo = 0;
 
@@ -136,9 +138,29 @@ void OrangeRX_Init(void)
     rx_data.ch_high_time[5] = ORANGE_RX_CH_5_HIGH_TIME;
     rx_data.ch_high_time[6] = ORANGE_RX_CH_6_HIGH_TIME;
 
+
+    ORANGE_state = INITIALIZED;
     return;
 }
 
+/*
+ *
+ *
+ *
+ *
+ */
+
+void ORANGE_showState(void){
+
+    if( ORANGE_state  == INITIALIZED){
+        UARTprintf("OrangeRX  initialized. \n");
+    }
+    else{
+        UARTprintf("OrangeRX not initialized. \n");
+    }
+
+    return;
+}
 /*
  *
  *

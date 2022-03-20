@@ -11,6 +11,9 @@
 
 // Includes
 
+#ifndef PID_LOCK_
+#define PID_LOCK_
+
 #include "local_Include/global.h"
 
 // Defines
@@ -28,3 +31,6 @@
 // Function prototypes
 
 void PID_altitude_adjust(void);
+
+
+#endif /* PID_LOCK_ */

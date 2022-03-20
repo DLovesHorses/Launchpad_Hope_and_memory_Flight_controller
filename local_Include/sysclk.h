@@ -9,6 +9,9 @@
  */
 
 // Includes
+#ifndef SYSCLK_LOCK_
+#define SYSCLK_LOCK_
+
 #include "local_Include/global.h"
 
 // Defines
@@ -17,3 +20,5 @@
 
 // Function prototypes
 void SysClk_Init(void);
+
+#endif /* SYSCLK_LOCK */

@@ -30,7 +30,7 @@ void SysTick_Init(void)
 
 void SYSTICK_Delay( uint32_t uiDelay )
 {
-#ifdef DEBUG
+#ifdef DEBUG_D
         UARTprintf("SYSTICK: Waiting for %d ms\n", uiDelay);
 #endif
     while( uiDelay )

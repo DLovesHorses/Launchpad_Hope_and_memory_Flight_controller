@@ -9,6 +9,9 @@
  */
 
 // Includes
+#ifndef ORANGE_LOCK_
+#define ORANGE_LOCK_
+
 #include "local_Include/global.h"
 
 // Defines
@@ -120,10 +123,7 @@ enum MotionSelectState{
     SELECTED
 };
 
-enum RxConnectionStatus{
-    NOT_CONNECTED = 0,
-    CONNECTED               // 1
-};
+
 
 // Function prototypes
 
@@ -138,4 +138,7 @@ void OrangeRX_showRawData(void);    // show's frequency and period information
 void OrangeRX_receivedChannelReorganizer(void);
 
 bool OrangeRX_isConnected(void);
-void OrangeRX_showStatus(void);
+void OrangeRX_showStatus(void); // displays connected or not
+void ORANGE_showState(void);    // displays initialized or not
+
+#endif /* ORANGE_LOCK_ */

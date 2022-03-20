@@ -17,12 +17,14 @@
 #include "local_Include/i2c.h"
 #include "local_Include/SysTick.h"
 #include "local_Include/SysFlag.h"
+#include "local_Include/SystemAttitude/LPF.h"
 
 // global variables and externs
 struct bmp3_dev dev;
 uint8_t BMP388_addr;
 
 float base_altitude = 0.0f;
+bool  BMP388_state = NOT_INITIALIZED;
 
 /*
  * settings to configure:
@@ -182,21 +184,8 @@ void BMP388_Init(void)
     else
     {
 
-        // take minimum of 100 altitude reading
-        // and store it in base altitude variable.
-
-        float intermediate_result = BMP388_readAltitude();
-        uint8_t count = 0;
-        float rslt = intermediate_result;
-        for (count = 0; count < 100; count++)
-        {
-            rslt = BMP388_readAltitude();
-            intermediate_result =
-                    (rslt < intermediate_result) ? rslt : intermediate_result;
-        }
-
-        base_altitude = intermediate_result;
-
+        BMP388_calibrate();
+        BMP388_state  = INITIALIZED;
 #ifdef DEBUG
         UARTprintf("BMP388 Initialized...\n");
 
@@ -207,6 +196,87 @@ void BMP388_Init(void)
 #endif
     }
 
+    return;
+}
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void BMP388_calibrate(void){
+
+    /*
+    // take minimum of 100 altitude reading
+    // and store it in base altitude variable.
+
+    UARTprintf("BMP388 Calibrating\n");
+
+    float intermediate_result = BMP388_readAltitude();
+    uint8_t count = 0;
+    float rslt = intermediate_result;
+    for (count = 0; count < 100; count++)
+    {
+        SYSTICK_Delay(100);
+        rslt = BMP388_readAltitude();
+
+        intermediate_result =
+                (rslt < intermediate_result) ? rslt : intermediate_result;
+    }
+
+    base_altitude = intermediate_result;
+
+    UARTprintf("BMP388 Calibrated.\n");
+    */
+
+
+
+    // exponentially weighted moving average algorithm
+
+    UARTprintf("BMP388 Calibrating\n");
+
+    uint8_t count = 0;
+    char buffer[80];
+
+
+    // apply LPF on raw values and save it in same variable
+    static LOW_PASS_FILTER BMP388_calib;
+    BMP388_calib.Fc = 53.05f;       // cut-off freq. for altitude change.
+
+    float dt = 1.0f / (5 * 2.0f * PI * BMP388_calib.Fc);
+
+    float actual_Altitude = 0.0f;
+    float filtered_Altitude = 0.0f;
+
+    // initialize the previous value so that the exponentially weighted moving average will be more accurate
+    actual_Altitude = BMP388_readAltitude();
+    BMP388_calib.prevOutput = actual_Altitude; // <- Initialize the previous value here.
+
+    for (count = 0; count < 100; count++)
+    {
+        SYSTICK_Delay(100);
+        actual_Altitude = BMP388_readAltitude();
+        filtered_Altitude = applyLPF(&BMP388_calib, actual_Altitude, dt);
+
+#ifdef DEBUG
+        sprintf(buffer, "Actual Altitude: \t %f \t  filtered_altitude : \t %f \n", actual_Altitude, filtered_Altitude);
+        UARTprintf("%s", buffer);
+        buffer[0] = '\0';
+#endif
+
+    }
+
+    base_altitude = filtered_Altitude;
+
+    sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n", filtered_Altitude);
+    UARTprintf("%s", buffer);
+    buffer[0] = '\0';
     return;
 }
 /*
@@ -334,6 +404,28 @@ int8_t BMP388_begin(void)
 
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void BMP388_showState(void){
+
+    if( BMP388_state  == INITIALIZED){
+        UARTprintf("BMP388 initialized. \n");
+    }
+    else{
+        UARTprintf("BMP388 not initialized. \n");
+    }
+
+    return;
+}
 /*
  *
  *
@@ -545,6 +637,8 @@ void BMP388_showData(void)
 {
     char charBuffer[80];
     charBuffer[0] = '\0';
+
+    UARTprintf("Data from BMP388: \n");
     /*
      UARTprintf("Data from BMP388: \n\n");
      // data from BMP388_readPressure
@@ -634,8 +728,6 @@ void BMP388_showData(void)
 
 
 
-    // upper limit  : 100 cm
-    //pv_height = alt_process_variable > 100 ? 100 : alt_process_variable;
 
 
     sprintf(charBuffer, "\nAlt.(drifted): %4.2f, \t (stable): %4.2f, \t Height: %d cm (PV: %d cm)\n",
@@ -944,6 +1036,8 @@ int8_t BMP388_get_sensor_data(uint8_t sensor_comp, struct bmp3_data *comp_data)
         /* Parse the read data from the sensor */
         BMP388_parse_sensor_data(reg_data, &uncomp_data);
 
+
+
         /* Compensate the pressure/temperature/both data read
          from the sensor */
 
@@ -958,6 +1052,22 @@ int8_t BMP388_get_sensor_data(uint8_t sensor_comp, struct bmp3_data *comp_data)
 #endif
             return BMP3_E_DATA_COMPENSATION_FAILED;
         }
+
+        //debug display for uncompensated (parsed) and compensated from BMP388.
+#ifdef DEBUG_DIS
+
+        // Uncompensated Data
+
+        UARTprintf("Uncompensated Data: \t Pressure : \t %d \t Temp. : \t %d \n", uncomp_data.pressure, uncomp_data.temperature);
+        UARTprintf("\n\n");
+
+        char charBuffer [80] = {0};
+        sprintf(charBuffer, "Compensated   Data: \t Pressure : \t %f \t Temp. : \t %f \n", comp_data->pressure, comp_data->temperature);
+        UARTprintf("%s", charBuffer);
+        charBuffer[0] = '\0';
+        UARTprintf("\n\n");
+
+#endif
 
     }
 
@@ -1566,7 +1676,29 @@ float BMP388_readSeaLevel(float altitude)
 float BMP388_readAltitude(void)
 {
     float pressure = BMP388_readPressure();
-    return (1.0 - pow(pressure / 101325, 0.190284)) * 288.15 / 0.0065;
+    float temperature = BMP388_readTemperature();
+
+    float interResult = 0.0f;
+    interResult = pow(pressure / 101325, 0.190284);
+    interResult = 1 - interResult;
+    interResult *=  (temperature + 273.15);
+
+    interResult /= 0.0065;
+
+
+    float alt = interResult ;
+
+#ifdef DEBUG
+
+    char charBuffer [80] = {0};
+    sprintf(charBuffer, "Read Altitude : \t Pressure : \t %f \t Temp. : \t %f \t Alt. : \t %f \n", pressure, temperature, alt);
+    UARTprintf("%s", charBuffer);
+    charBuffer[0] = '\0';
+    UARTprintf("\n\n");
+
+#endif
+    return alt;
+    //return (1.0 - pow(pressure / 101325, 0.190284)) * 288.15 / 0.0065;
 }
 
 /*

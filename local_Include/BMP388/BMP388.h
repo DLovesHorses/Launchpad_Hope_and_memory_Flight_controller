@@ -770,6 +770,8 @@ struct bmp3_dev
 
 
 
+
+
 // functions prototypes
 
 // interface functions
@@ -791,6 +793,7 @@ float BMP388_readAltitude(void);                        // implemented
 int8_t BMP388_INTEnable(uint8_t config);                // implemented
 int8_t BMP388_INTDisable(uint8_t config);               // implemented
 void BMP388_set_i2c_addr(const uint8_t addr);           // implemented
+void BMP388_showState(void);
 
 // private functions
 
@@ -834,6 +837,8 @@ int8_t BMP388_user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
 
 int8_t BMP388_user_i2c_MultiByteWrite(uint8_t dev_id, uint8_t *reg_addr, uint8_t *data,
                              uint16_t len);                                             // implemented
+
+void BMP388_calibrate(void);
 
 #ifdef __cplusplus
 }

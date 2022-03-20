@@ -10,6 +10,8 @@
 
 
 // Includes
+#ifndef SONAR_LOCK_
+#define SONAR_LOCK_
 
 #include "local_Include/global.h"
 
@@ -41,3 +43,6 @@ void SONAR_EchoIntHandler(void);
 void SONAR_Init(void);
 
 void SONAR_Trigger(bool trigState, float trigTime);
+
+
+#endif /* SONAR_LOCK */

@@ -80,7 +80,7 @@ void LED_LED3(bool state)
     }
 }
 
-void LED_ALL(bool command)
+void LED_ALL_FUNCTION(bool command)
 {
     if (command == OFF)
     {
@@ -95,4 +95,33 @@ void LED_ALL(bool command)
         LED_LED3(ON);
     }
 
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ * LED_Drive() : Top level API for driving any set of LEDs.
+ *
+ * Inputs:
+ *      leds : LED to select. (eg: RED, BLUE, RED | GREEN, RED | BLUE | GREEN, etc.)
+ *      state: State of led to drive to (ON, OFF).
+ *
+ */
+void LED_Drive(uint8_t leds, bool state){
+    bool red = ((leds & RED) == RED) ? LED_SELECTED : LED_NOT_SELECTED;
+    bool blue = ((leds & BLUE) == BLUE) ? LED_SELECTED : LED_NOT_SELECTED;
+    bool green = ((leds & GREEN) == GREEN) ? LED_SELECTED : LED_NOT_SELECTED;
+    bool all = ((leds & LED_ALL) == LED_ALL) ? LED_SELECTED : LED_NOT_SELECTED;
+
+    if(red == LED_SELECTED){ LED_LED1(state); }
+    if(blue == LED_SELECTED){ LED_LED2(state); }
+    if(green == LED_SELECTED){ LED_LED3(state); }
+    if(all == LED_SELECTED){ LED_ALL_FUNCTION(state); }
+
+
+    return;
 }

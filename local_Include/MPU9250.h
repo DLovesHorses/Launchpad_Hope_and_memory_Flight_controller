@@ -10,6 +10,10 @@
 
 
 // Includes
+
+#ifndef MPU9250_LOCK_
+#define MPU9250_LOCK_
+
 #include "local_include/global.h"
 
 #define MPU9250_SA      0x68
@@ -56,4 +60,4 @@ void MPU9250_Read(uint8_t slaveAddr, uint32_t regAddr, uint8_t *puiData);       
 
 
 
-
+#endif /* MPU9250_LOCK_ */

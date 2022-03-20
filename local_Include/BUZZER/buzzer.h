@@ -11,6 +11,10 @@
 
 // Includes
 
+
+#ifndef BUZZER_LOCK_
+#define BUZZER_LOCK_
+
 #include "local_Include/global.h"
 
 
@@ -67,3 +71,7 @@ void BUZZ_BUZZER(uint16_t duration, uint8_t repTime, uint16_t pauseIntervalTime)
 
 void BUZZ_SM(bool callerID);
 
+void BUZZER_showState(void);
+
+
+#endif /* BUZZER_LOCK */

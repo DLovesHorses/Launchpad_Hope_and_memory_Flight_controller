@@ -9,6 +9,11 @@
  */
 
 // Includes
+
+#ifndef BMX160_LOCK
+#define BMX160_LOCK
+
+
 #include "local_Include/global.h"
 
 #include "local_Include/led.h"
@@ -1056,3 +1061,7 @@ void BMX160_writeBmxReg(uint8_t reg, uint8_t value);
 void BMX160_readReg(uint8_t reg, uint8_t *pBuf, uint16_t len);
 
 void BMX160_showData(void);
+void BMX160_showState(void);
+
+
+#endif /* BMX160_LOCK */

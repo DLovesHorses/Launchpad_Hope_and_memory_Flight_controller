@@ -12,7 +12,7 @@
 #include "uart.h"
 
 // global variables and externs
-
+bool I2C_state = NOT_INITIALIZED;
 // Function definitions.
 
 void I2C0_IntHandler(void)
@@ -38,6 +38,7 @@ void I2C0_Init(void)
                         true);
     I2CMasterGlitchFilterConfigSet(I2C0_BASE, I2C_MASTER_GLITCH_FILTER_32);
 
+    I2C_state = INITIALIZED;
 #ifdef DEBUG
     // DEBUG: <Component> | <File>   | <Routine> |   <Operation> | <Status>  |   <Data>
     UARTprintf("I2C0 Initialized");           // defines data
@@ -45,6 +46,36 @@ void I2C0_Init(void)
 #endif
 
 }
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void I2C_showState(void){
+
+    if( I2C_state  == INITIALIZED){
+        UARTprintf("I2C  initialized. \n");
+    }
+    else{
+        UARTprintf("I2C not initialized. \n");
+    }
+
+    return;
+}
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 void I2C_readReg(uint8_t slaveAddr, uint32_t regAddr, uint8_t *pBuffer,
                  uint16_t len)

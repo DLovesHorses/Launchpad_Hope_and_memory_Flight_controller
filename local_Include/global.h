@@ -1,3 +1,7 @@
+#ifndef GLOBAL_
+#define GLOBAL_
+
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -34,3 +38,17 @@
 
 #define TRUE true
 #define FALSE false
+
+
+enum DeviceConnectionStatus{
+    NOT_CONNECTED = 0,
+    CONNECTED               // 1
+};
+
+enum DeviceInitializationStatus{
+    NOT_INITIALIZED = 0,
+    INITIALIZED
+};
+
+
+#endif /*GLOBAL_H */

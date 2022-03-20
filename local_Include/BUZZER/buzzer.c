@@ -14,9 +14,13 @@
 #include "local_Include/i2c.h"
 
 // global variables and externs
+
+bool BUZZER_state = NOT_INITIALIZED;
+
 uint16_t buzDuration;
 uint16_t count;
 uint16_t pauseTime;
+
 
 /*
  *
@@ -46,10 +50,33 @@ void init_Buzzer(void)
     // configure PC7 as output pin
     GPIOPinTypeGPIOOutput(GPIO_PORTC_BASE, GPIO_PIN_7);
 
+
+    BUZZER_state = INITIALIZED;
     return;
 
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void BUZZER_showState(void){
+
+    if( BUZZER_state  == INITIALIZED){
+        UARTprintf("BUZZER  initialized. \n");
+    }
+    else{
+        UARTprintf("BUZZER not initialized. \n");
+    }
+
+    return;
+}
 /*
  *
  *

@@ -27,6 +27,7 @@
 
 // global variables and externs
 
+bool BMX160_state = NOT_INITIALIZED;
 const uint8_t int_mask_lookup_table[13] = {
 BMX160_INT1_SLOPE_MASK,
                                             BMX160_INT1_SLOPE_MASK,
@@ -86,12 +87,44 @@ void BMX160_Init(void)
         }
         else
         {
+            BMX160_state = INITIALIZED;
 #ifdef DEBUG
             UARTprintf("BMX160 Initialized...\n");
 #endif
         }
     }
 }
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void BMX160_showState(void){
+
+    if( BMX160_state  == INITIALIZED){
+        UARTprintf("BMX160 initialized. \n");
+    }
+    else{
+        UARTprintf("BMX160 not initialized. \n");
+    }
+
+    return;
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 bool BMX160_scan(void)
 {

@@ -38,9 +38,7 @@ local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/timer.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/pwm.h
 local_Include/SysTick.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
 local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysTick.h
-local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 local_Include/SysTick.obj: ../local_Include/LED.h
-local_Include/SysTick.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
 
 ../local_Include/SysTick.c:
 
@@ -118,9 +116,5 @@ C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h:
 
 C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/SysTick.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
-
 ../local_Include/LED.h:
-
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
 

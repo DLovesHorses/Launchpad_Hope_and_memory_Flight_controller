@@ -9,6 +9,10 @@
  */
 
 // Includes
+
+#ifndef SYSFLAG_LOCK_
+#define SYSFLAG_LOCK_
+
 #include "local_include/global.h"
 
 // Defines
@@ -42,3 +46,5 @@ void SysFlag_Set(uint32_t uiSysFlag);
 void SysFlag_Clear(uint32_t uiSysFlag);
 bool SysFlag_Check(uint32_t uiSysFlag);
 
+
+#endif /* SYSFLAG_LOCK */

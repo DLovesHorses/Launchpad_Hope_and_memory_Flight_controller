@@ -29,6 +29,7 @@
 #include "local_include/PWM/PWM.h"
 #include "local_include/PID/PID.h"
 #include "local_include/SONAR/SONAR.h"
+#include "local_include/MotorControl/MotorControl.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -83,6 +84,8 @@ void SystemInitialize(void)
     // SONAR_Init();
 
     // BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_2, BUZZ_PAUSE_TIME_500 );
+
+
 }
 
 //*****************************************************************************
@@ -277,15 +280,20 @@ int main(void)
             }
 
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 150) // 1 seconds
+            if (sensorDataSampleTimeCounter == 100) // 1 seconds
             {
                  BMX160_showData();
                  BMP388_showData();
-                 OrangeRX_showStatus();
+                // OrangeRX_showStatus();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
-                  Motor_ManMixer();
+                // GetEStopState();
+                // GetFlightMode();
+
+               //  Motor_ManMixer();
                 // PID_altitude_adjust();
+                flightControl();
+                MOTOR_showDuty();
 
 
 
@@ -354,6 +362,12 @@ int main(void)
                     uint8_t testReg = 0x00;
                     uint8_t knownValue = 0xD8;
                     I2C_AddressBruteForcer(testReg, knownValue);
+                    break;
+                }
+
+                case 'c':
+                {
+                    BMP388_calibrate();
                     break;
                 }
                 case 'm':
@@ -464,6 +478,23 @@ int main(void)
                     }
 
                     break;
+                }
+
+
+                case 's':
+                {
+                    // Display State of the devices
+
+                    I2C_showState();
+                    BMX160_showState();
+                    BMP388_showState();
+                    BUZZER_showState();
+                    PWM_showState();
+                    ORANGE_showState();
+
+
+                    break;
+
                 }
 
                 case 'w':

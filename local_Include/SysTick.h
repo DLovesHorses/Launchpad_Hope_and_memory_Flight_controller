@@ -9,6 +9,9 @@
  */
 
 // Includes
+#ifndef SYSTICK_LOCK_
+#define SYSTICK_LOCK_
+
 #include "local_include/global.h"
 
 // Defines
@@ -22,3 +25,5 @@
 void SysTick_IntHandler(void);
 void SysTick_Init(void);
 void SYSTICK_Delay( uint32_t );
+
+#endif /* SYSTICK_LOCK */

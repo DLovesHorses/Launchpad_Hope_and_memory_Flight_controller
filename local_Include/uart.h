@@ -8,6 +8,9 @@
  * Date         :   2022-01-26
  */
 
+#ifndef UART_LOCK_
+#define UART_LOCK_
+
 #include "local_include/global.h"
 
 // Defines
@@ -22,3 +25,4 @@ void UART0_STDIO_Init(void);
 void UARTdebug(char *component, char *file, char *routine, char *operation,
                char *status);
 
+#endif /* UART_LOCK */

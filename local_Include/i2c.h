@@ -9,6 +9,9 @@
  */
 
 // Includes
+#ifndef I2C_LOCK_
+#define I2C_LOCK_
+
 #include "local_include/global.h"
 
 // Defines
@@ -64,3 +67,6 @@ void I2C_readReg(uint8_t slaveAddr, uint32_t regAddr, uint8_t *pBuffer,
                  uint16_t len);
 
 void I2C_writeSingleReg(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteToWrite);
+void I2C_showState(void);
+
+#endif /* I2C_LOCK */
