@@ -15,6 +15,7 @@
 
 
 #include "local_Include/global.h"
+//#include "local_Include/BSX_LITE/bsxlite_interface.h"
 
 #include "local_Include/led.h"
 #include "local_Include/uart.h"
@@ -31,6 +32,12 @@
 #define LITTLE_ENDIAN 1
 
 #define BMX160_SA                                0x68
+
+
+#define G_TO_MPS2                                9.80665f       // 1g = 9.80665 m/s^2
+#define RAD_TO_DEG                               57.29577951f   // 1 rad = 180/PI deg
+#define DEG_TO_RAD                               0.017453293f   // 1 deg = PI/180 rad
+#define COMP_FILTER_ALPHA                        0.500000000f   // 0 <= alpha <= 1
 
 /** Mask definitions */
 #define BMX160_ACCEL_BW_MASK                     0x70

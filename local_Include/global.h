@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+
 #include <math.h>
 
 
@@ -32,12 +33,13 @@
 
 
 
-
 #define ON true
 #define OFF false
 
 #define TRUE true
 #define FALSE false
+
+#define SAMPLE_TIME_MS     100     // 100 ms sample time
 
 
 enum DeviceConnectionStatus{

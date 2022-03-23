@@ -22,7 +22,12 @@
 
 // Defines
 
-#define E_STOP_DECREMENT_STEP   1       // decrement motor by 1 if e-stop is pressed while flying
+#define E_STOP_DECREMENT_STEP               1       // decrement motor by 1 if e-stop is pressed while flying
+
+#define IDLE_STATE_LED_LEVEL_STABLE_TIME    250     // 250 ms
+
+#define CALIB_STATE_LED_LEVEL_STABLE_TIME    1000     // 1000 ms
+#define AUTO_STATE_LED_LEVEL_STABLE_TIME     1000     // 1000 ms
 
 
 
@@ -36,8 +41,10 @@ enum ESTOP_STATES{
 enum FLIGHT_MODES{
     CALIBRATION = 0,        // Switch A -> UP
     MANUAL,                 // Switch A -> Middle
-    AUTO                    // Switch A -> Down
+    AUTO,                    // Switch A -> Down
+    IDLE                     // IDLE State
 };
+
 
 
 
@@ -47,5 +54,6 @@ enum FLIGHT_MODES{
 void flightControl(void);
 bool GetEStopState(void);
 uint8_t GetFlightMode(void);
+void flightControl_SM(void);
 
 #endif /* MOTOR_CONTROL_LOCK */

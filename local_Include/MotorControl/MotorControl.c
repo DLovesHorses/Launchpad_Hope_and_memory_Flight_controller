@@ -217,7 +217,7 @@ bool GetEStopState(void)
 
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_D
     if (rxIsConnected == NOT_CONNECTED) { UARTprintf("RX state : \t Not Connected \n"); }
     if (eStopState == ENGAGED) { UARTprintf("EStop State : \t ON \n"); }
     if (eStopState == NOT_ENGAGED) { UARTprintf("EStop State : \t OFF \n"); }
@@ -226,4 +226,188 @@ bool GetEStopState(void)
 
     return eStopState;
 
+}
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void flightControl_SM(void){
+    static uint8_t curState = IDLE;
+
+    if(GetEStopState() == ENGAGED){
+        curState = IDLE;
+    }
+
+    switch(curState){
+
+    case IDLE:{
+        static unsigned int timer = 0;
+        static bool ledState = 0;
+
+        // TURN off all LEDs if transition from other state
+        if(timer == 0){
+            LED_Drive(LED_ALL, OFF);
+        }
+        if(timer == IDLE_STATE_LED_LEVEL_STABLE_TIME){
+            ledState ^= 0x01;
+            LED_Drive(RED, ledState);
+
+            timer = 1;
+        }
+        else{
+            timer++;
+        }
+
+
+
+        // transition logic
+        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == CALIBRATION){
+            curState = CALIBRATION;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+            ledState = 0;
+        }
+        else{
+            curState = IDLE;
+        }
+
+
+
+        break;
+    }
+
+    case CALIBRATION:{
+
+        static unsigned int timer = 0;
+        static bool ledState = 0;
+
+        // TURN off all LEDs if transition from other state
+        if(timer == 0){
+            LED_Drive(LED_ALL, OFF);
+
+        }
+        if(timer == CALIB_STATE_LED_LEVEL_STABLE_TIME){
+            ledState ^= 0x01;
+            LED_Drive(BLUE, ledState);
+
+            timer = 1;
+        }
+        else{
+            timer++;
+        }
+
+        if(GetEStopState() == ENGAGED){
+            curState = IDLE;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+            ledState = 0;
+        }
+
+        // transition logic
+        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == MANUAL){
+            curState = MANUAL;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+            ledState = 0;
+        }
+
+        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == AUTO){
+            curState = AUTO;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+            ledState = 0;
+        }
+
+
+        break;
+    }
+
+    case MANUAL:{
+
+        static unsigned int timer = 0;
+
+
+        // TURN off all LEDs if transition from other state
+        if(timer == 0){
+            LED_Drive(LED_ALL, OFF);
+            timer++;
+        }
+        else if (timer == 1){
+            LED_Drive(GREEN, ON);       // GREEN : Solid ON
+            timer++;
+
+        }
+        else{
+            // keep the light on. No action required.
+        }
+
+
+        if(GetEStopState() == ENGAGED){
+            curState = IDLE;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+        }
+
+        // transition logic
+        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == AUTO){
+            curState = AUTO;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+        }
+
+
+
+
+        break;
+    }
+
+    case AUTO:{
+
+        static unsigned int timer = 0;
+        static bool ledState = 0;
+
+        // TURN off all LEDs if transition from other state
+        if(timer == 0){
+            LED_Drive(LED_ALL, OFF);
+
+        }
+        if(timer == AUTO_STATE_LED_LEVEL_STABLE_TIME){
+            ledState ^= 0x01;
+            LED_Drive(GREEN, ledState);
+
+            timer = 1;
+        }
+        else{
+            timer++;
+        }
+
+        if(GetEStopState() == ENGAGED){
+            curState = IDLE;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+            ledState = 0;
+        }
+
+        // transition logic
+        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == MANUAL){
+            curState = MANUAL;
+            LED_Drive(LED_ALL, OFF);
+            timer = 0;
+            ledState = 0;
+        }
+
+        break;
+    }
+
+    }
 }

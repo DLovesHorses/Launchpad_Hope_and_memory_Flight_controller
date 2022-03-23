@@ -39,6 +39,8 @@
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
 extern uint8_t motorSelect;
 
+int32_t w_time_stamp = 0;    // timestamp for bsx_lite
+
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
 {
@@ -279,9 +281,11 @@ int main(void)
 #endif
             }
 
+            //flightControl_SM();
             static uint16_t sensorDataSampleTimeCounter = 0;
-            if (sensorDataSampleTimeCounter == 100) // 1 seconds
+            if (sensorDataSampleTimeCounter == SAMPLE_TIME_MS) // 1 seconds
             {
+                w_time_stamp +=  10;
                  BMX160_showData();
                  BMP388_showData();
                 // OrangeRX_showStatus();
@@ -294,6 +298,7 @@ int main(void)
                 // PID_altitude_adjust();
                 flightControl();
                 MOTOR_showDuty();
+
 
 
 
@@ -591,6 +596,16 @@ int main(void)
 #ifdef DEBUG
                     PCF8574A_Write( PCF8574A_SA, 0x47);
                     UARTprintf("PCF8575A written with %X", 0x47);
+                    break;
+#endif
+                }
+
+                case '3':
+                {
+#ifdef DEBUG
+                    static bool state = 0;
+                    state ^= 0x01;
+                    LED_LED2(state);
                     break;
 #endif
                 }
