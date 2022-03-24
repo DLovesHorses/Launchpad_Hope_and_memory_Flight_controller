@@ -768,6 +768,10 @@ struct bmp3_dev
 };
 
 
+enum BMP388_CALIB_STATE{
+    BMP388_NOT_CALIBRATED = 0,
+    BMP388_CALIBRATED
+};
 
 
 
@@ -839,6 +843,7 @@ int8_t BMP388_user_i2c_MultiByteWrite(uint8_t dev_id, uint8_t *reg_addr, uint8_t
                              uint16_t len);                                             // implemented
 
 void BMP388_calibrate(void);
+void BMP388_calibrate_SM(void);
 
 #ifdef __cplusplus
 }

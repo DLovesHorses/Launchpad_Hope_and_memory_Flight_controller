@@ -24,7 +24,8 @@ struct bmp3_dev dev;
 uint8_t BMP388_addr;
 
 float base_altitude = 0.0f;
-bool  BMP388_state = NOT_INITIALIZED;
+bool BMP388_state = NOT_INITIALIZED;
+bool BMP388_calibState = BMP388_NOT_CALIBRATED;
 
 /*
  * settings to configure:
@@ -185,7 +186,7 @@ void BMP388_Init(void)
     {
 
         BMP388_calibrate();
-        BMP388_state  = INITIALIZED;
+        BMP388_state = INITIALIZED;
 #ifdef DEBUG
         UARTprintf("BMP388 Initialized...\n");
 
@@ -210,40 +211,37 @@ void BMP388_Init(void)
  *
  */
 
-void BMP388_calibrate(void){
+void BMP388_calibrate(void)
+{
 
     /*
-    // take minimum of 100 altitude reading
-    // and store it in base altitude variable.
+     // take minimum of 100 altitude reading
+     // and store it in base altitude variable.
 
-    UARTprintf("BMP388 Calibrating\n");
+     UARTprintf("BMP388 Calibrating\n");
 
-    float intermediate_result = BMP388_readAltitude();
-    uint8_t count = 0;
-    float rslt = intermediate_result;
-    for (count = 0; count < 100; count++)
-    {
-        SYSTICK_Delay(100);
-        rslt = BMP388_readAltitude();
+     float intermediate_result = BMP388_readAltitude();
+     uint8_t count = 0;
+     float rslt = intermediate_result;
+     for (count = 0; count < 100; count++)
+     {
+     SYSTICK_Delay(100);
+     rslt = BMP388_readAltitude();
 
-        intermediate_result =
-                (rslt < intermediate_result) ? rslt : intermediate_result;
-    }
+     intermediate_result =
+     (rslt < intermediate_result) ? rslt : intermediate_result;
+     }
 
-    base_altitude = intermediate_result;
+     base_altitude = intermediate_result;
 
-    UARTprintf("BMP388 Calibrated.\n");
-    */
-
-
+     UARTprintf("BMP388 Calibrated.\n");
+     */
 
     // exponentially weighted moving average algorithm
-
     UARTprintf("BMP388 Calibrating\n");
 
     uint8_t count = 0;
     char buffer[80];
-
 
     // apply LPF on raw values and save it in same variable
     static LOW_PASS_FILTER BMP388_calib;
@@ -265,7 +263,9 @@ void BMP388_calibrate(void){
         filtered_Altitude = applyLPF(&BMP388_calib, actual_Altitude, dt);
 
 #ifdef DEBUG
-        sprintf(buffer, "Actual Altitude: \t %f \t  filtered_altitude : \t %f \n", actual_Altitude, filtered_Altitude);
+        sprintf(buffer,
+                "Actual Altitude: \t %f \t  filtered_altitude : \t %f \n",
+                actual_Altitude, filtered_Altitude);
         UARTprintf("%s", buffer);
         buffer[0] = '\0';
 #endif
@@ -274,11 +274,98 @@ void BMP388_calibrate(void){
 
     base_altitude = filtered_Altitude;
 
-    sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n", filtered_Altitude);
+    sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n",
+            filtered_Altitude);
     UARTprintf("%s", buffer);
     buffer[0] = '\0';
     return;
 }
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void BMP388_calibrate_SM(void)
+{
+
+
+    char buffer[80];
+    if (BMP388_calibState == BMP388_NOT_CALIBRATED)
+    {
+        // exponentially weighted moving average algorithm
+
+        static uint8_t count = 0;
+
+
+        // apply LPF on raw values and save it in same variable
+        static LOW_PASS_FILTER BMP388_calib;
+        BMP388_calib.Fc = 53.05f;       // cut-off freq. for altitude change.
+
+        static float dt ;
+        dt = 1.0f / (5 * 2.0f * PI * BMP388_calib.Fc);
+
+        static float actual_Altitude = 0.0f;
+        static float filtered_Altitude = 0.0f;
+
+        // initialize the previous value so that the exponentially weighted moving average will be more accurate
+        actual_Altitude = BMP388_readAltitude();
+        BMP388_calib.prevOutput = actual_Altitude; // <- Initialize the previous value here.
+
+        if (count < 100)
+        {
+            //SYSTICK_Delay(100);
+            actual_Altitude = BMP388_readAltitude();
+            filtered_Altitude = applyLPF(&BMP388_calib, actual_Altitude, dt);
+            count++;
+
+#ifdef DEBUG
+            sprintf(buffer,
+                    "Actual Altitude: \t %f \t  filtered_altitude : \t %f \n",
+                    actual_Altitude, filtered_Altitude);
+            UARTprintf("%s", buffer);
+            buffer[0] = '\0';
+#endif
+        }
+        else
+        {
+            BMP388_calibState = BMP388_CALIBRATED;
+
+            static bool i = 0;
+            if (i == 0)
+            {
+                i++;
+                base_altitude = filtered_Altitude;
+                sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n",
+                        base_altitude);
+                UARTprintf("%s", buffer);
+                buffer[0] = '\0';
+            }
+
+        }
+
+    }
+    else
+    {
+        sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n",
+                base_altitude);
+        UARTprintf("%s", buffer);
+        buffer[0] = '\0';
+    }
+
+    return;
+
+}
+
 /*
  *
  *
@@ -343,8 +430,8 @@ int8_t BMP388_begin(void)
     UARTprintf("SUCCESS: BMP388 Chip Recognized: ID: %X\n", dev.chip_id);
 #endif
 
-    // next call is for debug purpose only
-    // BMP388_read_all_regs();
+// next call is for debug purpose only
+// BMP388_read_all_regs();
 
     /* Reset the sensor */
     rslt = BMP388_reset();
@@ -378,14 +465,14 @@ int8_t BMP388_begin(void)
     UARTprintf("SUCCESS: Calibration data acquisition completed.\n");
 #endif
 
-    // configure device
+// configure device
 
     rslt = BMP388_set_config();
 
-    // set-up the interrupt system
+// set-up the interrupt system
     BMP388_Int_Configure();
 
-    // next call is for debug purpose only: to ensure config is properly set
+// next call is for debug purpose only: to ensure config is properly set
     BMP388_read_all_regs();
 
     if (rslt != BMP3_OK)
@@ -415,12 +502,15 @@ int8_t BMP388_begin(void)
  *
  *
  */
-void BMP388_showState(void){
+void BMP388_showState(void)
+{
 
-    if( BMP388_state  == INITIALIZED){
+    if (BMP388_state == INITIALIZED)
+    {
         UARTprintf("BMP388 initialized. \n");
     }
-    else{
+    else
+    {
         UARTprintf("BMP388 not initialized. \n");
     }
 
@@ -510,7 +600,7 @@ int8_t BMP388_set_config(void)
     int8_t rslt = BMP3_E_NULL_PTR;
     uint8_t reg_addr;
 
-    // write pwr_ctrl reg data
+// write pwr_ctrl reg data
     reg_addr = BMP3_PWR_CTRL_ADDR;
     uint8_t pwr_ctrl_data = 0x33;
     rslt = BMP388_set_regs(&reg_addr, &pwr_ctrl_data, 1);
@@ -524,9 +614,9 @@ int8_t BMP388_set_config(void)
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
 
-    // write config reg data
+// write config reg data
     reg_addr = BMP3_CONFIG_ADDR;
-    uint8_t config_data = 0x0E;     // IIR Filter coefficient = 127 (Max Filtering).
+    uint8_t config_data = 0x0E; // IIR Filter coefficient = 127 (Max Filtering).
     rslt = BMP388_set_regs(&reg_addr, &config_data, 1);
 
     if (rslt != BMP3_OK)
@@ -538,7 +628,7 @@ int8_t BMP388_set_config(void)
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
 
-    // write output sampeling reg (osr) reg data
+// write output sampeling reg (osr) reg data
     reg_addr = BMP3_OSR_ADDR;
     uint8_t osr_data = 0x03;
     rslt = BMP388_set_regs(&reg_addr, &osr_data, 1);
@@ -551,7 +641,7 @@ int8_t BMP388_set_config(void)
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
 
-    // write output data rate (odr) reg data
+// write output data rate (odr) reg data
     reg_addr = BMP3_ODR_ADDR;
     uint8_t odr_data = 0x02;
     rslt = BMP388_set_regs(&reg_addr, &odr_data, 1);
@@ -564,7 +654,7 @@ int8_t BMP388_set_config(void)
         return BMP3_E_SET_SENSOR_SETTINGS_FAILED;
     }
 
-    // configure interrupts
+// configure interrupts
 
     reg_addr = BMP3_INT_CTRL_ADDR;
     uint8_t int_ctrl_data = 0x42;
@@ -608,7 +698,7 @@ float BMP388_readTemperature(void)
     sensor_comp = BMP3_TEMP;
     struct bmp3_data data;
 
-    // get the sensor data.
+// get the sensor data.
     rslt = BMP388_get_sensor_data(sensor_comp, &data);
 
     if (rslt != BMP3_OK)
@@ -673,7 +763,7 @@ void BMP388_showData(void)
 
      */
 
-    // Display Just Altitude. (and altitude process variable)
+// Display Just Altitude. (and altitude process variable)
     static float prevReading = 0.0f;
 
     float curReading = BMP388_readAltitude();
@@ -683,63 +773,56 @@ void BMP388_showData(void)
     float high_limit;
     float low_limit;
 
-    if(prevReading > 0.05f){
-        high_limit  = prevReading + 0.05;
-        low_limit   = prevReading - 0.05;
+    if (prevReading > 0.05f)
+    {
+        high_limit = prevReading + 0.05;
+        low_limit = prevReading - 0.05;
     }
-    else if(prevReading < -0.05f){
-        high_limit  = prevReading + 0.05;
-        low_limit   = prevReading - 0.05;
+    else if (prevReading < -0.05f)
+    {
+        high_limit = prevReading + 0.05;
+        low_limit = prevReading - 0.05;
     }
-    else{
-        high_limit    = 0.05f;
-        low_limit     = -0.05f;
+    else
+    {
+        high_limit = 0.05f;
+        low_limit = -0.05f;
     }
 
-
-    if (curBaselineReading <= low_limit
-            || curBaselineReading >= high_limit)
+    if (curBaselineReading <= low_limit || curBaselineReading >= high_limit)
     {
         prevReading = curBaselineReading;
     }
 
-
-    // Height process variable conditioning.
+// Height process variable conditioning.
 
     int16_t pv_height = 0;
 
-    // lower limit  : 0 cm
-    //pv_height = alt_process_variable < 0 ? 0 : alt_process_variable;
+// lower limit  : 0 cm
+//pv_height = alt_process_variable < 0 ? 0 : alt_process_variable;
 
     pv_height = alt_process_variable; // Just for debug. Remove it in final production code.
-    /*
-    if(alt_process_variable >= 0 && alt_process_variable <= 100){
-        pv_height = alt_process_variable;
-    }
-    else{
-        if (alt_process_variable < 0){
-            pv_height = 0;
-        }
-        else if(alt_process_variable > 100){
-            pv_height = 100;
-        }
-    }
-    */
+            /*
+             if(alt_process_variable >= 0 && alt_process_variable <= 100){
+             pv_height = alt_process_variable;
+             }
+             else{
+             if (alt_process_variable < 0){
+             pv_height = 0;
+             }
+             else if(alt_process_variable > 100){
+             pv_height = 100;
+             }
+             }
+             */
 
-
-
-
-
-    sprintf(charBuffer, "\nAlt.(drifted): %4.2f, \t (stable): %4.2f, \t Height: %d cm (PV: %d cm)\n",
+    sprintf(charBuffer,
+            "\nAlt.(drifted): %4.2f, \t (stable): %4.2f, \t Height: %d cm (PV: %d cm)\n",
             curBaselineReading, prevReading, alt_process_variable, pv_height);
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
 
     UARTprintf("\n\n");
-
-
-
-
 
     return;
 }
@@ -769,7 +852,7 @@ float BMP388_readPressure(void)
     sensor_comp = BMP3_PRESS;
     struct bmp3_data data;
 
-    // get the sensor data.
+// get the sensor data.
     rslt = BMP388_get_sensor_data(sensor_comp, &data);
 
     if (rslt != BMP3_OK)
@@ -799,7 +882,7 @@ int8_t BMP388_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
 {
 
     int8_t rslt = BMP3_OK;
-    //-----I2C-----
+//-----I2C-----
     if (dev.intf == BMP3_I2C_INTF)
     {
         rslt = dev.read(dev.dev_id, reg_addr, reg_data, len);
@@ -831,7 +914,7 @@ int8_t BMP388_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len)
     int8_t rslt = BMP3_E_NULL_PTR;
 
     uint8_t dataToWrite = *reg_data;
-    // Check for arguments validity
+// Check for arguments validity
     if ((reg_addr != NULL) && (reg_data != NULL) && (len != 0))
     {
 
@@ -867,7 +950,7 @@ int8_t BMP388_set_sensor_settings(uint32_t desired_settings)
 {
     int8_t rslt = BMP3_E_NULL_PTR;
 
-    // if desired_settings has POWER_CNTL bit enabled
+// if desired_settings has POWER_CNTL bit enabled
     if (POWER_CNTL & desired_settings)
     {
         /* Set the power control settings */
@@ -1035,8 +1118,6 @@ int8_t BMP388_get_sensor_data(uint8_t sensor_comp, struct bmp3_data *comp_data)
 
         /* Parse the read data from the sensor */
         BMP388_parse_sensor_data(reg_data, &uncomp_data);
-
-
 
         /* Compensate the pressure/temperature/both data read
          from the sensor */
@@ -1212,7 +1293,7 @@ int8_t BMP388_set_pwr_ctrl_settings(uint32_t desired_settings)
         return BMP3_E_REG_READ_FAILED;
     }
 
-    // if we want to enable pressure sensor
+// if we want to enable pressure sensor
     if (desired_settings & BMP3_PRESS_EN_SEL)
     {
         /* Set the pressure enable settings in the
@@ -1222,7 +1303,7 @@ int8_t BMP388_set_pwr_ctrl_settings(uint32_t desired_settings)
                                        dev.settings.press_en);
     }
 
-    // if we want to enable temperature sensor
+// if we want to enable temperature sensor
     if (desired_settings & BMP3_TEMP_EN_SEL)
     {
         /* Set the temperature enable settings in the
@@ -1315,7 +1396,7 @@ int8_t BMP388_compensate_data(uint8_t sensor_comp,
 {
     int8_t rslt = BMP3_OK;
 
-    // check for NULL pointer references before continuing.
+// check for NULL pointer references before continuing.
     if ((uncomp_data == NULL) || (comp_data == NULL) || (calib_data == NULL))
     {
 
@@ -1343,7 +1424,7 @@ int8_t BMP388_compensate_data(uint8_t sensor_comp,
                                                                calib_data);
     }
 
-    // compensate pressure only if it needs to be compensated
+// compensate pressure only if it needs to be compensated
     if (sensor_comp & BMP3_PRESS)
     {
         /* Compensate the pressure data */
@@ -1382,78 +1463,78 @@ void BMP388_parse_calib_data(const uint8_t *reg_data)
     /* Temporary variable */
     double temp_var = 0;
 
-    // Calculate PAR_T1 (16-bits)
+// Calculate PAR_T1 (16-bits)
     temp_var = BMP3_CALIB_PAR_T1_DIVISOR_VALUE;
     reg_calib_data->par_t1 = BMP3_CONCAT_BYTES(reg_data[1], reg_data[0]);
     quantized_calib_data->par_t1 = ((double) reg_calib_data->par_t1 / temp_var);
 
-    // Calculate PAR_T2 (16-bits)
+// Calculate PAR_T2 (16-bits)
     reg_calib_data->par_t2 = BMP3_CONCAT_BYTES(reg_data[3], reg_data[2]);
     temp_var = BMP3_CALIB_PAR_T2_DIVISOR_VALUE;
     quantized_calib_data->par_t2 = ((double) reg_calib_data->par_t2 / temp_var);
 
-    // Calculate PAR_T3 (8-bits)
+// Calculate PAR_T3 (8-bits)
     reg_calib_data->par_t3 = (int8_t) reg_data[4];
     temp_var = BMP3_CALIB_PAR_T3_DIVISOR_VALUE;
     quantized_calib_data->par_t3 = ((double) reg_calib_data->par_t3 / temp_var);
 
-    // Calculate PAR_P1 (16-bits)
+// Calculate PAR_P1 (16-bits)
     reg_calib_data->par_p1 = (int16_t) BMP3_CONCAT_BYTES(reg_data[6],
                                                          reg_data[5]);
     temp_var = BMP3_CALIB_PAR_P1_DIVISOR_VALUE;
     quantized_calib_data->par_p1 = ((double) (reg_calib_data->par_p1 - (16384))
             / temp_var);
 
-    // Calculate PAR_P2 (16-bits)
+// Calculate PAR_P2 (16-bits)
     reg_calib_data->par_p2 = (int16_t) BMP3_CONCAT_BYTES(reg_data[8],
                                                          reg_data[7]);
     temp_var = BMP3_CALIB_PAR_P2_DIVISOR_VALUE;
     quantized_calib_data->par_p2 = ((double) (reg_calib_data->par_p2 - (16384))
             / temp_var);
 
-    // Calculate PAR_P3 (8-bits)
+// Calculate PAR_P3 (8-bits)
     reg_calib_data->par_p3 = (int8_t) reg_data[9];
     temp_var = BMP3_CALIB_PAR_P3_DIVISOR_VALUE;
     quantized_calib_data->par_p3 = ((double) reg_calib_data->par_p3 / temp_var);
 
-    // Calculate PAR_P4 (8-bits)
+// Calculate PAR_P4 (8-bits)
     reg_calib_data->par_p4 = (int8_t) reg_data[10];
     temp_var = BMP3_CALIB_PAR_P4_DIVISOR_VALUE;
     quantized_calib_data->par_p4 = ((double) reg_calib_data->par_p4 / temp_var);
 
-    // Calculate PAR_P5 (16-bits)
+// Calculate PAR_P5 (16-bits)
     reg_calib_data->par_p5 = BMP3_CONCAT_BYTES(reg_data[12], reg_data[11]);
     temp_var = BMP3_CALIB_PAR_P5_DIVISOR_VALUE;
     quantized_calib_data->par_p5 = ((double) reg_calib_data->par_p5 / temp_var);
 
-    // Calculate PAR_P6 (16-bits)
+// Calculate PAR_P6 (16-bits)
     reg_calib_data->par_p6 = BMP3_CONCAT_BYTES(reg_data[14], reg_data[13]);
     temp_var = BMP3_CALIB_PAR_P6_DIVISOR_VALUE;
     quantized_calib_data->par_p6 = ((double) reg_calib_data->par_p6 / temp_var);
 
-    // Calculate PAR_P7 (8-bits)
+// Calculate PAR_P7 (8-bits)
     reg_calib_data->par_p7 = (int8_t) reg_data[15];
     temp_var = BMP3_CALIB_PAR_P7_DIVISOR_VALUE;
     quantized_calib_data->par_p7 = ((double) reg_calib_data->par_p7 / temp_var);
 
-    // Calculate PAR_P8 (8-bits)
+// Calculate PAR_P8 (8-bits)
     reg_calib_data->par_p8 = (int8_t) reg_data[16];
     temp_var = BMP3_CALIB_PAR_P8_DIVISOR_VALUE;
     quantized_calib_data->par_p8 = ((double) reg_calib_data->par_p8 / temp_var);
 
-    // Calculate PAR_P9 (16-bits)
+// Calculate PAR_P9 (16-bits)
     reg_calib_data->par_p9 = (int16_t) BMP3_CONCAT_BYTES(reg_data[18],
                                                          reg_data[17]);
     temp_var = BMP3_CALIB_PAR_P9_DIVISOR_VALUE;
     quantized_calib_data->par_p9 = ((double) reg_calib_data->par_p9 / temp_var);
 
-    // Calculate PAR_P10 (8-bits)
+// Calculate PAR_P10 (8-bits)
     reg_calib_data->par_p10 = (int8_t) reg_data[19];
     temp_var = BMP3_CALIB_PAR_P10_DIVISOR_VALUE;
     quantized_calib_data->par_p10 =
             ((double) reg_calib_data->par_p10 / temp_var);
 
-    // Calculate PAR_P11 (8-bits)
+// Calculate PAR_P11 (8-bits)
     reg_calib_data->par_p11 = (int8_t) reg_data[20];
     temp_var = BMP3_CALIB_PAR_P11_DIVISOR_VALUE;
     quantized_calib_data->par_p11 =
@@ -1530,7 +1611,7 @@ double BMP388_compensate_pressure(const struct bmp3_uncomp_data *uncomp_data,
     float partial_out2;
 
     /* Calibration data */
-    // for out 1
+// for out 1
     partial_data1 = calib_data->quantized_calib_data.par_p6
             * calib_data->quantized_calib_data.t_lin;
 
@@ -1546,7 +1627,7 @@ double BMP388_compensate_pressure(const struct bmp3_uncomp_data *uncomp_data,
     partial_out1 = calib_data->quantized_calib_data.par_p5 + partial_data1
             + partial_data2 + partial_data3;
 
-    // for out 2
+// for out 2
     partial_data1 = calib_data->quantized_calib_data.par_p2
             * calib_data->quantized_calib_data.t_lin;
 
@@ -1681,24 +1762,41 @@ float BMP388_readAltitude(void)
     float interResult = 0.0f;
     interResult = pow(pressure / 101325, 0.190284);
     interResult = 1 - interResult;
-    interResult *=  (temperature + 273.15);
+    interResult *= (temperature + 273.15);
 
     interResult /= 0.0065;
 
+    // now pass this to LPF
+    static LOW_PASS_FILTER alt_LPF;
+    alt_LPF.Fc = 10.05f;       // cut-off freq. for alt
 
-    float alt = interResult ;
+    // initialize initial previous value inside filter
+    static int i = 1;
+    if(i == 1){
+        alt_LPF.prevOutput = interResult;
+        i++;
+    }
 
-#ifdef DEBUG
+    float dt_alt = 1.0f / (5 * 2.0f * PI * alt_LPF.Fc);
+    float alt_filtered = applyLPF(&alt_LPF, interResult, dt_alt);
 
-    char charBuffer [80] = {0};
-    sprintf(charBuffer, "Read Altitude : \t Pressure : \t %f \t Temp. : \t %f \t Alt. : \t %f \n", pressure, temperature, alt);
+
+    // assign the final Altitude value as filtered altitude (alt_filtered) or unfiltered altitude (interResult)
+    float alt = alt_filtered;
+
+#ifdef DEBUG_D
+
+    char charBuffer[200] = { 0 };
+    sprintf(charBuffer,
+            "Read Altitude : \t Pressure : \t %f \t Temp. : \t %f \n Alt. : \t (unfiltered: %f \t filtered: %f .\n",
+            pressure, temperature, interResult, alt_filtered);
     UARTprintf("%s", charBuffer);
     charBuffer[0] = '\0';
     UARTprintf("\n\n");
 
 #endif
     return alt;
-    //return (1.0 - pow(pressure / 101325, 0.190284)) * 288.15 / 0.0065;
+//return (1.0 - pow(pressure / 101325, 0.190284)) * 288.15 / 0.0065;
 }
 
 /*
@@ -1719,19 +1817,19 @@ int8_t BMP388_INTEnable(uint8_t config)
     uint8_t reg_data = 0x00; //
     uint8_t reg_addr = BMP3_INT_CTRL_ADDR;
 
-    // if FIFO water-mark interrupt needs to be enabled
+// if FIFO water-mark interrupt needs to be enabled
     if (config & BMP3_INT_FIFO_WM)
     {
         reg_data |= BMP3_INT_FIFO_WM;
     }
 
-    // if FIFO FULL interrupt needs to be enabled
+// if FIFO FULL interrupt needs to be enabled
     if (config & BMP3_INT_FIFO_FULL)
     {
         reg_data |= BMP3_INT_FIFO_FULL;
     }
 
-    // if Data Ready interrupt needs to be enabled
+// if Data Ready interrupt needs to be enabled
     if (config & BMP3_INT_DATA_RDY)
     {
         reg_data |= BMP3_INT_DATA_RDY;
@@ -1757,7 +1855,7 @@ int8_t BMP388_INTDisable(uint8_t config)
     uint8_t reg_data = 0x00;
     uint8_t reg_addr = BMP3_INT_CTRL_ADDR;
 
-    //read the current status of Int Ctrl Reg.
+//read the current status of Int Ctrl Reg.
     rslt = BMP388_get_regs(reg_addr, &reg_data, 1);
     if (rslt != BMP3_OK)
     {
@@ -1770,22 +1868,22 @@ int8_t BMP388_INTDisable(uint8_t config)
         return BMP3_E_GET_REG_DATA_FAILED;
     }
 
-    // reg_data now contains the current status of
-    // enabled interrupts
+// reg_data now contains the current status of
+// enabled interrupts
 
-    // if FIFO_Water mark interrupt needs to be disabled
+// if FIFO_Water mark interrupt needs to be disabled
     if (config & BMP3_INT_FIFO_WM)
     {
         reg_data &= ~BMP3_INT_FIFO_WM;
     }
 
-    // if FIFO FULL interrupt needs to be disabled
+// if FIFO FULL interrupt needs to be disabled
     if (config & BMP3_INT_FIFO_FULL)
     {
         reg_data &= ~BMP3_INT_FIFO_FULL;
     }
 
-    // if Data Ready interrupt needs to be disabled
+// if Data Ready interrupt needs to be disabled
     if (config & BMP3_INT_DATA_RDY)
     {
         reg_data &= ~BMP3_INT_DATA_RDY;
@@ -1847,9 +1945,9 @@ void BMP388_read_all_regs(void)
 
     uint8_t data[32] = { 0 };
 
-    //breakpoint at next line,
-    // step-over the program in debug mode
-    // read the contents of returned values in debug variables tab.
+//breakpoint at next line,
+// step-over the program in debug mode
+// read the contents of returned values in debug variables tab.
     reg_addr = 0x19;
     length = 6; // 9, A, B, C, D
     BMP388_get_regs(reg_addr, data, length);
@@ -1894,39 +1992,39 @@ int8_t BMP388_user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
         return BMP3_E_I2C_INVALIDE_WRITE_LENGTH;
     }
 
-    // set slave address in write mode
+// set slave address in write mode
     I2CMasterSlaveAddrSet(I2C0_BASE, dev_id, false);
 
-    // wait if Master is busy
+// wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
     }
-    // master is in idle state right now
+// master is in idle state right now
     I2CMasterDataPut(I2C0_BASE, reg_addr);
 
-    // send START condition followed by TRANSMIT operation (master goes
-    // to the Master Transmit state). TM4C datasheet: Table 16-5, pg. 1023.
+// send START condition followed by TRANSMIT operation (master goes
+// to the Master Transmit state). TM4C datasheet: Table 16-5, pg. 1023.
     I2CMasterControl(I2C0_BASE, I2C_START | I2C_RUN);
 
-    // master is in Master Transmit state right now.
+// master is in Master Transmit state right now.
 
-    // wait if Master is busy
+// wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
     }
 
-    // send data that will be written to the first
-    // addressed register
+// send data that will be written to the first
+// addressed register
 
     I2CMasterDataPut(I2C0_BASE, *data);
 
-    // TRANSMIT followed by STOP condition (master goes
-    // to Idle state).
+// TRANSMIT followed by STOP condition (master goes
+// to Idle state).
     I2CMasterControl(I2C0_BASE, I2C_STOP | I2C_RUN);
 
-    // wait if bus is busy
+// wait if bus is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
@@ -1982,44 +2080,44 @@ int8_t BMP388_user_i2c_MultiByteWrite(uint8_t dev_id, uint8_t *reg_addr,
         return BMP3_E_I2C_INVALIDE_WRITE_LENGTH;
     }
 
-    // slave address in write mode
+// slave address in write mode
     I2CMasterSlaveAddrSet(I2C0_BASE, dev_id, false);
 
-    // wait if Master is busy
+// wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
     }
 
-    // master is in idle state right now
+// master is in idle state right now
     I2CMasterDataPut(I2C0_BASE, reg_addr[0]);
 
-    // send START condition followed by TRANSMIT operation (master goes
-    // to the Master Transmit state). TM4C datasheet: Table 16-5, pg. 1023.
+// send START condition followed by TRANSMIT operation (master goes
+// to the Master Transmit state). TM4C datasheet: Table 16-5, pg. 1023.
     I2CMasterControl(I2C0_BASE, I2C_START | I2C_RUN);
 
-    // master is in Master Transmit state right now.
+// master is in Master Transmit state right now.
 
-    // wait if Master is busy
+// wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
     }
 
-    //send the first data-byte.
+//send the first data-byte.
     I2CMasterDataPut(I2C0_BASE, data[0]);
 
-    //TRANSMIT operation (master remains in Master
-    // Transmit state).
+//TRANSMIT operation (master remains in Master
+// Transmit state).
     I2CMasterControl(I2C0_BASE, I2C_RUN);
 
-    // wait if bus is busy
+// wait if bus is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
     }
 
-    // send remaining reg-addr and data combinations.
+// send remaining reg-addr and data combinations.
     uint8_t count = 0;
     for (count = 1; count < len; count++)
     {
@@ -2112,32 +2210,32 @@ int8_t BMP388_user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data,
 
     I2CMasterSlaveAddrSet(I2C0_BASE, dev_id, false); // write
 
-    // wait if Master is busy
+// wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
     }
 
-    // master is in idle state right now
+// master is in idle state right now
     I2CMasterDataPut(I2C0_BASE, reg_addr);
 
-    // Send START condition followed by TRANSMIT (master goes
-    // to the Master Transmit state).
+// Send START condition followed by TRANSMIT (master goes
+// to the Master Transmit state).
     I2CMasterControl(I2C0_BASE, I2C_START | I2C_RUN);
 
-    // wait if Master is busy
+// wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 
     }
 
-    // At this point, following transaction finishied
-    // -> (START)-(SL.ADDR+W)-(ACK)-(REG.ADDR)-(ACK)
+// At this point, following transaction finishied
+// -> (START)-(SL.ADDR+W)-(ACK)-(REG.ADDR)-(ACK)
 
-    // Put slave address in read mode
+// Put slave address in read mode
     I2CMasterSlaveAddrSet(I2C0_BASE, dev_id, true); // read mode
 
-    // wait if Master is busy
+// wait if Master is busy
     while (I2CMasterBusy(I2C0_BASE))
     {
 

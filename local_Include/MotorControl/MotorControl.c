@@ -11,9 +11,9 @@
 // Includes
 #include "MotorControl.h"
 #include "local_Include/led.h"
+#include "local_Include/BUZZER/buzzer.h"
 #include "local_Include/uart.h"
 #include "local_Include/i2c.h"
-
 
 #include "local_Include/PWM/PWM.h"
 #include "local_Include/OrangeRX/OrangeRX.h"
@@ -24,6 +24,7 @@
 
 extern Orange_RX_Channel_Data rx_data;
 extern MOTOR_VARIABLES mixer;
+extern bool BMP388_calibState;
 
 // Function definitions.
 /*
@@ -73,7 +74,7 @@ void flightControl(void)
         }
 
 #ifdef DEBUG
-       UARTprintf("E-Stop:\t  ON \n\n");
+        UARTprintf("E-Stop:\t  ON \n\n");
 #endif
     }
 
@@ -125,10 +126,19 @@ void flightControl(void)
         }
 
 #ifdef DEBUG
-       UARTprintf("E-Stop:\t  OFF \n");
-       if (flightMode == CALIBRATION) { UARTprintf("Mode :\t  Calibration. \n"); }
-       if (flightMode == MANUAL) { UARTprintf("Mode :\t  Manual. \n"); }
-       if (flightMode == AUTO) { UARTprintf("Mode :\t  Automatic. \n"); }
+        UARTprintf("E-Stop:\t  OFF \n");
+        if (flightMode == CALIBRATION)
+        {
+            UARTprintf("Mode :\t  Calibration. \n");
+        }
+        if (flightMode == MANUAL)
+        {
+            UARTprintf("Mode :\t  Manual. \n");
+        }
+        if (flightMode == AUTO)
+        {
+            UARTprintf("Mode :\t  Automatic. \n");
+        }
 
 #endif
 
@@ -176,7 +186,7 @@ uint8_t GetFlightMode(void)
         flightMode = CALIBRATION;
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_D
 
     if (flightMode == MANUAL)
     {
@@ -241,173 +251,368 @@ bool GetEStopState(void)
  *
  */
 
-void flightControl_SM(void){
+void flightControl_SM(void)
+{
     static uint8_t curState = IDLE;
-
-    if(GetEStopState() == ENGAGED){
+    /*
+     if(OrangeRX_isConnected() == NOT_CONNECTED){
+     // bypass the state machine. Turn Solid Red.
+     LED_Drive(RED, ON);
+     return;
+     }
+     */
+    if (GetEStopState() == ENGAGED)
+    {
         curState = IDLE;
+        BMP388_calibState = BMP388_NOT_CALIBRATED;
+
     }
 
-    switch(curState){
+    if (OrangeRX_isConnected() == NOT_CONNECTED)
+    {
+        // bypass the state machine. Turn Solid Red.
 
-    case IDLE:{
+        curState = RX_NOT_CONNECTED;
+        BMP388_calibState = BMP388_NOT_CALIBRATED;
+        //LED_Drive(RED, ON);
+    }
+
+    switch (curState)
+    {
+
+    case RX_NOT_CONNECTED:
+    {
+
+        static unsigned int timer = 0;
+        if (timer == 0)
+        {
+            LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
+            LED_Drive(RED, ON);
+            timer++;
+        }
+
+        if (GetEStopState() == ENGAGED)
+        {
+            curState = IDLE;
+            timer = 0;
+        }
+
+        // RX Connection Lost motor duty change logic.
+        flightSafeLand();
+
+        break;
+    }
+    case IDLE:
+    {
         static unsigned int timer = 0;
         static bool ledState = 0;
 
         // TURN off all LEDs if transition from other state
-        if(timer == 0){
+        if (timer == 0)
+        {
             LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
         }
-        if(timer == IDLE_STATE_LED_LEVEL_STABLE_TIME){
+        if (timer == IDLE_STATE_LED_LEVEL_STABLE_TIME)
+        {
             ledState ^= 0x01;
             LED_Drive(RED, ledState);
+            BUZZ_BUZZ(ledState);
 
             timer = 1;
         }
-        else{
+        else
+        {
             timer++;
         }
 
-
-
         // transition logic
-        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == CALIBRATION){
+        uint8_t eStopState = GetEStopState();
+        uint8_t rxState = OrangeRX_isConnected();
+        uint8_t flightMode = GetFlightMode();
+        if (eStopState == NOT_ENGAGED && rxState == CONNECTED
+                && flightMode == CALIBRATION)
+        {
             curState = CALIBRATION;
             LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
             timer = 0;
             ledState = 0;
         }
-        else{
+        else
+        {
             curState = IDLE;
         }
 
+        // E-stop logic
+        flightSafeLand();
 
+#ifdef DEBUG_D
+       UARTprintf("E-Stop:\t  ON \n\n");
+#endif
 
         break;
     }
 
-    case CALIBRATION:{
+    case CALIBRATION:
+    {
+        static unsigned int timer = 0;
+        static bool ledState = 0;
+
+        // TURN off all LEDs if transition from other state
+        if (timer == 0)
+        {
+            LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
+
+        }
+        if (BMP388_calibState == BMP388_NOT_CALIBRATED)
+        {
+
+            // if BMP388 is not calibrated, flash Blue light while calibrating
+            if (timer == CALIB_STATE_LED_LEVEL_CALIB_NOT_COMPLETED)
+            {
+                ledState ^= 0x01;
+                LED_Drive(BLUE, ledState);
+
+                timer = 1;
+            }
+            else
+            {
+                timer++;
+            }
+
+            // Calibration logic.
+            BMP388_calibrate_SM();
+
+        }
+        else
+        {
+
+            // if BMP388 is already calibrated, flash with period of 1 sec
+            if (timer == CALIB_STATE_LED_LEVEL_CALIB_COMPLETED)
+            {
+                ledState ^= 0x01;
+                LED_Drive(BLUE, ledState);
+
+                timer = 1;
+            }
+            else
+            {
+                timer++;
+            }
+
+            if (GetEStopState() == ENGAGED)
+            {
+                curState = IDLE;
+                LED_Drive(LED_ALL, OFF);
+                BUZZ_BUZZ(OFF);
+                timer = 0;
+                ledState = 0;
+            }
+
+            // transition logic
+            if (GetEStopState() == NOT_ENGAGED
+                    && OrangeRX_isConnected() == CONNECTED
+                    && GetFlightMode() == MANUAL)
+            {
+                curState = MANUAL;
+                LED_Drive(LED_ALL, OFF);
+                BUZZ_BUZZ(OFF);
+                timer = 0;
+                ledState = 0;
+            }
+
+            if (GetEStopState() == NOT_ENGAGED
+                    && OrangeRX_isConnected() == CONNECTED
+                    && GetFlightMode() == AUTO)
+            {
+                curState = AUTO;
+                LED_Drive(LED_ALL, OFF);
+                BUZZ_BUZZ(OFF);
+                timer = 0;
+                ledState = 0;
+            }
+
+        }
+
+        break;
+    }
+
+    case MANUAL:
+    {
 
         static unsigned int timer = 0;
         static bool ledState = 0;
 
         // TURN off all LEDs if transition from other state
-        if(timer == 0){
+        if (timer == 0)
+        {
             LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
 
-        }
-        if(timer == CALIB_STATE_LED_LEVEL_STABLE_TIME){
-            ledState ^= 0x01;
-            LED_Drive(BLUE, ledState);
-
-            timer = 1;
-        }
-        else{
             timer++;
         }
+        else
+        {
+            //LED_Drive(GREEN, ON);
 
-        if(GetEStopState() == ENGAGED){
+            // follow this sequence: GREEN - GREEN, BLUE - BLUE, ...
+            if (timer == MANUAL_STATE_LED_LEVEL)
+            {
+                static uint8_t led_select = GREEN;
+                static uint8_t led_flash_count = 0;
+
+                if (led_flash_count == 4)
+                {
+                    led_select = BLUE;
+                }
+                if (led_flash_count == 0)
+                {
+                    led_select = GREEN;
+                }
+
+                ledState ^= 0x01;
+                LED_Drive(led_select, ledState);
+
+                led_flash_count++;
+
+                if (led_flash_count == 9)
+                {
+                    led_flash_count = 0;
+                }
+                timer = 1;
+            }
+            else
+            {
+                timer++;
+            }
+        }
+
+        if (GetEStopState() == ENGAGED)
+        {
             curState = IDLE;
             LED_Drive(LED_ALL, OFF);
-            timer = 0;
-            ledState = 0;
-        }
-
-        // transition logic
-        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == MANUAL){
-            curState = MANUAL;
-            LED_Drive(LED_ALL, OFF);
-            timer = 0;
-            ledState = 0;
-        }
-
-        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == AUTO){
-            curState = AUTO;
-            LED_Drive(LED_ALL, OFF);
-            timer = 0;
-            ledState = 0;
-        }
-
-
-        break;
-    }
-
-    case MANUAL:{
-
-        static unsigned int timer = 0;
-
-
-        // TURN off all LEDs if transition from other state
-        if(timer == 0){
-            LED_Drive(LED_ALL, OFF);
-            timer++;
-        }
-        else if (timer == 1){
-            LED_Drive(GREEN, ON);       // GREEN : Solid ON
-            timer++;
-
-        }
-        else{
-            // keep the light on. No action required.
-        }
-
-
-        if(GetEStopState() == ENGAGED){
-            curState = IDLE;
-            LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
             timer = 0;
         }
 
         // transition logic
-        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == AUTO){
+        if (GetEStopState() == NOT_ENGAGED
+                && OrangeRX_isConnected() == CONNECTED
+                && GetFlightMode() == AUTO)
+        {
             curState = AUTO;
             LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
             timer = 0;
         }
+        else
+        {
+            //curState = MANUAL;
+        }
 
+        // Manual controller logic
 
-
+        // call Manual Mixer.
+        Motor_ManMixer();
 
         break;
     }
 
-    case AUTO:{
+    case AUTO:
+    {
 
         static unsigned int timer = 0;
         static bool ledState = 0;
 
         // TURN off all LEDs if transition from other state
-        if(timer == 0){
+        if (timer == 0)
+        {
             LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
 
         }
-        if(timer == AUTO_STATE_LED_LEVEL_STABLE_TIME){
+        if (timer == AUTO_STATE_LED_LEVEL_STABLE_TIME)
+        {
             ledState ^= 0x01;
             LED_Drive(GREEN, ledState);
 
             timer = 1;
         }
-        else{
+        else
+        {
             timer++;
         }
 
-        if(GetEStopState() == ENGAGED){
+        if (GetEStopState() == ENGAGED)
+        {
             curState = IDLE;
             LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
             timer = 0;
             ledState = 0;
         }
 
         // transition logic
-        if(GetEStopState() == NOT_ENGAGED && OrangeRX_isConnected() == CONNECTED && GetFlightMode() == MANUAL){
+        if (GetEStopState() == NOT_ENGAGED
+                && OrangeRX_isConnected() == CONNECTED
+                && GetFlightMode() == MANUAL)
+        {
             curState = MANUAL;
             LED_Drive(LED_ALL, OFF);
+            BUZZ_BUZZ(OFF);
             timer = 0;
             ledState = 0;
         }
 
+        // Automatic controller logic
+
+        // call Auto Mixer.
+        //PID_altitude_adjust();
+        //PID_roll_adjust();
+        PID_master_pid();
+
         break;
     }
 
+    }
+}
+
+/*
+ *
+ *
+ *+
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void flightSafeLand(void)
+{
+
+    // Safely reduce duty of motors when
+    // E-Stop is pressed or RX loses the connection from TX.
+
+    uint8_t count;
+    for (count = 0; count < 4; count++)
+    {
+        //check if the current duty is already 0
+        if (mixer.final_duty[count] == 0)
+        {
+            // drone is landed.
+        }
+        else
+        {
+            // drone is in air. Decrement by a predefined step.
+            mixer.final_duty[count] -= E_STOP_DECREMENT_STEP;
+        }
+
+        // send the duty to pwm controller
+        Motor_setDuty(count, mixer.final_duty[count]);
     }
 }

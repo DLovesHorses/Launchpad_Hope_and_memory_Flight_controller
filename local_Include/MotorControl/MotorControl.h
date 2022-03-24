@@ -24,10 +24,13 @@
 
 #define E_STOP_DECREMENT_STEP               1       // decrement motor by 1 if e-stop is pressed while flying
 
-#define IDLE_STATE_LED_LEVEL_STABLE_TIME    250     // 250 ms
+#define IDLE_STATE_LED_LEVEL_STABLE_TIME    250 / SAMPLE_TIME_MS    // 250 ms
 
-#define CALIB_STATE_LED_LEVEL_STABLE_TIME    1000     // 1000 ms
-#define AUTO_STATE_LED_LEVEL_STABLE_TIME     1000     // 1000 ms
+#define CALIB_STATE_LED_LEVEL_CALIB_NOT_COMPLETED    250 / SAMPLE_TIME_MS     // 250 ms flash when calibrarion is not completed
+#define CALIB_STATE_LED_LEVEL_CALIB_COMPLETED        1000 / SAMPLE_TIME_MS      // 1000 ms flash when calibration is completed
+#define MANUAL_STATE_LED_LEVEL                      100 / SAMPLE_TIME_MS      // 100 ms flash when calibration is completed
+
+#define AUTO_STATE_LED_LEVEL_STABLE_TIME     1000 / SAMPLE_TIME_MS     // 1000 ms
 
 
 
@@ -42,7 +45,8 @@ enum FLIGHT_MODES{
     CALIBRATION = 0,        // Switch A -> UP
     MANUAL,                 // Switch A -> Middle
     AUTO,                    // Switch A -> Down
-    IDLE                     // IDLE State
+    IDLE,                    // IDLE State
+    RX_NOT_CONNECTED         // RX not connected state
 };
 
 
@@ -55,5 +59,7 @@ void flightControl(void);
 bool GetEStopState(void);
 uint8_t GetFlightMode(void);
 void flightControl_SM(void);
+
+void flightSafeLand(void);
 
 #endif /* MOTOR_CONTROL_LOCK */

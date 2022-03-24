@@ -31,6 +31,8 @@
 // Function prototypes
 
 void PID_altitude_adjust(void);
+void PID_roll_adjust(void);
+void PID_master_pid(void);
 
 
 #endif /* PID_LOCK_ */

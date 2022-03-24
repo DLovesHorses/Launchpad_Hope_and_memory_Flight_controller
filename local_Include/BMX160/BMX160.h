@@ -1069,6 +1069,7 @@ void BMX160_readReg(uint8_t reg, uint8_t *pBuf, uint16_t len);
 
 void BMX160_showData(void);
 void BMX160_showState(void);
+void BMX160_updateData(void);
 
 
 #endif /* BMX160_LOCK */

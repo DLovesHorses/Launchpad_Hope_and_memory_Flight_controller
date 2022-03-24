@@ -54,6 +54,10 @@ float gyroRange = GYRO_SENSITIVITY_SELECT;
 float phi_rad = 0.0f;
 float theta_rad = 0.0f;
 
+int roll_filtered = 0;      // this will contain filtered value of Roll. Call BMX160_updateData() to update this data.
+int pitch_filtered = 0;     // this will contain filtered value of Pitch. Call BMX160_updateData() to update this data.
+int yaw_filtered = 0;       // this will contain filtered value of Yaw. Call BMX160_updateData() to update this data.
+
 sBmx160Dev_t *Obmx160;
 
 sBmx160SensorData_t *Omagn;
@@ -61,23 +65,22 @@ sBmx160SensorData_t *Oaccel;
 sBmx160SensorData_t *Ogyro;
 
 /*
-// Sensor fusion library variables
-extern int32_t w_time_stamp;
+ // Sensor fusion library variables
+ extern int32_t w_time_stamp;
 
-bsxlite_version bsx_version;
-bsxlite_instance_t bsx_instance;
-bsxlite_out_t bsx_output_data;
+ bsxlite_version bsx_version;
+ bsxlite_instance_t bsx_instance;
+ bsxlite_out_t bsx_output_data;
 
-vector_3d_t bsx_accel_input_data;
-vector_3d_t bsx_gyro_input_data;
+ vector_3d_t bsx_accel_input_data;
+ vector_3d_t bsx_gyro_input_data;
 
 
-bsxlite_return_t bsx_api_return_status;
+ bsxlite_return_t bsx_api_return_status;
 
-*/
+ */
 
 // Function definitions.
-
 void BMX160_Init(void)
 {
 #ifdef DEBUG
@@ -109,32 +112,32 @@ void BMX160_Init(void)
             BMX160_state = INITIALIZED;
 
             /*
-            bsxlite_get_version(&bsx_version);
-            bsx_api_return_status = BSXLITE_E_FATAL;
-            bsx_api_return_status = bsxlite_init(&bsx_instance);
-            if(bsx_api_return_status == BSXLITE_OK){
-                // bsx_lite successfull initialized.
+             bsxlite_get_version(&bsx_version);
+             bsx_api_return_status = BSXLITE_E_FATAL;
+             bsx_api_return_status = bsxlite_init(&bsx_instance);
+             if(bsx_api_return_status == BSXLITE_OK){
+             // bsx_lite successfull initialized.
 
-                memset(&bsx_accel_input_data, 0x00, sizeof(bsx_accel_input_data));
-                memset(&bsx_gyro_input_data, 0x00, sizeof(bsx_gyro_input_data));
-                memset(&bsx_output_data, 0x00, sizeof(bsx_output_data));
-
-
-                bsx_api_return_status = bsxlite_set_to_default(&bsx_instance);
+             memset(&bsx_accel_input_data, 0x00, sizeof(bsx_accel_input_data));
+             memset(&bsx_gyro_input_data, 0x00, sizeof(bsx_gyro_input_data));
+             memset(&bsx_output_data, 0x00, sizeof(bsx_output_data));
 
 
+             bsx_api_return_status = bsxlite_set_to_default(&bsx_instance);
 
-#ifdef DEBUG
-                UARTprintf("BSX_lite Instance initialized successfully. \n");
-#endif
-            }
-            else{
-#ifdef DEBUG
-                UARTprintf("BSX_lite Instance failed to initialize. \n");
-#endif
-            }
 
-            */
+
+             #ifdef DEBUG
+             UARTprintf("BSX_lite Instance initialized successfully. \n");
+             #endif
+             }
+             else{
+             #ifdef DEBUG
+             UARTprintf("BSX_lite Instance failed to initialize. \n");
+             #endif
+             }
+
+             */
 
 #ifdef DEBUG
             UARTprintf("BMX160 Initialized...\n");
@@ -397,13 +400,11 @@ void BMX160_defaultParamSettg(sBmx160Dev_t *dev)
     BMX160_GYRO_PMU_MODE_NORMAL_CMD);
     SYSTICK_Delay(BMX160_GYRO_DELAY_MS);
 
-
     //gyro filter to Normal mode with 3200 Hz sampling rate
-    //BMX160_writeBmxReg(BMX160_GYRO_CONFIG_ADDR, 0x2D);
+    BMX160_writeBmxReg(BMX160_GYRO_CONFIG_ADDR, 0x2D);
 
     // for BSX_lite: gyro odr = 100 Hz
-    BMX160_writeBmxReg(BMX160_GYRO_CONFIG_ADDR, 0x28);
-
+    //BMX160_writeBmxReg(BMX160_GYRO_CONFIG_ADDR, 0x28);
 
     // gyro range to 125 dps. If this is changed, also change the GYRO_SENSITIVITY_SELECT
     BMX160_writeBmxReg(BMX160_GYRO_RANGE_ADDR, BMX160_GYRO_RANGE_125_DPS);
@@ -418,11 +419,10 @@ void BMX160_defaultParamSettg(sBmx160Dev_t *dev)
     SYSTICK_Delay(BMX160_ACC_DELAY_MS);
 
     //accel filter to Normal mode (acc_us = 0, acc_bwp = 010) with 1600 Hz sampling rate (acc_odr = 0x0C)
-    //BMX160_writeBmxReg(BMX160_ACCEL_CONFIG_ADDR, 0x2C);
+    BMX160_writeBmxReg(BMX160_ACCEL_CONFIG_ADDR, 0x2C);
 
     // for BSX_lite: acc odr = 100 Hz
-    BMX160_writeBmxReg(BMX160_ACCEL_CONFIG_ADDR, 0x28);
-
+    //BMX160_writeBmxReg(BMX160_ACCEL_CONFIG_ADDR, 0x28);
 
     // acc range to 2G . If this is changed, also change the ACCEL_SENSITIVITY_SELECT
     BMX160_writeBmxReg(BMX160_ACCEL_RANGE_ADDR, BMX160_ACCEL_RANGE_2G);
@@ -705,29 +705,28 @@ void BMX160_showData(void)
 
     // estimate the angles by fusing the readings.
     phi_rad = COMP_FILTER_ALPHA * phiHat_acc_rad
-            + (1 - COMP_FILTER_ALPHA)
-                    * (phi_rad + phiDot_rps);
+            + (1 - COMP_FILTER_ALPHA) * (phi_rad + phiDot_rps);
 
     theta_rad = COMP_FILTER_ALPHA * thetaHat_acc_rad
-            + (1 - COMP_FILTER_ALPHA)
-                    * (theta_rad +  thetaDot_rps); // previous -> (SAMPLE_TIME_MS / 1000.0f) * thetaDot_rps
+            + (1 - COMP_FILTER_ALPHA) * (theta_rad + thetaDot_rps); // previous -> (SAMPLE_TIME_MS / 1000.0f) * thetaDot_rps
 
-    // phi_rad holds the fused Roll angle in rad/s
-    // theta_rad holds the fused Pitch angle in rad/s
+            // phi_rad holds the fused Roll angle in rad/s
+            // theta_rad holds the fused Pitch angle in rad/s
 
     // convert rad/s to deg/s and store in into another variable.
-    float roll =  phi_rad * RAD_TO_DEG;
-    float pitch =  theta_rad * RAD_TO_DEG;
+    float roll = phi_rad * RAD_TO_DEG;
+    float pitch = theta_rad * RAD_TO_DEG;
 
     // now, pass this to a low pass filter.
     static LOW_PASS_FILTER complimantary_filter_roll;
     static LOW_PASS_FILTER complimantary_filter_pitch;
-    complimantary_filter_roll.Fc = 10.05f;       // cut-off freq. for roll and pitch change.
-    complimantary_filter_pitch.Fc = 10.05f;       // cut-off freq. for roll and pitch change.
+    complimantary_filter_roll.Fc = 10.05f; // cut-off freq. for roll and pitch change.
+    complimantary_filter_pitch.Fc = 10.05f; // cut-off freq. for roll and pitch change.
 
     // initialize initial previous value inside filter
     static int i = 1;
-    if(i == 1){
+    if (i == 1)
+    {
         complimantary_filter_roll.prevOutput = roll;
         complimantary_filter_pitch.prevOutput = pitch;
         i++;
@@ -736,24 +735,24 @@ void BMX160_showData(void)
     float dt_roll = 1.0f / (5 * 2.0f * PI * complimantary_filter_roll.Fc);
     float dt_pitch = 1.0f / (5 * 2.0f * PI * complimantary_filter_pitch.Fc);
 
-    int roll_filtered = trunc( applyLPF(&complimantary_filter_roll, roll, dt_roll));
-    int pitch_filtered = trunc( applyLPF(&complimantary_filter_pitch, pitch, dt_pitch));
+    int roll_filtered = trunc(
+            applyLPF(&complimantary_filter_roll, roll, dt_roll));
+    int pitch_filtered = trunc(
+            applyLPF(&complimantary_filter_pitch, pitch, dt_pitch));
 
+    /*
+     //process the data to make suitable for bsx_lite. and then call the input processing bsx_lite API.
 
-/*
-    //process the data to make suitable for bsx_lite. and then call the input processing bsx_lite API.
+     bsx_accel_input_data.x  = accRaw.x ; //accData.x * G_TO_MPS2;
+     bsx_accel_input_data.y  = accRaw.y ; //accData.y * G_TO_MPS2;
+     bsx_accel_input_data.z  = accRaw.z ; //accData.z * G_TO_MPS2;
 
-    bsx_accel_input_data.x  = accRaw.x ; //accData.x * G_TO_MPS2;
-    bsx_accel_input_data.y  = accRaw.y ; //accData.y * G_TO_MPS2;
-    bsx_accel_input_data.z  = accRaw.z ; //accData.z * G_TO_MPS2;
-
-    bsx_gyro_input_data.x   = gyroRaw.x ; //gyroData.x * DEG_TO_RAD;
-    bsx_gyro_input_data.y   = gyroRaw.y ; //gyroData.y * DEG_TO_RAD;
-    bsx_gyro_input_data.z   = gyroRaw.z ; //gyroData.z * DEG_TO_RAD;
-*/
+     bsx_gyro_input_data.x   = gyroRaw.x ; //gyroData.x * DEG_TO_RAD;
+     bsx_gyro_input_data.y   = gyroRaw.y ; //gyroData.y * DEG_TO_RAD;
+     bsx_gyro_input_data.z   = gyroRaw.z ; //gyroData.z * DEG_TO_RAD;
+     */
 
     //bsx_api_return_status   = bsxlite_do_step(&bsx_instance, w_time_stamp, &bsx_accel_input_data, &bsx_gyro_input_data, &bsx_output_data);
-
 
     char printBuffer[252] = "";
 
@@ -834,23 +833,156 @@ void BMX160_showData(void)
      */
 
     // just heading
-     // calculate heading angle
+    // calculate heading angle
+    float heading_angle = 90
+            - (atan(magData.y / magData.x) * 180 / (2 * acos(0.0)));
 
-     float heading_angle = 90 - (atan(magData.y/ magData.x) * 180 / (2 * acos(0.0)));
-
-     /*// display heading
+    /*// display heading
      sprintf(printBuffer, "%3.1f\n", heading_angle);
      UARTprintf("%s", printBuffer);
      printBuffer[0] = '\0';
      */
 
     // Just roll and pitch
-    sprintf(printBuffer, "Unfiltered: Roll -> %6.3f , Pitch -> %6.3f \t || \t Filtered: Roll -> %d , Pitch -> %d \n", roll,
-            pitch, roll_filtered, pitch_filtered);
+    sprintf(printBuffer,
+            "Unfiltered: Roll -> %6.3f , Pitch -> %6.3f \t || \t Filtered: Roll -> %d , Pitch -> %d \n",
+            roll, pitch, roll_filtered, pitch_filtered);
     UARTprintf("%s", printBuffer);
     printBuffer[0] = '\0';
 
 #endif
 
     return;
+}
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void BMX160_updateData(void)
+{
+
+    // get data from BMX160;
+    sBmx160SensorData_t magData;
+    sBmx160SensorData_t gyroData;
+    sBmx160SensorData_t accData;
+
+    rawData accRaw;
+    rawData gyroRaw;
+    rawData magRaw;
+
+    // Get data
+    BMX160_getAllData(&magData, &gyroData, &accData, &magRaw, &gyroRaw,
+                      &accRaw);
+
+    // Implimentation of complimantary fliter sensor algorithm.
+
+    // for acceleration, convert g values to ( m / s^2).
+    float accDataX_MPS2 = accData.x_LPF * G_TO_MPS2;
+    float accDataY_MPS2 = accData.y_LPF * G_TO_MPS2;
+    float accDataZ_MPS2 = accData.z_LPF * G_TO_MPS2;
+
+    // get roll(phi) and pitch(theta) from acceleration
+    float phiHat_acc_rad = atan2f(accDataY_MPS2, accDataZ_MPS2); // estimated roll in rad (only from accelerometer)
+    float thetaHat_acc_rad = asinf(accDataX_MPS2 / G_TO_MPS2); // estimated pitch in rad (only from accelerometer)
+
+    // for filtered gyro data, convert it into rad/sec.
+    float gyroDataX_RPS = gyroData.x_LPF * DEG_TO_RAD;
+    float gyroDataY_RPS = gyroData.y_LPF * DEG_TO_RAD;
+    float gyroDataZ_RPS = gyroData.z_LPF * DEG_TO_RAD;
+
+    // Transform the body rates (gyro rates) into Eular rates
+
+    float phiDot_rps = gyroDataX_RPS
+            + (sinf(phi_rad) * tanf(theta_rad) * gyroDataY_RPS)
+            + (cosf(phi_rad) * tanf(theta_rad) * gyroDataZ_RPS);
+
+    float thetaDot_rps = 0 + (cosf(phi_rad) * gyroDataY_RPS)
+            - (sinf(phi_rad) * gyroDataZ_RPS);
+
+    // estimate the angles by fusing the readings.
+    phi_rad = COMP_FILTER_ALPHA * phiHat_acc_rad
+            + (1 - COMP_FILTER_ALPHA) * (phi_rad + phiDot_rps);
+
+    theta_rad = COMP_FILTER_ALPHA * thetaHat_acc_rad
+            + (1 - COMP_FILTER_ALPHA) * (theta_rad + thetaDot_rps); // previous -> (SAMPLE_TIME_MS / 1000.0f) * thetaDot_rps
+
+            // phi_rad holds the fused Roll angle in rad/s
+            // theta_rad holds the fused Pitch angle in rad/s
+
+    // convert rad/s to deg/s and store in into another variable.
+    float roll = phi_rad * RAD_TO_DEG;
+    float pitch = theta_rad * RAD_TO_DEG;
+
+    // now, pass this to a low pass filter.
+    static LOW_PASS_FILTER complimantary_filter_roll;
+    static LOW_PASS_FILTER complimantary_filter_pitch;
+    complimantary_filter_roll.Fc = 10.05f; // cut-off freq. for roll and pitch change.
+    complimantary_filter_pitch.Fc = 10.05f; // cut-off freq. for roll and pitch change.
+
+    // initialize initial previous value inside filter
+    static int i = 1;
+    if (i == 1)
+    {
+        complimantary_filter_roll.prevOutput = roll;
+        complimantary_filter_pitch.prevOutput = pitch;
+        i++;
+    }
+
+    float dt_roll = 1.0f / (5 * 2.0f * PI * complimantary_filter_roll.Fc);
+    float dt_pitch = 1.0f / (5 * 2.0f * PI * complimantary_filter_pitch.Fc);
+
+    roll_filtered = trunc(
+            applyLPF(&complimantary_filter_roll, roll, dt_roll));
+    pitch_filtered = trunc(
+            applyLPF(&complimantary_filter_pitch, pitch, dt_pitch));
+
+
+    // Calculate Heading
+    // TODO: Make this process more robust.
+
+    float yaw = 90
+                - (atan(magData.y / magData.x) * 180 / (2 * acos(0.0)));
+
+    // filter heading
+    static LOW_PASS_FILTER complimantary_filter_yaw;
+    complimantary_filter_yaw.Fc = 10.05f; // cut-off freq. for yaw change.
+
+    // initialize initial previous value inside Yaw filter
+    i = 1;
+    if (i == 1)
+    {
+        complimantary_filter_yaw.prevOutput = yaw;
+        i++;
+    }
+
+    static float dt_yaw;
+    dt_yaw = 1.0f / (5 * 2.0f * PI * complimantary_filter_yaw.Fc);
+
+    yaw_filtered = trunc( applyLPF(&complimantary_filter_yaw, yaw, dt_yaw));
+
+
+#ifdef DEBUG_D
+
+    UARTprintf("Axis \t -> \t \t Unfiltered \t \t Filtered\n");
+    char printBuffer[252] = { '0' };
+    sprintf(printBuffer,
+            "Roll \t -> \t \t (%6.3f) \t \t (%d) \nPitch \t -> \t \t (%6.3f) \t \t (%d) \nYaw \t -> \t \t (%6.3f) \t \t (%d) \n\n",
+            roll, roll_filtered , pitch, pitch_filtered, yaw, yaw_filtered);
+    UARTprintf("%s", printBuffer);
+    printBuffer[0] = '\0';
+#endif
+
+
 }

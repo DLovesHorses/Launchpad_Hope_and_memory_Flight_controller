@@ -39,7 +39,7 @@
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
 extern uint8_t motorSelect;
 
-int32_t w_time_stamp = 0;    // timestamp for bsx_lite
+//int32_t w_time_stamp = 0;    // timestamp for bsx_lite
 
 #ifdef DEBUG
 void __error__(char *pcFilename, uint32_t ui32Line)
@@ -281,13 +281,13 @@ int main(void)
 #endif
             }
 
-            //flightControl_SM();
+
             static uint16_t sensorDataSampleTimeCounter = 0;
             if (sensorDataSampleTimeCounter == SAMPLE_TIME_MS) // 1 seconds
             {
-                w_time_stamp +=  10;
-                 BMX160_showData();
-                 BMP388_showData();
+                //w_time_stamp +=  10;
+                // BMX160_showData();
+                // BMP388_showData();
                 // OrangeRX_showStatus();
                 // OrangeRX_showRawData();
                 // OrangeRX_showActData();
@@ -296,9 +296,10 @@ int main(void)
 
                //  Motor_ManMixer();
                 // PID_altitude_adjust();
-                flightControl();
-                MOTOR_showDuty();
-
+                //flightControl();
+                //MOTOR_showDuty();
+                //BMX160_updateData();
+                flightControl_SM();
 
 
 
