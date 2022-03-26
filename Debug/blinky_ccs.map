@@ -1,35 +1,35 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.5                     
 ******************************************************************************
->> Linked Thu Mar 24 08:37:49 2022
+>> Linked Fri Mar 25 20:40:55 2022
 
 OUTPUT FILE NAME:   <DroneProject.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000a651
+ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000b205
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  FLASH                 00000000   00040000  0000b482  00034b7e  R  X
-  SRAM                  20000000   00008000  00002c3d  000053c3  RW X
+  FLASH                 00000000   00040000  0000c07a  00033f86  R  X
+  SRAM                  20000000   00008000  00002d8d  00005273  RW X
 
 
 SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    0000b488   0000b488    r-x
+00000000    00000000    0000c080   0000c080    r-x
   00000000    00000000    0000026c   0000026c    r-- .intvecs
-  0000026c    0000026c    0000ab3a   0000ab3a    r-x .text
-  0000ada8    0000ada8    0000064c   0000064c    r-- .const
-  0000b3f8    0000b3f8    00000090   00000090    r-- .cinit
-20000000    20000000    00002c42   00000000    rw-
+  0000026c    0000026c    0000b73a   0000b73a    r-x .text
+  0000b9a8    0000b9a8    0000064c   0000064c    r-- .const
+  0000bff8    0000bff8    00000088   00000088    r-- .cinit
+20000000    20000000    00002d92   00000000    rw-
   20000000    20000000    0000026c   00000000    rw- .vtable
   20000270    20000270    00001000   00000000    rw- .stack
   20001270    20001270    00001000   00000000    rw- .sysmem
-  20002270    20002270    000008bb   00000000    rw- .bss
-  20002b2c    20002b2c    00000116   00000000    rw- .data
+  20002270    20002270    000008db   00000000    rw- .bss
+  20002b4c    20002b4c    00000246   00000000    rw- .data
 
 
 SECTION ALLOCATION MAP
@@ -40,300 +40,310 @@ section   page    origin      length       input sections
 .intvecs   0    00000000    0000026c     
                   00000000    0000026c     startup_ccs.obj (.intvecs)
 
-.text      0    0000026c    0000ab3a     
-                  0000026c    00000a4e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:__TI_printfi)
-                  00000cba    00000002     startup_ccs.obj (.text:FaultISR)
-                  00000cbc    000009ee     main.obj (.text:main)
-                  000016aa    00000002     startup_ccs.obj (.text:IntDefaultHandler)
-                  000016ac    000009d0     rtsv7M4_T_le_v4SPD16_eabi.lib : e_pow.c.obj (.text:pow)
-                  0000207c    00000978     PWM.obj (.text:Motor_ManMixer)
-                  000029f4    000004f0     BMX160.obj (.text:BMX160_getAllData)
-                  00002ee4    00000424     MotorControl.obj (.text:flightControl_SM)
-                  00003308    0000041c     rtsv7M4_T_le_v4SPD16_eabi.lib : e_acos.c.obj (.text:acos)
-                  00003724    000003ac     BMX160.obj (.text:BMX160_updateData)
-                  00003ad0    00000354     main.obj (.text:UARTvprintf)
-                  00003e24    0000031c     BMP388.obj (.text:BMP388_parse_calib_data)
-                  00004140    000002ec     rtsv7M4_T_le_v4SPD16_eabi.lib : s_atan.c.obj (.text:atan)
-                  0000442c    000002b0     OrangeRX.obj (.text:OrangeRX_Init)
-                  000046dc    0000029a     BMP388.obj (.text:BMP388_compensate_pressure)
-                  00004976    00000002     startup_ccs.obj (.text:NmiSR)
-                  00004978    00000270     BMP388.obj (.text:BMP388_begin)
-                  00004be8    00000270     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_a)
-                  00004e58    00000214     PWM.obj (.text:Motor_setDuty)
-                  0000506c    00000201     BMP388.obj (.text:BMP388_set_config)
-                  0000526d    00000001     --HOLE-- [fill = 0]
-                  0000526e    00000002     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.c.obj (.text:_nop)
-                  00005270    000001f8     OrangeRX.obj (.text:OrangeRX_extractData)
-                  00005468    000001ec     BMP388.obj (.text:BMP388_showData)
-                  00005654    000001e8     PWM.obj (.text:PWM_Init)
-                  0000583c    000001dc     BMP388.obj (.text:BMP388_user_i2c_read)
-                  00005a18    000001d0     PID.obj (.text:PID_master_pid)
-                  00005be8    000001d0     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_g)
-                  00005db8    000001b6                                   : fd_add_t2.asm.obj (.text)
-                  00005f6e    00000002                                   : div0.asm.obj (.text)
-                  00005f70    000001a0     BMP388.obj (.text:BMP388_calibrate_SM)
-                  00006110    000001a0     BMP388.obj (.text:BMP388_reset)
-                  000062b0    00000188     main.obj (.text:UARTStdioIntHandler)
-                  00006438    00000174     BMP388.obj (.text:BMP388_calibrate)
-                  000065ac    00000170     rtsv7M4_T_le_v4SPD16_eabi.lib : e_asinf.c.obj (.text:asinf)
-                  0000671c    0000016c     driverlib.lib : gpio.obj (.text:GPIOPadConfigSet)
-                  00006888    00000158     rtsv7M4_T_le_v4SPD16_eabi.lib : e_atan2f.c.obj (.text:atan2f)
-                  000069e0    00000158                                   : e_sqrt.c.obj (.text:sqrt)
-                  00006b38    00000150                                   : s_atanf.c.obj (.text:atanf)
-                  00006c88    00000143     i2c.obj (.text:I2C_AddressBruteForcer)
-                  00006dcb    00000001     --HOLE-- [fill = 0]
-                  00006dcc    0000013c     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_e)
-                  00006f08    00000138     main.obj (.text:UARTStdioConfig)
-                  00007040    00000136     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_div_t2.asm.obj (.text)
-                  00007176    00000002     --HOLE-- [fill = 0]
-                  00007178    00000134     BMP388.obj (.text:BMP388_readAltitude)
-                  000072ac    00000128     OrangeRX.obj (.text:OrangeRX_showActData)
-                  000073d4    00000124     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:fcvt)
-                  000074f8    00000118     BMP388.obj (.text:BMP388_user_i2c_write)
-                  00007610    00000118     driverlib.lib : sysctl.obj (.text:SysCtlClockGet)
-                  00007728    00000114     main.obj (.text:UARTwrite)
-                  0000783c    00000110     rtsv7M4_T_le_v4SPD16_eabi.lib : s_scalbn.c.obj (.text:scalbn)
-                  0000794c    0000010c     BMP388.obj (.text:BMP388_get_sensor_data)
-                  00007a58    00000104     BMX160.obj (.text:BMX160_Init)
-                  00007b5c    00000100     i2c.obj (.text:I2C_writeSingleReg)
-                  00007c5c    00000100     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:aligned_alloc)
-                  00007d5c    000000fc                                   : fd_mul_t2.asm.obj (.text)
-                  00007e58    000000f8                                   : s_floor.c.obj (.text:floor)
-                  00007f50    000000f4     driverlib.lib : sysctl.obj (.text:SysCtlClockSet)
-                  00008044    000000f0     buzzer.obj (.text:BUZZ_SM)
-                  00008134    000000e4     OrangeRX.obj (.text:OrangeRX_receivedChannelReorganizer)
-                  00008218    000000e0     BMP388.obj (.text:BMP388_Init)
-                  000082f8    000000d6     BMX160.obj (.text:BMX160_setMagnConf)
-                  000083ce    00000002     --HOLE-- [fill = 0]
-                  000083d0    000000c4     rtsv7M4_T_le_v4SPD16_eabi.lib : s_round.c.obj (.text:round)
-                  00008494    000000be     BMX160.obj (.text:BMX160_begin)
-                  00008552    00000002     --HOLE-- [fill = 0]
-                  00008554    000000bc     rtsv7M4_T_le_v4SPD16_eabi.lib : s_trunc.c.obj (.text:trunc)
-                  00008610    000000b4                                   : s_cosf.c.obj (.text:cosf)
-                  000086c4    000000b1                                   : _printfi.c.obj (.text:_ltostr)
-                  00008775    00000001     --HOLE-- [fill = 0]
-                  00008776    000000b0     led.obj (.text:LED_Drive)
-                  00008826    00000002     --HOLE-- [fill = 0]
-                  00008828    000000ad     BMP388.obj (.text:BMP388_compensate_data)
-                  000088d5    00000003     --HOLE-- [fill = 0]
-                  000088d8    000000ac     rtsv7M4_T_le_v4SPD16_eabi.lib : s_tanf.c.obj (.text:tanf)
-                  00008984    000000ab     BMP388.obj (.text:BMP388_get_calib_data)
-                  00008a2f    00000001     --HOLE-- [fill = 0]
-                  00008a30    000000a4     BMP388.obj (.text:BMP388_set_regs)
-                  00008ad4    000000a4     rtsv7M4_T_le_v4SPD16_eabi.lib : s_sinf.c.obj (.text:sinf)
-                  00008b78    0000009c                                   : memcpy_t2.asm.obj (.text)
-                  00008c14    00000096                                   : ull_div_t2.asm.obj (.text)
-                  00008caa    00000002     --HOLE-- [fill = 0]
-                  00008cac    00000094     BMX160.obj (.text:BMX160_softReset)
-                  00008d40    00000094     main.obj (.text:UARTPrimeTransmit)
-                  00008dd4    0000008c     i2c.obj (.text:I2C0_Init)
-                  00008e60    0000008a     BMX160.obj (.text:BMX160_defaultParamSettg)
-                  00008eea    00000002     --HOLE-- [fill = 0]
-                  00008eec    00000088     BMP388.obj (.text:BMP388_get_regs)
-                  00008f74    00000086     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_cmp_t2.asm.obj (.text:__aeabi_cdcmple)
-                  00008ffa    00000086                                   : fd_cmp_t2.asm.obj (.text:__aeabi_cdrcmple)
-                  00009080    00000084     i2c.obj (.text:PCF8574A_Read)
-                  00009104    00000080     uart.obj (.text:UART0_STDIO_Init)
-                  00009184    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.asm.obj (.text)
-                  000091fe    00000002     --HOLE-- [fill = 0]
-                  00009200    00000074     LPF.obj (.text:applyLPF)
-                  00009274    00000070     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:split)
-                  000092e4    0000006e     BMP388.obj (.text:BMP388_compensate_temperature)
-                  00009352    0000006e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_mcpy)
-                  000093c0    0000006e                                   : fd_tos_t2.asm.obj (.text)
-                  0000942e    0000006c     BMP388.obj (.text:BMP388_parse_sensor_data)
-                  0000949a    00000002     --HOLE-- [fill = 0]
-                  0000949c    0000006c     i2c.obj (.text:I2C_ReadByte)
-                  00009508    00000068     MotorControl.obj (.text:GetFlightMode)
-                  00009570    00000068     driverlib.lib : interrupt.obj (.text:IntEnable)
-                  000095d8    00000068     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  00009640    00000066     BMP388.obj (.text:BMP388_readTemperature)
-                  000096a6    00000002     --HOLE-- [fill = 0]
-                  000096a8    00000064     BMP388.obj (.text:BMP388_Int_Handler)
-                  0000970c    00000064     rtsv7M4_T_le_v4SPD16_eabi.lib : s_frexp.c.obj (.text:frexp)
-                  00009770    00000063     BMP388.obj (.text:BMP388_readPressure)
-                  000097d3    00000001     --HOLE-- [fill = 0]
-                  000097d4    00000063     BMX160.obj (.text:BMX160_writeBmxReg)
-                  00009837    00000001     --HOLE-- [fill = 0]
-                  00009838    00000061     main.obj (.text:__error__)
-                  00009899    00000003     --HOLE-- [fill = 0]
-                  0000989c    00000060     i2c.obj (.text:PCF8574A_Write)
-                  000098fc    00000060     SONAR.obj (.text:SONAR_Trigger)
-                  0000995c    00000060     driverlib.lib : timer.obj (.text:TimerConfigure)
-                  000099bc    0000005c     OrangeRX.obj (.text:OrangeRX_isConnected)
-                  00009a18    00000058     driverlib.lib : gpio.obj (.text:GPIOIntTypeSet)
-                  00009a70    00000058     OrangeRX.obj (.text:ORANGE_showState)
-                  00009ac8    00000056     i2c.obj (.text:I2C_readReg)
-                  00009b1e    00000056     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_f)
-                  00009b74    00000054     BMP388.obj (.text:BMP388_showState)
-                  00009bc8    00000054     BMX160.obj (.text:BMX160_showState)
-                  00009c1c    00000054     buzzer.obj (.text:BUZZER_showState)
-                  00009c70    00000054     rtsv7M4_T_le_v4SPD16_eabi.lib : _ltoa.c.obj (.text:__TI_ltoa)
-                  00009cc4    00000052                                   : _printfi.c.obj (.text:_ecpy)
-                  00009d16    00000002     --HOLE-- [fill = 0]
-                  00009d18    00000050     MotorControl.obj (.text:flightSafeLand)
-                  00009d68    0000004c     driverlib.lib : gpio.obj (.text:GPIOPinConfigure)
-                  00009db4    0000004c                   : i2c.obj (.text:I2CMasterInitExpClk)
-                  00009e00    0000004c     i2c.obj (.text:I2C_showState)
-                  00009e4c    0000004c     PWM.obj (.text:PWM_showState)
-                  00009e98    0000004c     onBoardSwitch.obj (.text:SWITCH_Init)
-                  00009ee4    0000004c     main.obj (.text:SystemInitialize)
-                  00009f30    0000004c     main.obj (.text:UARTFlushTx)
-                  00009f7c    0000004c     driverlib.lib : timer.obj (.text:_TimerIntNumberGet)
-                  00009fc8    0000004c     rtsv7M4_T_le_v4SPD16_eabi.lib : atoi.c.obj (.text:atoi)
-                  0000a014    00000048                                   : fd_toi_t2.asm.obj (.text)
-                  0000a05c    00000044     driverlib.lib : i2c.obj (.text:I2CMasterGlitchFilterConfigSet)
-                  0000a0a0    00000044                   : gpio.obj (.text:_GPIOIntNumberGet)
-                  0000a0e4    00000044     rtsv7M4_T_le_v4SPD16_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
-                  0000a128    00000040     driverlib.lib : uart.obj (.text:_UARTIntNumberGet)
-                  0000a168    00000040     buzzer.obj (.text:init_Buzzer)
-                  0000a1a8    00000040     rtsv7M4_T_le_v4SPD16_eabi.lib : u_divt2.asm.obj (.text)
-                  0000a1e8    00000040                                   : sprintf.c.obj (.text:sprintf)
-                  0000a228    0000003e     i2c.obj (.text:PCF8574A_Init)
-                  0000a266    0000003e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_fcpy)
-                  0000a2a4    0000003c     buzzer.obj (.text:BUZZ_BUZZER)
-                  0000a2e0    0000003c     main.obj (.text:IsBufferFull)
-                  0000a31c    0000003c     main.obj (.text:UARTgetc)
-                  0000a358    0000003a     BMP388.obj (.text:BMP388_read_all_regs)
-                  0000a392    00000002     --HOLE-- [fill = 0]
-                  0000a394    00000038     BMP388.obj (.text:BMP388_Int_Configure)
-                  0000a3cc    00000038     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralReady)
-                  0000a404    00000038     SysFlag.obj (.text:SysFlag_Check)
-                  0000a43c    00000038     uart.obj (.text:UART0_STDIO_IntHandler)
-                  0000a474    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.asm.obj (.text)
-                  0000a4ac    00000036     BMX160.obj (.text:BMX160_softResetWorker)
-                  0000a4e2    00000002     --HOLE-- [fill = 0]
-                  0000a4e4    00000034     driverlib.lib : interrupt.obj (.text:IntRegister)
-                  0000a518    00000034     led.obj (.text:LED_ALL_FUNCTION)
-                  0000a54c    00000034     led.obj (.text:LED_LEDInit)
-                  0000a580    00000034     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralEnable)
-                  0000a5b4    00000034     SysFlag.obj (.text:SysFlag_Clear)
-                  0000a5e8    00000034     SysFlag.obj (.text:SysFlag_Set)
-                  0000a61c    00000034     main.obj (.text:UARTFlushRx)
-                  0000a650    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
-                  0000a684    00000030     MotorControl.obj (.text:GetEStopState)
-                  0000a6b4    0000002e     rtsv7M4_T_le_v4SPD16_eabi.lib : i_tofd_t2.asm.obj (.text)
-                  0000a6e2    00000002     --HOLE-- [fill = 0]
-                  0000a6e4    0000002c     buzzer.obj (.text:BUZZ_BUZZ)
-                  0000a710    0000002c     driverlib.lib : gpio.obj (.text:GPIODirModeSet)
-                  0000a73c    0000002c     main.obj (.text:IsBufferEmpty)
-                  0000a768    0000002c     led.obj (.text:LED_LED1)
-                  0000a794    0000002c     led.obj (.text:LED_LED2)
-                  0000a7c0    0000002c     led.obj (.text:LED_LED3)
-                  0000a7ec    0000002c     main.obj (.text:UARTEchoSet)
-                  0000a818    00000028     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:free_list_insert)
-                  0000a840    00000026     BMX160.obj (.text:BMX160_readReg)
-                  0000a866    00000026     SysTick.obj (.text:SYSTICK_Delay)
-                  0000a88c    00000024     onBoardSwitch.obj (.text:SWITCH_SW1_Pressed)
-                  0000a8b0    00000024     onBoardSwitch.obj (.text:SWITCH_SW2_Pressed)
-                  0000a8d4    00000024     main.obj (.text:UARTprintf)
-                  0000a8f8    00000022     BMX160.obj (.text:BMX160_scan)
-                  0000a91a    00000022     driverlib.lib : pwm.obj (.text:PWMGenConfigure)
-                  0000a93c    00000020     OrangeRX.obj (.text:OrangeRX_IntHandler)
-                  0000a95c    00000020     SysTick.obj (.text:SysTick_Init)
-                  0000a97c    00000020     rtsv7M4_T_le_v4SPD16_eabi.lib : u_tofd_t2.asm.obj (.text)
-                  0000a99c    0000001e     driverlib.lib : pwm.obj (.text:PWMPulseWidthGet)
-                  0000a9ba    0000001e                   : pwm.obj (.text:PWMPulseWidthSet)
-                  0000a9d8    0000001c                   : systick.obj (.text:SysTickIntRegister)
-                  0000a9f4    0000001c     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:free_list_remove)
-                  0000aa10    0000001c                                   : memccpy.c.obj (.text:memccpy)
-                  0000aa2c    0000001a     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOOutput)
-                  0000aa46    0000001a     rtsv7M4_T_le_v4SPD16_eabi.lib : s_copysign.c.obj (.text:copysign)
-                  0000aa60    00000018     BMP388.obj (.text:BMP388_set_i2c_addr)
-                  0000aa78    00000018     driverlib.lib : gpio.obj (.text:GPIOIntRegister)
-                  0000aa90    00000018                   : sysctl.obj (.text:SysCtlPWMClockGet)
-                  0000aaa8    00000018                   : timer.obj (.text:TimerIntRegister)
-                  0000aac0    00000018                   : uart.obj (.text:UARTIntRegister)
-                  0000aad8    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outs)
-                  0000aaf0    00000016     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOInput)
-                  0000ab06    00000016                   : gpio.obj (.text:GPIOPinTypeI2C)
-                  0000ab1c    00000016                   : gpio.obj (.text:GPIOPinTypeI2CSCL)
-                  0000ab32    00000016                   : gpio.obj (.text:GPIOPinTypePWM)
-                  0000ab48    00000016                   : gpio.obj (.text:GPIOPinTypeTimer)
-                  0000ab5e    00000016                   : gpio.obj (.text:GPIOPinTypeUART)
-                  0000ab74    00000016                   : i2c.obj (.text:I2CMasterErr)
-                  0000ab8a    00000016                   : timer.obj (.text:TimerControlEvent)
-                  0000aba0    00000016     rtsv7M4_T_le_v4SPD16_eabi.lib : strchr.c.obj (.text:strchr)
-                  0000abb6    00000002     --HOLE-- [fill = 0]
-                  0000abb8    00000014     driverlib.lib : sysctl.obj (.text:SysCtlPWMClockSet)
-                  0000abcc    00000014                   : sysctl.obj (.text:SysCtlResetCauseClear)
-                  0000abe0    00000014                   : systick.obj (.text:SysTickEnable)
-                  0000abf4    00000014                   : systick.obj (.text:SysTickIntEnable)
-                  0000ac08    00000014     rtsv7M4_T_le_v4SPD16_eabi.lib : strlen.c.obj (.text:strlen)
-                  0000ac1c    00000012     driverlib.lib : pwm.obj (.text:PWMGenPeriodGet)
-                  0000ac2e    00000012                   : pwm.obj (.text:PWMOutputState)
-                  0000ac40    00000012                   : timer.obj (.text:TimerLoadSet)
-                  0000ac52    00000012                   : timer.obj (.text:TimerMatchSet)
-                  0000ac64    00000012     rtsv7M4_T_le_v4SPD16_eabi.lib : wcslen.c.obj (.text:wcslen)
-                  0000ac76    00000010     driverlib.lib : pwm.obj (.text:PWMGenPeriodSet)
-                  0000ac86    00000002     --HOLE-- [fill = 0]
-                  0000ac88    00000010     sysclk.obj (.text:SysClk_Init)
-                  0000ac98    00000010     driverlib.lib : systick.obj (.text:SysTickPeriodSet)
-                  0000aca8    0000000e                   : timer.obj (.text:TimerEnable)
-                  0000acb6    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
-                  0000acc4    0000000c     BMP388.obj (.text:BMP388_user_delay_ms)
-                  0000acd0    0000000c     driverlib.lib : gpio.obj (.text:GPIOIntEnable)
-                  0000acdc    0000000c                   : pwm.obj (.text:PWMGenEnable)
-                  0000ace8    0000000c                   : sysctl.obj (.text:SysCtlResetCauseGet)
-                  0000acf4    0000000c     SysFlag.obj (.text:SysFlag_Init)
-                  0000ad00    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init)
-                  0000ad0c    0000000a     driverlib.lib : i2c.obj (.text:I2CMasterEnable)
-                  0000ad16    0000000a     SysTick.obj (.text:SysTick_IntHandler)
-                  0000ad20    0000000a     driverlib.lib : timer.obj (.text:TimerValueGet)
-                  0000ad2a    0000000a                   : uart.obj (.text:UARTIntStatus)
-                  0000ad34    0000000a     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outc)
-                  0000ad3e    00000008     driverlib.lib : i2c.obj (.text:I2CMasterBusy)
-                  0000ad46    00000008                   : i2c.obj (.text:I2CMasterSlaveAddrSet)
-                  0000ad4e    00000008                   : timer.obj (.text:TimerIntEnable)
-                  0000ad56    00000008                   : uart.obj (.text:UARTIntEnable)
-                  0000ad5e    00000002     --HOLE-- [fill = 0]
-                  0000ad60    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.text:__aeabi_errno_addr)
-                  0000ad68    00000008                                   : memory.c.obj (.text:malloc)
-                  0000ad70    00000006     driverlib.lib : gpio.obj (.text:GPIOPinRead)
-                  0000ad76    00000006                   : gpio.obj (.text:GPIOPinWrite)
-                  0000ad7c    00000006     startup_ccs.obj (.text:ResetISR)
-                  0000ad82    00000006     driverlib.lib : sysctl.obj (.text:SysCtlDelay)
-                  0000ad88    00000006                   : uart.obj (.text:UARTClockSourceSet)
-                  0000ad8e    00000004                   : i2c.obj (.text:I2CMasterControl)
-                  0000ad92    00000004                   : i2c.obj (.text:I2CMasterDataGet)
-                  0000ad96    00000004                   : i2c.obj (.text:I2CMasterDataPut)
-                  0000ad9a    00000004                   : timer.obj (.text:TimerIntClear)
-                  0000ad9e    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
-                  0000ada2    00000004                                   : exit.c.obj (.text:abort:abort)
+.text      0    0000026c    0000b73a     
+                  0000026c    00000a7a     main.obj (.text:main)
+                  00000ce6    00000002     startup_ccs.obj (.text:FaultISR)
+                  00000ce8    00000a4e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:__TI_printfi)
+                  00001736    00000002     startup_ccs.obj (.text:IntDefaultHandler)
+                  00001738    000009d0     rtsv7M4_T_le_v4SPD16_eabi.lib : e_pow.c.obj (.text:pow)
+                  00002108    00000978     PWM.obj (.text:Motor_ManMixer)
+                  00002a80    000005c8     BLUETOOTH.obj (.text:BLUETOOTH_IntHandler)
+                  00003048    00000590     PID.obj (.text:PID_master_pid)
+                  000035d8    000004f0     BMX160.obj (.text:BMX160_getAllData)
+                  00003ac8    00000424     MotorControl.obj (.text:flightControl_SM)
+                  00003eec    0000041c     rtsv7M4_T_le_v4SPD16_eabi.lib : e_acos.c.obj (.text:acos)
+                  00004308    000003ac     BMX160.obj (.text:BMX160_updateData)
+                  000046b4    00000354     main.obj (.text:UARTvprintf)
+                  00004a08    0000031c     BMP388.obj (.text:BMP388_parse_calib_data)
+                  00004d24    000002ec     rtsv7M4_T_le_v4SPD16_eabi.lib : s_atan.c.obj (.text:atan)
+                  00005010    000002b0     OrangeRX.obj (.text:OrangeRX_Init)
+                  000052c0    0000029a     BMP388.obj (.text:BMP388_compensate_pressure)
+                  0000555a    00000002     startup_ccs.obj (.text:NmiSR)
+                  0000555c    00000270     BMP388.obj (.text:BMP388_begin)
+                  000057cc    00000270     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_a)
+                  00005a3c    00000214     PWM.obj (.text:Motor_setDuty)
+                  00005c50    00000201     BMP388.obj (.text:BMP388_set_config)
+                  00005e51    00000001     --HOLE-- [fill = 0]
+                  00005e52    00000002     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.c.obj (.text:_nop)
+                  00005e54    000001f8     OrangeRX.obj (.text:OrangeRX_extractData)
+                  0000604c    000001ec     BMP388.obj (.text:BMP388_showData)
+                  00006238    000001e8     PWM.obj (.text:PWM_Init)
+                  00006420    000001dc     BMP388.obj (.text:BMP388_user_i2c_read)
+                  000065fc    000001d0     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_g)
+                  000067cc    000001b6                                   : fd_add_t2.asm.obj (.text)
+                  00006982    00000002                                   : div0.asm.obj (.text)
+                  00006984    000001a0     BMP388.obj (.text:BMP388_calibrate_SM)
+                  00006b24    000001a0     BMP388.obj (.text:BMP388_reset)
+                  00006cc4    00000188     main.obj (.text:UARTStdioIntHandler)
+                  00006e4c    00000174     BMP388.obj (.text:BMP388_calibrate)
+                  00006fc0    00000170     rtsv7M4_T_le_v4SPD16_eabi.lib : e_asinf.c.obj (.text:asinf)
+                  00007130    0000016c     driverlib.lib : gpio.obj (.text:GPIOPadConfigSet)
+                  0000729c    00000158     rtsv7M4_T_le_v4SPD16_eabi.lib : e_atan2f.c.obj (.text:atan2f)
+                  000073f4    00000158                                   : e_sqrt.c.obj (.text:sqrt)
+                  0000754c    00000150                                   : s_atanf.c.obj (.text:atanf)
+                  0000769c    00000143     i2c.obj (.text:I2C_AddressBruteForcer)
+                  000077df    00000001     --HOLE-- [fill = 0]
+                  000077e0    0000013c     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_e)
+                  0000791c    00000138     main.obj (.text:UARTStdioConfig)
+                  00007a54    00000136     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_div_t2.asm.obj (.text)
+                  00007b8a    00000002     --HOLE-- [fill = 0]
+                  00007b8c    00000134     BMP388.obj (.text:BMP388_readAltitude)
+                  00007cc0    00000128     OrangeRX.obj (.text:OrangeRX_showActData)
+                  00007de8    00000124     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:fcvt)
+                  00007f0c    00000118     BMP388.obj (.text:BMP388_user_i2c_write)
+                  00008024    00000118     driverlib.lib : sysctl.obj (.text:SysCtlClockGet)
+                  0000813c    00000114     main.obj (.text:UARTwrite)
+                  00008250    00000110     rtsv7M4_T_le_v4SPD16_eabi.lib : s_scalbn.c.obj (.text:scalbn)
+                  00008360    0000010c     BMP388.obj (.text:BMP388_get_sensor_data)
+                  0000846c    00000104     BMX160.obj (.text:BMX160_Init)
+                  00008570    00000100     i2c.obj (.text:I2C_writeSingleReg)
+                  00008670    00000100     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:aligned_alloc)
+                  00008770    000000fc                                   : fd_mul_t2.asm.obj (.text)
+                  0000886c    000000f8                                   : s_floor.c.obj (.text:floor)
+                  00008964    000000f4     driverlib.lib : sysctl.obj (.text:SysCtlClockSet)
+                  00008a58    000000f0     buzzer.obj (.text:BUZZ_SM)
+                  00008b48    000000e4     OrangeRX.obj (.text:OrangeRX_receivedChannelReorganizer)
+                  00008c2c    000000e0     BMP388.obj (.text:BMP388_Init)
+                  00008d0c    000000d6     BMX160.obj (.text:BMX160_setMagnConf)
+                  00008de2    00000002     --HOLE-- [fill = 0]
+                  00008de4    000000c4     rtsv7M4_T_le_v4SPD16_eabi.lib : s_round.c.obj (.text:round)
+                  00008ea8    000000be     BMX160.obj (.text:BMX160_begin)
+                  00008f66    00000002     --HOLE-- [fill = 0]
+                  00008f68    000000bc     rtsv7M4_T_le_v4SPD16_eabi.lib : s_trunc.c.obj (.text:trunc)
+                  00009024    000000b4                                   : s_cosf.c.obj (.text:cosf)
+                  000090d8    000000b1                                   : _printfi.c.obj (.text:_ltostr)
+                  00009189    00000001     --HOLE-- [fill = 0]
+                  0000918a    000000b0     led.obj (.text:LED_Drive)
+                  0000923a    00000002     --HOLE-- [fill = 0]
+                  0000923c    000000ad     BMP388.obj (.text:BMP388_compensate_data)
+                  000092e9    00000003     --HOLE-- [fill = 0]
+                  000092ec    000000ac     rtsv7M4_T_le_v4SPD16_eabi.lib : s_tanf.c.obj (.text:tanf)
+                  00009398    000000ab     BMP388.obj (.text:BMP388_get_calib_data)
+                  00009443    00000001     --HOLE-- [fill = 0]
+                  00009444    000000a4     BMP388.obj (.text:BMP388_set_regs)
+                  000094e8    000000a4     rtsv7M4_T_le_v4SPD16_eabi.lib : s_sinf.c.obj (.text:sinf)
+                  0000958c    000000a0     PID.obj (.text:changeMotorDuty)
+                  0000962c    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
+                  000096c8    00000096                                   : ull_div_t2.asm.obj (.text)
+                  0000975e    00000002     --HOLE-- [fill = 0]
+                  00009760    00000094     BMX160.obj (.text:BMX160_softReset)
+                  000097f4    00000094     main.obj (.text:UARTPrimeTransmit)
+                  00009888    0000008c     i2c.obj (.text:I2C0_Init)
+                  00009914    0000008a     BMX160.obj (.text:BMX160_defaultParamSettg)
+                  0000999e    00000002     --HOLE-- [fill = 0]
+                  000099a0    00000088     BMP388.obj (.text:BMP388_get_regs)
+                  00009a28    00000086     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_cmp_t2.asm.obj (.text:__aeabi_cdcmple)
+                  00009aae    00000086                                   : fd_cmp_t2.asm.obj (.text:__aeabi_cdrcmple)
+                  00009b34    00000084     i2c.obj (.text:PCF8574A_Read)
+                  00009bb8    00000080     uart.obj (.text:UART0_STDIO_Init)
+                  00009c38    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.asm.obj (.text)
+                  00009cb2    00000002     --HOLE-- [fill = 0]
+                  00009cb4    00000074     LPF.obj (.text:applyLPF)
+                  00009d28    00000070     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:split)
+                  00009d98    0000006e     BMP388.obj (.text:BMP388_compensate_temperature)
+                  00009e06    0000006e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_mcpy)
+                  00009e74    0000006e                                   : fd_tos_t2.asm.obj (.text)
+                  00009ee2    00000002     --HOLE-- [fill = 0]
+                  00009ee4    0000006c     BLUETOOTH.obj (.text:BLUETOOTH_Init)
+                  00009f50    0000006c     BMP388.obj (.text:BMP388_parse_sensor_data)
+                  00009fbc    0000006c     i2c.obj (.text:I2C_ReadByte)
+                  0000a028    00000068     MotorControl.obj (.text:GetFlightMode)
+                  0000a090    00000068     driverlib.lib : interrupt.obj (.text:IntEnable)
+                  0000a0f8    00000068     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  0000a160    00000066     BMP388.obj (.text:BMP388_readTemperature)
+                  0000a1c6    00000002     --HOLE-- [fill = 0]
+                  0000a1c8    00000064     BMP388.obj (.text:BMP388_Int_Handler)
+                  0000a22c    00000064     rtsv7M4_T_le_v4SPD16_eabi.lib : s_frexp.c.obj (.text:frexp)
+                  0000a290    00000063     BMP388.obj (.text:BMP388_readPressure)
+                  0000a2f3    00000001     --HOLE-- [fill = 0]
+                  0000a2f4    00000063     BMX160.obj (.text:BMX160_writeBmxReg)
+                  0000a357    00000001     --HOLE-- [fill = 0]
+                  0000a358    00000061     main.obj (.text:__error__)
+                  0000a3b9    00000003     --HOLE-- [fill = 0]
+                  0000a3bc    00000060     i2c.obj (.text:PCF8574A_Write)
+                  0000a41c    00000060     SONAR.obj (.text:SONAR_Trigger)
+                  0000a47c    00000060     driverlib.lib : timer.obj (.text:TimerConfigure)
+                  0000a4dc    0000005c     OrangeRX.obj (.text:OrangeRX_isConnected)
+                  0000a538    00000058     driverlib.lib : gpio.obj (.text:GPIOIntTypeSet)
+                  0000a590    00000058     OrangeRX.obj (.text:ORANGE_showState)
+                  0000a5e8    00000056     i2c.obj (.text:I2C_readReg)
+                  0000a63e    00000056     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_pconv_f)
+                  0000a694    00000054     BMP388.obj (.text:BMP388_showState)
+                  0000a6e8    00000054     BMX160.obj (.text:BMX160_showState)
+                  0000a73c    00000054     buzzer.obj (.text:BUZZER_showState)
+                  0000a790    00000054     rtsv7M4_T_le_v4SPD16_eabi.lib : _ltoa.c.obj (.text:__TI_ltoa)
+                  0000a7e4    00000052                                   : _printfi.c.obj (.text:_ecpy)
+                  0000a836    00000002     --HOLE-- [fill = 0]
+                  0000a838    00000050     main.obj (.text:SystemInitialize)
+                  0000a888    00000050     MotorControl.obj (.text:flightSafeLand)
+                  0000a8d8    0000004c     driverlib.lib : gpio.obj (.text:GPIOPinConfigure)
+                  0000a924    0000004c                   : i2c.obj (.text:I2CMasterInitExpClk)
+                  0000a970    0000004c     i2c.obj (.text:I2C_showState)
+                  0000a9bc    0000004c     PWM.obj (.text:PWM_showState)
+                  0000aa08    0000004c     onBoardSwitch.obj (.text:SWITCH_Init)
+                  0000aa54    0000004c     main.obj (.text:UARTFlushTx)
+                  0000aaa0    0000004c     driverlib.lib : timer.obj (.text:_TimerIntNumberGet)
+                  0000aaec    0000004c     rtsv7M4_T_le_v4SPD16_eabi.lib : atoi.c.obj (.text:atoi)
+                  0000ab38    00000048     BLUETOOTH.obj (.text:BLUETOOTHprintf)
+                  0000ab80    00000048     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_toi_t2.asm.obj (.text)
+                  0000abc8    00000046     driverlib.lib : uart.obj (.text:UARTConfigSetExpClk)
+                  0000ac0e    00000002     --HOLE-- [fill = 0]
+                  0000ac10    00000044                   : i2c.obj (.text:I2CMasterGlitchFilterConfigSet)
+                  0000ac54    00000044                   : gpio.obj (.text:_GPIOIntNumberGet)
+                  0000ac98    00000044     rtsv7M4_T_le_v4SPD16_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
+                  0000acdc    00000040     driverlib.lib : uart.obj (.text:_UARTIntNumberGet)
+                  0000ad1c    00000040     buzzer.obj (.text:init_Buzzer)
+                  0000ad5c    00000040     rtsv7M4_T_le_v4SPD16_eabi.lib : u_divt2.asm.obj (.text)
+                  0000ad9c    00000040                                   : sprintf.c.obj (.text:sprintf)
+                  0000addc    0000003e     i2c.obj (.text:PCF8574A_Init)
+                  0000ae1a    0000003e     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.c.obj (.text:_fcpy)
+                  0000ae58    0000003c     buzzer.obj (.text:BUZZ_BUZZER)
+                  0000ae94    0000003c     main.obj (.text:IsBufferFull)
+                  0000aed0    0000003c     main.obj (.text:UARTgetc)
+                  0000af0c    0000003a     BMP388.obj (.text:BMP388_read_all_regs)
+                  0000af46    00000002     --HOLE-- [fill = 0]
+                  0000af48    00000038     BMP388.obj (.text:BMP388_Int_Configure)
+                  0000af80    00000038     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralReady)
+                  0000afb8    00000038     SysFlag.obj (.text:SysFlag_Check)
+                  0000aff0    00000038     uart.obj (.text:UART0_STDIO_IntHandler)
+                  0000b028    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.asm.obj (.text)
+                  0000b060    00000036     BMX160.obj (.text:BMX160_softResetWorker)
+                  0000b096    00000002     --HOLE-- [fill = 0]
+                  0000b098    00000034     driverlib.lib : interrupt.obj (.text:IntRegister)
+                  0000b0cc    00000034     led.obj (.text:LED_ALL_FUNCTION)
+                  0000b100    00000034     led.obj (.text:LED_LEDInit)
+                  0000b134    00000034     driverlib.lib : sysctl.obj (.text:SysCtlPeripheralEnable)
+                  0000b168    00000034     SysFlag.obj (.text:SysFlag_Clear)
+                  0000b19c    00000034     SysFlag.obj (.text:SysFlag_Set)
+                  0000b1d0    00000034     main.obj (.text:UARTFlushRx)
+                  0000b204    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
+                  0000b238    00000030     MotorControl.obj (.text:GetEStopState)
+                  0000b268    0000002e     rtsv7M4_T_le_v4SPD16_eabi.lib : i_tofd_t2.asm.obj (.text)
+                  0000b296    00000002     --HOLE-- [fill = 0]
+                  0000b298    0000002c     buzzer.obj (.text:BUZZ_BUZZ)
+                  0000b2c4    0000002c     driverlib.lib : gpio.obj (.text:GPIODirModeSet)
+                  0000b2f0    0000002c     main.obj (.text:IsBufferEmpty)
+                  0000b31c    0000002c     led.obj (.text:LED_LED1)
+                  0000b348    0000002c     led.obj (.text:LED_LED2)
+                  0000b374    0000002c     led.obj (.text:LED_LED3)
+                  0000b3a0    0000002c     main.obj (.text:UARTEchoSet)
+                  0000b3cc    00000028     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:free_list_insert)
+                  0000b3f4    00000026     BMX160.obj (.text:BMX160_readReg)
+                  0000b41a    00000026     SysTick.obj (.text:SYSTICK_Delay)
+                  0000b440    00000024     onBoardSwitch.obj (.text:SWITCH_SW1_Pressed)
+                  0000b464    00000024     onBoardSwitch.obj (.text:SWITCH_SW2_Pressed)
+                  0000b488    00000024     main.obj (.text:UARTprintf)
+                  0000b4ac    00000022     BMX160.obj (.text:BMX160_scan)
+                  0000b4ce    00000022     driverlib.lib : pwm.obj (.text:PWMGenConfigure)
+                  0000b4f0    00000020     OrangeRX.obj (.text:OrangeRX_IntHandler)
+                  0000b510    00000020     SysTick.obj (.text:SysTick_Init)
+                  0000b530    00000020     driverlib.lib : uart.obj (.text:UARTDisable)
+                  0000b550    00000020     rtsv7M4_T_le_v4SPD16_eabi.lib : u_tofd_t2.asm.obj (.text)
+                  0000b570    0000001e     driverlib.lib : pwm.obj (.text:PWMPulseWidthGet)
+                  0000b58e    0000001e                   : pwm.obj (.text:PWMPulseWidthSet)
+                  0000b5ac    0000001c                   : systick.obj (.text:SysTickIntRegister)
+                  0000b5c8    0000001c     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.text:free_list_remove)
+                  0000b5e4    0000001c                                   : memccpy.c.obj (.text:memccpy)
+                  0000b600    0000001a     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOOutput)
+                  0000b61a    0000001a     rtsv7M4_T_le_v4SPD16_eabi.lib : s_copysign.c.obj (.text:copysign)
+                  0000b634    00000018     BMP388.obj (.text:BMP388_set_i2c_addr)
+                  0000b64c    00000018     driverlib.lib : gpio.obj (.text:GPIOIntRegister)
+                  0000b664    00000018                   : sysctl.obj (.text:SysCtlPWMClockGet)
+                  0000b67c    00000018                   : timer.obj (.text:TimerIntRegister)
+                  0000b694    00000018                   : uart.obj (.text:UARTIntRegister)
+                  0000b6ac    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outs)
+                  0000b6c4    00000016     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOInput)
+                  0000b6da    00000016                   : gpio.obj (.text:GPIOPinTypeI2C)
+                  0000b6f0    00000016                   : gpio.obj (.text:GPIOPinTypeI2CSCL)
+                  0000b706    00000016                   : gpio.obj (.text:GPIOPinTypePWM)
+                  0000b71c    00000016                   : gpio.obj (.text:GPIOPinTypeTimer)
+                  0000b732    00000016                   : gpio.obj (.text:GPIOPinTypeUART)
+                  0000b748    00000016                   : i2c.obj (.text:I2CMasterErr)
+                  0000b75e    00000016                   : timer.obj (.text:TimerControlEvent)
+                  0000b774    00000016     rtsv7M4_T_le_v4SPD16_eabi.lib : strchr.c.obj (.text:strchr)
+                  0000b78a    00000002     --HOLE-- [fill = 0]
+                  0000b78c    00000014     driverlib.lib : sysctl.obj (.text:SysCtlPWMClockSet)
+                  0000b7a0    00000014                   : sysctl.obj (.text:SysCtlResetCauseClear)
+                  0000b7b4    00000014                   : systick.obj (.text:SysTickEnable)
+                  0000b7c8    00000014                   : systick.obj (.text:SysTickIntEnable)
+                  0000b7dc    00000014                   : uart.obj (.text:UARTEnable)
+                  0000b7f0    00000014     rtsv7M4_T_le_v4SPD16_eabi.lib : strlen.c.obj (.text:strlen)
+                  0000b804    00000012     driverlib.lib : pwm.obj (.text:PWMGenPeriodGet)
+                  0000b816    00000012                   : pwm.obj (.text:PWMOutputState)
+                  0000b828    00000012                   : timer.obj (.text:TimerLoadSet)
+                  0000b83a    00000012                   : timer.obj (.text:TimerMatchSet)
+                  0000b84c    00000012     rtsv7M4_T_le_v4SPD16_eabi.lib : wcslen.c.obj (.text:wcslen)
+                  0000b85e    00000010     driverlib.lib : pwm.obj (.text:PWMGenPeriodSet)
+                  0000b86e    00000002     --HOLE-- [fill = 0]
+                  0000b870    00000010     sysclk.obj (.text:SysClk_Init)
+                  0000b880    00000010     driverlib.lib : systick.obj (.text:SysTickPeriodSet)
+                  0000b890    0000000e                   : timer.obj (.text:TimerEnable)
+                  0000b89e    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
+                  0000b8ac    0000000c     BMP388.obj (.text:BMP388_user_delay_ms)
+                  0000b8b8    0000000c     driverlib.lib : gpio.obj (.text:GPIOIntEnable)
+                  0000b8c4    0000000c                   : pwm.obj (.text:PWMGenEnable)
+                  0000b8d0    0000000c                   : sysctl.obj (.text:SysCtlResetCauseGet)
+                  0000b8dc    0000000c     SysFlag.obj (.text:SysFlag_Init)
+                  0000b8e8    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init)
+                  0000b8f4    0000000a     driverlib.lib : i2c.obj (.text:I2CMasterEnable)
+                  0000b8fe    0000000a     SysTick.obj (.text:SysTick_IntHandler)
+                  0000b908    0000000a     driverlib.lib : timer.obj (.text:TimerValueGet)
+                  0000b912    0000000a                   : uart.obj (.text:UARTCharGet)
+                  0000b91c    0000000a                   : uart.obj (.text:UARTCharPut)
+                  0000b926    0000000a                   : uart.obj (.text:UARTIntStatus)
+                  0000b930    0000000a     rtsv7M4_T_le_v4SPD16_eabi.lib : sprintf.c.obj (.text:_outc)
+                  0000b93a    00000008     driverlib.lib : i2c.obj (.text:I2CMasterBusy)
+                  0000b942    00000008                   : i2c.obj (.text:I2CMasterSlaveAddrSet)
+                  0000b94a    00000008                   : timer.obj (.text:TimerIntEnable)
+                  0000b952    00000008                   : uart.obj (.text:UARTIntEnable)
+                  0000b95a    00000002     --HOLE-- [fill = 0]
+                  0000b95c    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.text:__aeabi_errno_addr)
+                  0000b964    00000008                                   : memory.c.obj (.text:malloc)
+                  0000b96c    00000006     driverlib.lib : gpio.obj (.text:GPIOPinRead)
+                  0000b972    00000006                   : gpio.obj (.text:GPIOPinWrite)
+                  0000b978    00000006     startup_ccs.obj (.text:ResetISR)
+                  0000b97e    00000006     driverlib.lib : sysctl.obj (.text:SysCtlDelay)
+                  0000b984    00000006                   : uart.obj (.text:UARTClockSourceSet)
+                  0000b98a    00000004                   : i2c.obj (.text:I2CMasterControl)
+                  0000b98e    00000004                   : i2c.obj (.text:I2CMasterDataGet)
+                  0000b992    00000004                   : i2c.obj (.text:I2CMasterDataPut)
+                  0000b996    00000004                   : timer.obj (.text:TimerIntClear)
+                  0000b99a    00000004                   : uart.obj (.text:UARTIntClear)
+                  0000b99e    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  0000b9a2    00000004                                   : exit.c.obj (.text:abort:abort)
 
-.const     0    0000ada8    0000064c     
-                  0000ada8    00000101     rtsv7M4_T_le_v4SPD16_eabi.lib : ctype.c.obj (.const:.string:_ctypes_)
-                  0000aea9    00000003     --HOLE-- [fill = 0]
-                  0000aeac    000000d8     driverlib.lib : gpio.obj (.const:g_ppui32GPIOIntMapSnowflake)
-                  0000af84    000000c0                   : gpio.obj (.const:g_ppui32GPIOIntMapBlizzard)
-                  0000b044    00000004     main.obj (.const)
-                  0000b048    00000098     rtsv7M4_T_le_v4SPD16_eabi.lib : s_atan.c.obj (.const:$O1$$)
-                  0000b0e0    00000090     driverlib.lib : gpio.obj (.const:g_pui32GPIOBaseAddrs)
-                  0000b170    0000006c                   : sysctl.obj (.const:g_pui32Xtals)
-                  0000b1dc    00000060                   : timer.obj (.const:g_ppui32TimerIntMap)
-                  0000b23c    00000040                   : timer.obj (.const:g_ppui32TimerIntMapSnowflake)
-                  0000b27c    00000040                   : uart.obj (.const:g_ppui32UARTIntMap)
-                  0000b2bc    00000040                   : uart.obj (.const:g_ppui32UARTIntMapSnowflake)
-                  0000b2fc    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : s_atanf.c.obj (.const:$O1$$)
-                  0000b330    00000030                                   : e_pow.c.obj (.const:$O1$$)
-                  0000b360    00000020                                   : e_asinf.c.obj (.const)
-                  0000b380    00000020     PWM.obj (.const:subtract_Motor)
-                  0000b3a0    00000014     driverlib.lib : interrupt.obj (.const:g_pui32EnRegs)
-                  0000b3b4    00000012     main.obj (.const:.string)
-                  0000b3c6    00000002     --HOLE-- [fill = 0]
-                  0000b3c8    0000000c     main.obj (.const:g_ui32UARTBase)
-                  0000b3d4    0000000c     main.obj (.const:g_ui32UARTInt)
-                  0000b3e0    0000000c     main.obj (.const:g_ui32UARTPeriph)
-                  0000b3ec    00000008     BMP388.obj (.const:$P$T0$9)
+.const     0    0000b9a8    0000064c     
+                  0000b9a8    00000101     rtsv7M4_T_le_v4SPD16_eabi.lib : ctype.c.obj (.const:.string:_ctypes_)
+                  0000baa9    00000003     --HOLE-- [fill = 0]
+                  0000baac    000000d8     driverlib.lib : gpio.obj (.const:g_ppui32GPIOIntMapSnowflake)
+                  0000bb84    000000c0                   : gpio.obj (.const:g_ppui32GPIOIntMapBlizzard)
+                  0000bc44    00000004     main.obj (.const)
+                  0000bc48    00000098     rtsv7M4_T_le_v4SPD16_eabi.lib : s_atan.c.obj (.const:$O1$$)
+                  0000bce0    00000090     driverlib.lib : gpio.obj (.const:g_pui32GPIOBaseAddrs)
+                  0000bd70    0000006c                   : sysctl.obj (.const:g_pui32Xtals)
+                  0000bddc    00000060                   : timer.obj (.const:g_ppui32TimerIntMap)
+                  0000be3c    00000040                   : timer.obj (.const:g_ppui32TimerIntMapSnowflake)
+                  0000be7c    00000040                   : uart.obj (.const:g_ppui32UARTIntMap)
+                  0000bebc    00000040                   : uart.obj (.const:g_ppui32UARTIntMapSnowflake)
+                  0000befc    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : s_atanf.c.obj (.const:$O1$$)
+                  0000bf30    00000030                                   : e_pow.c.obj (.const:$O1$$)
+                  0000bf60    00000020                                   : e_asinf.c.obj (.const)
+                  0000bf80    00000020     PWM.obj (.const:subtract_Motor)
+                  0000bfa0    00000014     driverlib.lib : interrupt.obj (.const:g_pui32EnRegs)
+                  0000bfb4    00000012     main.obj (.const:.string)
+                  0000bfc6    00000002     --HOLE-- [fill = 0]
+                  0000bfc8    0000000c     main.obj (.const:g_ui32UARTBase)
+                  0000bfd4    0000000c     main.obj (.const:g_ui32UARTInt)
+                  0000bfe0    0000000c     main.obj (.const:g_ui32UARTPeriph)
+                  0000bfec    00000008     BMP388.obj (.const:$P$T0$9)
 
-.cinit     0    0000b3f8    00000090     
-                  0000b3f8    00000056     (.cinit..data.load) [load image, compression = lzss]
-                  0000b44e    00000002     --HOLE-- [fill = 0]
-                  0000b450    0000000c     (__TI_handler_table)
-                  0000b45c    00000004     --HOLE-- [fill = 0]
-                  0000b460    00000008     (.cinit..bss.load) [load image, compression = zero_init]
-                  0000b468    00000008     (.cinit..vtable.load) [load image, compression = zero_init]
-                  0000b470    00000018     (__TI_cinit_table)
+.cinit     0    0000bff8    00000088     
+                  0000bff8    00000051     (.cinit..data.load) [load image, compression = lzss]
+                  0000c049    00000003     --HOLE-- [fill = 0]
+                  0000c04c    0000000c     (__TI_handler_table)
+                  0000c058    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  0000c060    00000008     (.cinit..vtable.load) [load image, compression = zero_init]
+                  0000c068    00000018     (__TI_cinit_table)
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
@@ -349,7 +359,7 @@ section   page    origin      length       input sections
                   20001270    00000010     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.c.obj (.sysmem)
                   20001280    00000ff0     --HOLE--
 
-.bss       0    20002270    000008bb     UNINITIALIZED
+.bss       0    20002270    000008db     UNINITIALIZED
                   20002270    00000400     main.obj (.bss:g_pcUARTTxBuffer)
                   20002670    00000190     (.common:rx_data)
                   20002800    00000120     (.common:mixer)
@@ -357,44 +367,47 @@ section   page    origin      length       input sections
                   200029f0    00000080     main.obj (.bss:g_pcUARTRxBuffer)
                   20002a70    00000038     (.common:rx_text)
                   20002aa8    00000020     (.common:dutyOf)
-                  20002ac8    00000008     BMP388.obj (.bss:BMP388_calib$1)
-                  20002ad0    00000008     BMP388.obj (.bss:BMP388_calib$3)
-                  20002ad8    00000008     BMP388.obj (.bss:alt_LPF$10)
-                  20002ae0    00000008     BMX160.obj (.bss:complimantary_filter_pitch$8)
-                  20002ae8    00000008     BMX160.obj (.bss:complimantary_filter_roll$7)
-                  20002af0    00000008     BMX160.obj (.bss:complimantary_filter_yaw$10)
-                  20002af8    00000008     main.obj (.bss)
-                  20002b00    00000004     BMP388.obj (.bss)
-                  20002b04    00000004     BMX160.obj (.bss)
-                  20002b08    00000004     buzzer.obj (.bss)
-                  20002b0c    00000004     (.common:Oaccel)
-                  20002b10    00000004     (.common:Obmx160)
-                  20002b14    00000004     (.common:Ogyro)
-                  20002b18    00000004     (.common:Omagn)
-                  20002b1c    00000004     (.common:g_uiSysFlags)
-                  20002b20    00000004     (.common:resetCause)
-                  20002b24    00000002     (.common:buzDuration)
-                  20002b26    00000002     (.common:count)
-                  20002b28    00000002     (.common:pauseTime)
-                  20002b2a    00000001     (.common:BMP388_addr)
+                  20002ac8    00000020     (.common:tune)
+                  20002ae8    00000008     BMP388.obj (.bss:BMP388_calib$1)
+                  20002af0    00000008     BMP388.obj (.bss:BMP388_calib$3)
+                  20002af8    00000008     BMP388.obj (.bss:alt_LPF$10)
+                  20002b00    00000008     BMX160.obj (.bss:complimantary_filter_pitch$8)
+                  20002b08    00000008     BMX160.obj (.bss:complimantary_filter_roll$7)
+                  20002b10    00000008     BMX160.obj (.bss:complimantary_filter_yaw$10)
+                  20002b18    00000008     main.obj (.bss)
+                  20002b20    00000004     BMP388.obj (.bss)
+                  20002b24    00000004     BMX160.obj (.bss)
+                  20002b28    00000004     buzzer.obj (.bss)
+                  20002b2c    00000004     (.common:Oaccel)
+                  20002b30    00000004     (.common:Obmx160)
+                  20002b34    00000004     (.common:Ogyro)
+                  20002b38    00000004     (.common:Omagn)
+                  20002b3c    00000004     (.common:g_uiSysFlags)
+                  20002b40    00000004     (.common:resetCause)
+                  20002b44    00000002     (.common:buzDuration)
+                  20002b46    00000002     (.common:count)
+                  20002b48    00000002     (.common:pauseTime)
+                  20002b4a    00000001     (.common:BMP388_addr)
 
-.data      0    20002b2c    00000116     UNINITIALIZED
-                  20002b2c    0000002f     main.obj (.data)
-                  20002b5b    00000001     i2c.obj (.data)
-                  20002b5c    00000028     BMX160.obj (.data)
-                  20002b84    00000025     MotorControl.obj (.data)
-                  20002ba9    00000003     OrangeRX.obj (.data)
-                  20002bac    0000001c     BMP388.obj (.data)
-                  20002bc8    00000018     BMX160.obj (.data:acc_low_pass$3)
-                  20002be0    00000018     BMX160.obj (.data:gyro_low_pass$2)
-                  20002bf8    00000018     BMX160.obj (.data:mag_low_pass$1)
-                  20002c10    00000010     PWM.obj (.data:Channel_Tune_Variable)
-                  20002c20    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.c.obj (.data:$O1$$)
-                  20002c28    00000008                                   : memory.c.obj (.data:$O1$$)
-                  20002c30    00000008     PWM.obj (.data:selected_Motion)
-                  20002c38    00000004     buzzer.obj (.data)
-                  20002c3c    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.data)
-                  20002c40    00000002     PWM.obj (.data)
+.data      0    20002b4c    00000246     UNINITIALIZED
+                  20002b4c    00000100     BLUETOOTH.obj (.data:charBuffer)
+                  20002c4c    00000034     PID.obj (.data)
+                  20002c80    0000002b     main.obj (.data)
+                  20002cab    00000001     i2c.obj (.data)
+                  20002cac    00000028     BMX160.obj (.data)
+                  20002cd4    00000025     MotorControl.obj (.data)
+                  20002cf9    00000003     OrangeRX.obj (.data)
+                  20002cfc    0000001c     BMP388.obj (.data)
+                  20002d18    00000018     BMX160.obj (.data:acc_low_pass$3)
+                  20002d30    00000018     BMX160.obj (.data:gyro_low_pass$2)
+                  20002d48    00000018     BMX160.obj (.data:mag_low_pass$1)
+                  20002d60    00000010     PWM.obj (.data:Channel_Tune_Variable)
+                  20002d70    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.c.obj (.data:$O1$$)
+                  20002d78    00000008                                   : memory.c.obj (.data:$O1$$)
+                  20002d80    00000008     PWM.obj (.data:selected_Motion)
+                  20002d88    00000004     buzzer.obj (.data)
+                  20002d8c    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : errno.c.obj (.data)
+                  20002d90    00000002     PWM.obj (.data)
 
 __llvm_prf_cnts 
 *          0    20000000    00000000     UNINITIALIZED
@@ -406,10 +419,10 @@ MODULE SUMMARY
        Module                       code    ro data   rw data
        ------                       ----    -------   -------
     .\
-       main.obj                     5067    58        1211   
+       main.obj                     5211    58        1207   
        startup_ccs.obj              12      620       0      
     +--+----------------------------+-------+---------+---------+
-       Total:                       5079    678       1211   
+       Total:                       5223    678       1207   
                                                              
     .\local_Include\
        i2c.obj                      1279    0         1      
@@ -421,6 +434,11 @@ MODULE SUMMARY
        sysclk.obj                   16      0         0      
     +--+----------------------------+-------+---------+---------+
        Total:                       2291    0         5      
+                                                             
+    .\local_Include\BLUETOOTH\
+       BLUETOOTH.obj                1660    0         256    
+    +--+----------------------------+-------+---------+---------+
+       Total:                       1660    0         256    
                                                              
     .\local_Include\BMP388\
        BMP388.obj                   7248    8         265    
@@ -448,9 +466,9 @@ MODULE SUMMARY
        Total:                       1928    0         459    
                                                              
     .\local_Include\PID\
-       PID.obj                      464     0         0      
+       PID.obj                      1584    0         84     
     +--+----------------------------+-------+---------+---------+
-       Total:                       464     0         0      
+       Total:                       1584    0         84     
                                                              
     .\local_Include\PWM\
        PWM.obj                      3520    32        346    
@@ -472,12 +490,12 @@ MODULE SUMMARY
        sysctl.obj                   714     108       0      
        interrupt.obj                156     20        620    
        timer.obj                    290     160       0      
-       uart.obj                     112     128       0      
+       uart.obj                     258     128       0      
        i2c.obj                      204     0         0      
        pwm.obj                      158     0         0      
        systick.obj                  84      0         0      
     +--+----------------------------+-------+---------+---------+
-       Total:                       2564    968       620    
+       Total:                       2710    968       620    
                                                              
     C:\ti\ccs1040\ccs\tools\compiler\ti-cgt-arm_20.2.5.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
        _printfi.c.obj               4851    0         0      
@@ -534,22 +552,22 @@ MODULE SUMMARY
                                                              
        Heap:                        0       0         4096   
        Stack:                       0       0         4096   
-       Linker Generated:            0       138       0      
+       Linker Generated:            0       133       0      
     +--+----------------------------+-------+---------+---------+
-       Grand Total:                 43790   2365      11325  
+       Grand Total:                 46860   2360      11661  
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 0000b470 records: 3, size/record: 8, table size: 24
-	.data: load addr=0000b3f8, load size=00000056 bytes, run addr=20002b2c, run size=00000116 bytes, compression=lzss
-	.bss: load addr=0000b460, load size=00000008 bytes, run addr=20002270, run size=000008bb bytes, compression=zero_init
-	.vtable: load addr=0000b468, load size=00000008 bytes, run addr=20000000, run size=0000026c bytes, compression=zero_init
+__TI_cinit_table @ 0000c068 records: 3, size/record: 8, table size: 24
+	.data: load addr=0000bff8, load size=00000051 bytes, run addr=20002b4c, run size=00000246 bytes, compression=lzss
+	.bss: load addr=0000c058, load size=00000008 bytes, run addr=20002270, run size=000008db bytes, compression=zero_init
+	.vtable: load addr=0000c060, load size=00000008 bytes, run addr=20000000, run size=0000026c bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 0000b450 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 0000c04c records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_lzss
 	index: 2, handler: __TI_decompress_none
@@ -559,308 +577,332 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                               
 -------   ----                               
-00008219  BMP388_Init                        
-0000a395  BMP388_Int_Configure               
-000096a9  BMP388_Int_Handler                 
-20002b2a  BMP388_addr                        
-00004979  BMP388_begin                       
-20002bb1  BMP388_calibState                  
-00006439  BMP388_calibrate                   
-00005f71  BMP388_calibrate_SM                
-00008829  BMP388_compensate_data             
-000046dd  BMP388_compensate_pressure         
-000092e5  BMP388_compensate_temperature      
-00008985  BMP388_get_calib_data              
-00008eed  BMP388_get_regs                    
-0000794d  BMP388_get_sensor_data             
-00003e25  BMP388_parse_calib_data            
-0000942f  BMP388_parse_sensor_data           
-00007179  BMP388_readAltitude                
-00009771  BMP388_readPressure                
-00009641  BMP388_readTemperature             
-0000a359  BMP388_read_all_regs               
-00006111  BMP388_reset                       
-0000506d  BMP388_set_config                  
-0000aa61  BMP388_set_i2c_addr                
-00008a31  BMP388_set_regs                    
-00005469  BMP388_showData                    
-00009b75  BMP388_showState                   
-20002bb0  BMP388_state                       
-0000acc5  BMP388_user_delay_ms               
-0000583d  BMP388_user_i2c_read               
-000074f9  BMP388_user_i2c_write              
-00007a59  BMX160_Init                        
-00008495  BMX160_begin                       
-00008e61  BMX160_defaultParamSettg           
-000029f5  BMX160_getAllData                  
-0000a841  BMX160_readReg                     
-0000a8f9  BMX160_scan                        
-000082f9  BMX160_setMagnConf                 
-00009bc9  BMX160_showState                   
-00008cad  BMX160_softReset                   
-0000a4ad  BMX160_softResetWorker             
-20002b5c  BMX160_state                       
-00003725  BMX160_updateData                  
-000097d5  BMX160_writeBmxReg                 
-00009c1d  BUZZER_showState                   
-20002c38  BUZZER_state                       
-0000a6e5  BUZZ_BUZZ                          
-0000a2a5  BUZZ_BUZZER                        
-00008045  BUZZ_SM                            
-0000ada3  C$$EXIT                            
-20002c10  Channel_Tune_Variable              
-0000a711  GPIODirModeSet                     
-0000acd1  GPIOIntEnable                      
-0000aa79  GPIOIntRegister                    
-00009a19  GPIOIntTypeSet                     
-0000671d  GPIOPadConfigSet                   
-00009d69  GPIOPinConfigure                   
-0000ad71  GPIOPinRead                        
-0000aaf1  GPIOPinTypeGPIOInput               
-0000aa2d  GPIOPinTypeGPIOOutput              
-0000ab07  GPIOPinTypeI2C                     
-0000ab1d  GPIOPinTypeI2CSCL                  
-0000ab33  GPIOPinTypePWM                     
-0000ab49  GPIOPinTypeTimer                   
-0000ab5f  GPIOPinTypeUART                    
-0000ad77  GPIOPinWrite                       
-0000a685  GetEStopState                      
-00009509  GetFlightMode                      
-00008dd5  I2C0_Init                          
-0000ad3f  I2CMasterBusy                      
-0000ad8f  I2CMasterControl                   
-0000ad93  I2CMasterDataGet                   
-0000ad97  I2CMasterDataPut                   
-0000ad0d  I2CMasterEnable                    
-0000ab75  I2CMasterErr                       
-0000a05d  I2CMasterGlitchFilterConfigSet     
-00009db5  I2CMasterInitExpClk                
-0000ad47  I2CMasterSlaveAddrSet              
-00006c89  I2C_AddressBruteForcer             
-0000949d  I2C_ReadByte                       
-00009ac9  I2C_readReg                        
-00009e01  I2C_showState                      
-20002b5b  I2C_state                          
-00007b5d  I2C_writeSingleReg                 
-00009571  IntEnable                          
-0000a4e5  IntRegister                        
-0000a519  LED_ALL_FUNCTION                   
-00008777  LED_Drive                          
-0000a769  LED_LED1                           
-0000a795  LED_LED2                           
-0000a7c1  LED_LED3                           
-0000a54d  LED_LEDInit                        
-0000207d  Motor_ManMixer                     
-00004e59  Motor_setDuty                      
-00009a71  ORANGE_showState                   
-20002ba9  ORANGE_state                       
-20002b0c  Oaccel                             
-20002b10  Obmx160                            
-20002b14  Ogyro                              
-20002b18  Omagn                              
-0000442d  OrangeRX_Init                      
-0000a93d  OrangeRX_IntHandler                
-00005271  OrangeRX_extractData               
-000099bd  OrangeRX_isConnected               
-00008135  OrangeRX_receivedChannelReorganizer
-000072ad  OrangeRX_showActData               
-0000a229  PCF8574A_Init                      
-00009081  PCF8574A_Read                      
-0000989d  PCF8574A_Write                     
-00005a19  PID_master_pid                     
-0000a91b  PWMGenConfigure                    
-0000acdd  PWMGenEnable                       
-0000ac1d  PWMGenPeriodGet                    
-0000ac77  PWMGenPeriodSet                    
-0000ac2f  PWMOutputState                     
-0000a99d  PWMPulseWidthGet                   
-0000a9bb  PWMPulseWidthSet                   
-00005655  PWM_Init                           
-00009e4d  PWM_showState                      
-20002c40  PWM_state                          
-0000ad7d  ResetISR                           
-000098fd  SONAR_Trigger                      
-00009e99  SWITCH_Init                        
-0000a88d  SWITCH_SW1_Pressed                 
-0000a8b1  SWITCH_SW2_Pressed                 
-0000a867  SYSTICK_Delay                      
-0000ac89  SysClk_Init                        
-00007611  SysCtlClockGet                     
-00007f51  SysCtlClockSet                     
-0000ad83  SysCtlDelay                        
-0000aa91  SysCtlPWMClockGet                  
-0000abb9  SysCtlPWMClockSet                  
-0000a581  SysCtlPeripheralEnable             
-0000a3cd  SysCtlPeripheralReady              
-0000abcd  SysCtlResetCauseClear              
-0000ace9  SysCtlResetCauseGet                
-0000a405  SysFlag_Check                      
-0000a5b5  SysFlag_Clear                      
-0000acf5  SysFlag_Init                       
-0000a5e9  SysFlag_Set                        
-0000abe1  SysTickEnable                      
-0000abf5  SysTickIntEnable                   
-0000a9d9  SysTickIntRegister                 
-0000ac99  SysTickPeriodSet                   
-0000a95d  SysTick_Init                       
-0000ad17  SysTick_IntHandler                 
-00009ee5  SystemInitialize                   
-0000995d  TimerConfigure                     
-0000ab8b  TimerControlEvent                  
-0000aca9  TimerEnable                        
-0000ad9b  TimerIntClear                      
-0000ad4f  TimerIntEnable                     
-0000aaa9  TimerIntRegister                   
-0000ac41  TimerLoadSet                       
-0000ac53  TimerMatchSet                      
-0000ad21  TimerValueGet                      
-00009105  UART0_STDIO_Init                   
-0000a43d  UART0_STDIO_IntHandler             
-0000ad89  UARTClockSourceSet                 
-0000a7ed  UARTEchoSet                        
-0000a61d  UARTFlushRx                        
-00009f31  UARTFlushTx                        
-0000ad57  UARTIntEnable                      
-0000aac1  UARTIntRegister                    
-0000ad2b  UARTIntStatus                      
-00006f09  UARTStdioConfig                    
-000062b1  UARTStdioIntHandler                
-0000a31d  UARTgetc                           
-0000a8d5  UARTprintf                         
-00003ad1  UARTvprintf                        
-00007729  UARTwrite                          
+00009ee5  BLUETOOTH_Init                     
+00002a81  BLUETOOTH_IntHandler               
+0000ab39  BLUETOOTHprintf                    
+00008c2d  BMP388_Init                        
+0000af49  BMP388_Int_Configure               
+0000a1c9  BMP388_Int_Handler                 
+20002b4a  BMP388_addr                        
+0000555d  BMP388_begin                       
+20002d01  BMP388_calibState                  
+00006e4d  BMP388_calibrate                   
+00006985  BMP388_calibrate_SM                
+0000923d  BMP388_compensate_data             
+000052c1  BMP388_compensate_pressure         
+00009d99  BMP388_compensate_temperature      
+00009399  BMP388_get_calib_data              
+000099a1  BMP388_get_regs                    
+00008361  BMP388_get_sensor_data             
+00004a09  BMP388_parse_calib_data            
+00009f51  BMP388_parse_sensor_data           
+00007b8d  BMP388_readAltitude                
+0000a291  BMP388_readPressure                
+0000a161  BMP388_readTemperature             
+0000af0d  BMP388_read_all_regs               
+00006b25  BMP388_reset                       
+00005c51  BMP388_set_config                  
+0000b635  BMP388_set_i2c_addr                
+00009445  BMP388_set_regs                    
+0000604d  BMP388_showData                    
+0000a695  BMP388_showState                   
+20002d00  BMP388_state                       
+0000b8ad  BMP388_user_delay_ms               
+00006421  BMP388_user_i2c_read               
+00007f0d  BMP388_user_i2c_write              
+0000846d  BMX160_Init                        
+00008ea9  BMX160_begin                       
+00009915  BMX160_defaultParamSettg           
+000035d9  BMX160_getAllData                  
+0000b3f5  BMX160_readReg                     
+0000b4ad  BMX160_scan                        
+00008d0d  BMX160_setMagnConf                 
+0000a6e9  BMX160_showState                   
+00009761  BMX160_softReset                   
+0000b061  BMX160_softResetWorker             
+20002cac  BMX160_state                       
+00004309  BMX160_updateData                  
+0000a2f5  BMX160_writeBmxReg                 
+0000a73d  BUZZER_showState                   
+20002d88  BUZZER_state                       
+0000b299  BUZZ_BUZZ                          
+0000ae59  BUZZ_BUZZER                        
+00008a59  BUZZ_SM                            
+0000b9a3  C$$EXIT                            
+20002d60  Channel_Tune_Variable              
+0000b2c5  GPIODirModeSet                     
+0000b8b9  GPIOIntEnable                      
+0000b64d  GPIOIntRegister                    
+0000a539  GPIOIntTypeSet                     
+00007131  GPIOPadConfigSet                   
+0000a8d9  GPIOPinConfigure                   
+0000b96d  GPIOPinRead                        
+0000b6c5  GPIOPinTypeGPIOInput               
+0000b601  GPIOPinTypeGPIOOutput              
+0000b6db  GPIOPinTypeI2C                     
+0000b6f1  GPIOPinTypeI2CSCL                  
+0000b707  GPIOPinTypePWM                     
+0000b71d  GPIOPinTypeTimer                   
+0000b733  GPIOPinTypeUART                    
+0000b973  GPIOPinWrite                       
+0000b239  GetEStopState                      
+0000a029  GetFlightMode                      
+00009889  I2C0_Init                          
+0000b93b  I2CMasterBusy                      
+0000b98b  I2CMasterControl                   
+0000b98f  I2CMasterDataGet                   
+0000b993  I2CMasterDataPut                   
+0000b8f5  I2CMasterEnable                    
+0000b749  I2CMasterErr                       
+0000ac11  I2CMasterGlitchFilterConfigSet     
+0000a925  I2CMasterInitExpClk                
+0000b943  I2CMasterSlaveAddrSet              
+0000769d  I2C_AddressBruteForcer             
+00009fbd  I2C_ReadByte                       
+0000a5e9  I2C_readReg                        
+0000a971  I2C_showState                      
+20002cab  I2C_state                          
+00008571  I2C_writeSingleReg                 
+0000a091  IntEnable                          
+0000b099  IntRegister                        
+0000b0cd  LED_ALL_FUNCTION                   
+0000918b  LED_Drive                          
+0000b31d  LED_LED1                           
+0000b349  LED_LED2                           
+0000b375  LED_LED3                           
+0000b101  LED_LEDInit                        
+00002109  Motor_ManMixer                     
+00005a3d  Motor_setDuty                      
+0000a591  ORANGE_showState                   
+20002cf9  ORANGE_state                       
+20002b2c  Oaccel                             
+20002b30  Obmx160                            
+20002b34  Ogyro                              
+20002b38  Omagn                              
+00005011  OrangeRX_Init                      
+0000b4f1  OrangeRX_IntHandler                
+00005e55  OrangeRX_extractData               
+0000a4dd  OrangeRX_isConnected               
+00008b49  OrangeRX_receivedChannelReorganizer
+00007cc1  OrangeRX_showActData               
+0000addd  PCF8574A_Init                      
+00009b35  PCF8574A_Read                      
+0000a3bd  PCF8574A_Write                     
+00003049  PID_master_pid                     
+0000b4cf  PWMGenConfigure                    
+0000b8c5  PWMGenEnable                       
+0000b805  PWMGenPeriodGet                    
+0000b85f  PWMGenPeriodSet                    
+0000b817  PWMOutputState                     
+0000b571  PWMPulseWidthGet                   
+0000b58f  PWMPulseWidthSet                   
+00006239  PWM_Init                           
+0000a9bd  PWM_showState                      
+20002d90  PWM_state                          
+0000b979  ResetISR                           
+0000a41d  SONAR_Trigger                      
+0000aa09  SWITCH_Init                        
+0000b441  SWITCH_SW1_Pressed                 
+0000b465  SWITCH_SW2_Pressed                 
+0000b41b  SYSTICK_Delay                      
+0000b871  SysClk_Init                        
+00008025  SysCtlClockGet                     
+00008965  SysCtlClockSet                     
+0000b97f  SysCtlDelay                        
+0000b665  SysCtlPWMClockGet                  
+0000b78d  SysCtlPWMClockSet                  
+0000b135  SysCtlPeripheralEnable             
+0000af81  SysCtlPeripheralReady              
+0000b7a1  SysCtlResetCauseClear              
+0000b8d1  SysCtlResetCauseGet                
+0000afb9  SysFlag_Check                      
+0000b169  SysFlag_Clear                      
+0000b8dd  SysFlag_Init                       
+0000b19d  SysFlag_Set                        
+0000b7b5  SysTickEnable                      
+0000b7c9  SysTickIntEnable                   
+0000b5ad  SysTickIntRegister                 
+0000b881  SysTickPeriodSet                   
+0000b511  SysTick_Init                       
+0000b8ff  SysTick_IntHandler                 
+0000a839  SystemInitialize                   
+0000a47d  TimerConfigure                     
+0000b75f  TimerControlEvent                  
+0000b891  TimerEnable                        
+0000b997  TimerIntClear                      
+0000b94b  TimerIntEnable                     
+0000b67d  TimerIntRegister                   
+0000b829  TimerLoadSet                       
+0000b83b  TimerMatchSet                      
+0000b909  TimerValueGet                      
+00009bb9  UART0_STDIO_Init                   
+0000aff1  UART0_STDIO_IntHandler             
+0000b913  UARTCharGet                        
+0000b91d  UARTCharPut                        
+0000b985  UARTClockSourceSet                 
+0000abc9  UARTConfigSetExpClk                
+0000b531  UARTDisable                        
+0000b3a1  UARTEchoSet                        
+0000b7dd  UARTEnable                         
+0000b1d1  UARTFlushRx                        
+0000aa55  UARTFlushTx                        
+0000b99b  UARTIntClear                       
+0000b953  UARTIntEnable                      
+0000b695  UARTIntRegister                    
+0000b927  UARTIntStatus                      
+0000791d  UARTStdioConfig                    
+00006cc5  UARTStdioIntHandler                
+0000aed1  UARTgetc                           
+0000b489  UARTprintf                         
+000046b5  UARTvprintf                        
+0000813d  UARTwrite                          
 20001270  __STACK_END                        
 00001000  __STACK_SIZE                       
 20000470  __STACK_TOP                        
 00001000  __SYSMEM_SIZE                      
-0000b470  __TI_CINIT_Base                    
-0000b488  __TI_CINIT_Limit                   
-0000b450  __TI_Handler_Table_Base            
-0000b45c  __TI_Handler_Table_Limit           
-0000a0e5  __TI_auto_init_nobinit_nopinit     
-000095d9  __TI_decompress_lzss               
-0000acb7  __TI_decompress_none               
-00009c71  __TI_ltoa                          
+0000c068  __TI_CINIT_Base                    
+0000c080  __TI_CINIT_Limit                   
+0000c04c  __TI_Handler_Table_Base            
+0000c058  __TI_Handler_Table_Limit           
+0000ac99  __TI_auto_init_nobinit_nopinit     
+0000a0f9  __TI_decompress_lzss               
+0000b89f  __TI_decompress_none               
+0000a791  __TI_ltoa                          
 ffffffff  __TI_pprof_out_hndl                
-0000026d  __TI_printfi                       
+00000ce9  __TI_printfi                       
 ffffffff  __TI_prof_data_size                
 ffffffff  __TI_prof_data_start               
 00000000  __TI_static_base__                 
-0000ad01  __TI_zero_init                     
-00008f75  __aeabi_cdcmpeq                    
-00008f75  __aeabi_cdcmple                    
-00008ffb  __aeabi_cdrcmple                   
-000093c1  __aeabi_d2f                        
-0000a015  __aeabi_d2iz                       
-00005dc3  __aeabi_dadd                       
-00007041  __aeabi_ddiv                       
-00007d5d  __aeabi_dmul                       
-00005db9  __aeabi_dsub                       
-0000ad61  __aeabi_errno_addr                 
-0000a475  __aeabi_f2d                        
-0000a6b5  __aeabi_i2d                        
-00005f6f  __aeabi_idiv0                      
-00005f6f  __aeabi_ldiv0                      
-00009185  __aeabi_memclr                     
-00009185  __aeabi_memclr4                    
-00009185  __aeabi_memclr8                    
-00008b79  __aeabi_memcpy                     
-00008b79  __aeabi_memcpy4                    
-00008b79  __aeabi_memcpy8                    
-00009187  __aeabi_memset                     
-00009187  __aeabi_memset4                    
-00009187  __aeabi_memset8                    
-0000a97d  __aeabi_ui2d                       
-0000a1a9  __aeabi_uidiv                      
-0000a1a9  __aeabi_uidivmod                   
-00008c15  __aeabi_uldivmod                   
+0000b8e9  __TI_zero_init                     
+00009a29  __aeabi_cdcmpeq                    
+00009a29  __aeabi_cdcmple                    
+00009aaf  __aeabi_cdrcmple                   
+00009e75  __aeabi_d2f                        
+0000ab81  __aeabi_d2iz                       
+000067d7  __aeabi_dadd                       
+00007a55  __aeabi_ddiv                       
+00008771  __aeabi_dmul                       
+000067cd  __aeabi_dsub                       
+0000b95d  __aeabi_errno_addr                 
+0000b029  __aeabi_f2d                        
+0000b269  __aeabi_i2d                        
+00006983  __aeabi_idiv0                      
+00006983  __aeabi_ldiv0                      
+00009c39  __aeabi_memclr                     
+00009c39  __aeabi_memclr4                    
+00009c39  __aeabi_memclr8                    
+0000962d  __aeabi_memcpy                     
+0000962d  __aeabi_memcpy4                    
+0000962d  __aeabi_memcpy8                    
+00009c3b  __aeabi_memset                     
+00009c3b  __aeabi_memset4                    
+00009c3b  __aeabi_memset8                    
+0000b551  __aeabi_ui2d                       
+0000ad5d  __aeabi_uidiv                      
+0000ad5d  __aeabi_uidivmod                   
+000096c9  __aeabi_uldivmod                   
 ffffffff  __binit__                          
 ffffffff  __c_args__                         
-00009839  __error__                          
+0000a359  __error__                          
 UNDEFED   __mpu_init                         
 20000270  __stack                            
 20000000  __start___llvm_prf_cnts            
 20000000  __stop___llvm_prf_cnts             
-0000a651  _c_int00_noargs                    
-0000ada8  _ctypes_                           
-20002c20  _lock                              
-0000526f  _nop                               
+0000b205  _c_int00_noargs                    
+0000b9a8  _ctypes_                           
+20002d70  _lock                              
+00005e53  _nop                               
 20001270  _sys_memory                        
 UNDEFED   _system_post_cinit                 
-0000ad9f  _system_pre_init                   
-20002c24  _unlock                            
-0000ada3  abort                              
-20002b60  accelRange                         
-00003309  acos                               
-00003309  acosl                              
-00007c5d  aligned_alloc                      
-00009201  applyLPF                           
-000065ad  asinf                              
-00004141  atan                               
-00006889  atan2f                             
-00006b39  atanf                              
-00004141  atanl                              
-00009fc9  atoi                               
-20002bac  base_altitude                      
+0000b99f  _system_pre_init                   
+20002d74  _unlock                            
+0000b9a3  abort                              
+20002cb0  accelRange                         
+00003eed  acos                               
+00003eed  acosl                              
+00008671  aligned_alloc                      
+20002c74  alt_ki_tune                        
+20002c70  alt_kp_tune                        
+00009cb5  applyLPF                           
+00006fc1  asinf                              
+00004d25  atan                               
+0000729d  atan2f                             
+0000754d  atanf                              
+00004d25  atanl                              
+0000aaed  atoi                               
+20002cfc  base_altitude                      
 ffffffff  binit                              
-20002b24  buzDuration                        
-0000aa47  copysign                           
-0000aa47  copysignl                          
-00008611  cosf                               
-20002b26  count                              
+20002b44  buzDuration                        
+0000958d  changeMotorDuty                    
+20002b4c  charBuffer                         
+0000b61b  copysign                           
+0000b61b  copysignl                          
+00009025  cosf                               
+20002b46  count                              
 20002920  dev                                
 20002aa8  dutyOf                             
-20002c3c  errno                              
-00002ee5  flightControl_SM                   
-00009d19  flightSafeLand                     
-00007e59  floor                              
-00007e59  floorl                             
-20002baa  frameGapChNo                       
-0000970d  frexp                              
-0000970d  frexpl                             
+20002d8c  errno                              
+00003ac9  flightControl_SM                   
+0000a889  flightSafeLand                     
+0000886d  floor                              
+0000886d  floorl                             
+20002cfa  frameGapChNo                       
+0000a22d  frexp                              
+0000a22d  frexpl                             
 20000000  g_pfnRAMVectors                    
 00000000  g_pfnVectors                       
-20002b1c  g_uiSysFlags                       
-20002b64  gyroRange                          
-0000a169  init_Buzzer                        
-0000783d  ldexp                              
-0000783d  ldexpl                             
-00000cbd  main                               
-0000ad69  malloc                             
-00007c5d  memalign                           
-0000aa11  memccpy                            
-00008b79  memcpy                             
-0000918d  memset                             
+20002b3c  g_uiSysFlags                       
+20002cb4  gyroRange                          
+0000ad1d  init_Buzzer                        
+20002c54  ki_tune                            
+20002c50  kp_tune                            
+00008251  ldexp                              
+00008251  ldexpl                             
+0000026d  main                               
+0000b965  malloc                             
+00008671  memalign                           
+0000b5e5  memccpy                            
+0000962d  memcpy                             
+00009c41  memset                             
 20002800  mixer                              
-20002c41  motorSelect                        
-20002b28  pauseTime                          
-20002b68  phi_rad                            
-20002b74  pitch_filtered                     
-000016ad  pow                                
-000016ad  powl                               
-20002b20  resetCause                         
-20002b70  roll_filtered                      
-000083d1  round                              
-000083d1  roundl                             
-20002bab  rx_connection_status               
+20002d91  motorSelect                        
+20002b48  pauseTime                          
+20002cb8  phi_rad                            
+20002cc4  pitch_filtered                     
+20002c64  pitch_ki_tune                      
+20002c60  pitch_kp_tune                      
+00001739  pow                                
+00001739  powl                               
+20002c4c  pv_height                          
+20002c4e  pv_roll                            
+20002b40  resetCause                         
+20002cc0  roll_filtered                      
+20002c5c  roll_ki_tune                       
+20002c58  roll_kp_tune                       
+00008de5  round                              
+00008de5  roundl                             
+20002cfb  rx_connection_status               
 20002670  rx_data                            
 20002a70  rx_text                            
-0000783d  scalbn                             
-0000783d  scalbnl                            
-20002c30  selected_Motion                    
-00008ad5  sinf                               
-0000a1e9  sprintf                            
-000069e1  sqrt                               
-000069e1  sqrtl                              
-0000aba1  strchr                             
-0000ac09  strlen                             
-0000b380  subtract_Motor                     
-000088d9  tanf                               
-20002b6c  theta_rad                          
-00008555  trunc                              
-00008555  truncl                             
-0000ac65  wcslen                             
-20002b78  yaw_filtered                       
+00008251  scalbn                             
+00008251  scalbnl                            
+20002d80  selected_Motion                    
+000094e9  sinf                               
+0000ad9d  sprintf                            
+000073f5  sqrt                               
+000073f5  sqrtl                              
+0000b775  strchr                             
+0000b7f1  strlen                             
+0000bf80  subtract_Motor                     
+000092ed  tanf                               
+20002cbc  theta_rad                          
+00008f69  trunc                              
+00008f69  truncl                             
+20002ac8  tune                               
+0000b84d  wcslen                             
+20002cc8  yaw_filtered                       
+20002c6c  yaw_ki_tune                        
+20002c68  yaw_kp_tune                        
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -869,253 +911,263 @@ address   name
 -------   ----                               
 00000000  __TI_static_base__                 
 00000000  g_pfnVectors                       
-0000026d  __TI_printfi                       
-00000cbd  main                               
+0000026d  main                               
+00000ce9  __TI_printfi                       
 00001000  __STACK_SIZE                       
 00001000  __SYSMEM_SIZE                      
-000016ad  pow                                
-000016ad  powl                               
-0000207d  Motor_ManMixer                     
-000029f5  BMX160_getAllData                  
-00002ee5  flightControl_SM                   
-00003309  acos                               
-00003309  acosl                              
-00003725  BMX160_updateData                  
-00003ad1  UARTvprintf                        
-00003e25  BMP388_parse_calib_data            
-00004141  atan                               
-00004141  atanl                              
-0000442d  OrangeRX_Init                      
-000046dd  BMP388_compensate_pressure         
-00004979  BMP388_begin                       
-00004e59  Motor_setDuty                      
-0000506d  BMP388_set_config                  
-0000526f  _nop                               
-00005271  OrangeRX_extractData               
-00005469  BMP388_showData                    
-00005655  PWM_Init                           
-0000583d  BMP388_user_i2c_read               
-00005a19  PID_master_pid                     
-00005db9  __aeabi_dsub                       
-00005dc3  __aeabi_dadd                       
-00005f6f  __aeabi_idiv0                      
-00005f6f  __aeabi_ldiv0                      
-00005f71  BMP388_calibrate_SM                
-00006111  BMP388_reset                       
-000062b1  UARTStdioIntHandler                
-00006439  BMP388_calibrate                   
-000065ad  asinf                              
-0000671d  GPIOPadConfigSet                   
-00006889  atan2f                             
-000069e1  sqrt                               
-000069e1  sqrtl                              
-00006b39  atanf                              
-00006c89  I2C_AddressBruteForcer             
-00006f09  UARTStdioConfig                    
-00007041  __aeabi_ddiv                       
-00007179  BMP388_readAltitude                
-000072ad  OrangeRX_showActData               
-000074f9  BMP388_user_i2c_write              
-00007611  SysCtlClockGet                     
-00007729  UARTwrite                          
-0000783d  ldexp                              
-0000783d  ldexpl                             
-0000783d  scalbn                             
-0000783d  scalbnl                            
-0000794d  BMP388_get_sensor_data             
-00007a59  BMX160_Init                        
-00007b5d  I2C_writeSingleReg                 
-00007c5d  aligned_alloc                      
-00007c5d  memalign                           
-00007d5d  __aeabi_dmul                       
-00007e59  floor                              
-00007e59  floorl                             
-00007f51  SysCtlClockSet                     
-00008045  BUZZ_SM                            
-00008135  OrangeRX_receivedChannelReorganizer
-00008219  BMP388_Init                        
-000082f9  BMX160_setMagnConf                 
-000083d1  round                              
-000083d1  roundl                             
-00008495  BMX160_begin                       
-00008555  trunc                              
-00008555  truncl                             
-00008611  cosf                               
-00008777  LED_Drive                          
-00008829  BMP388_compensate_data             
-000088d9  tanf                               
-00008985  BMP388_get_calib_data              
-00008a31  BMP388_set_regs                    
-00008ad5  sinf                               
-00008b79  __aeabi_memcpy                     
-00008b79  __aeabi_memcpy4                    
-00008b79  __aeabi_memcpy8                    
-00008b79  memcpy                             
-00008c15  __aeabi_uldivmod                   
-00008cad  BMX160_softReset                   
-00008dd5  I2C0_Init                          
-00008e61  BMX160_defaultParamSettg           
-00008eed  BMP388_get_regs                    
-00008f75  __aeabi_cdcmpeq                    
-00008f75  __aeabi_cdcmple                    
-00008ffb  __aeabi_cdrcmple                   
-00009081  PCF8574A_Read                      
-00009105  UART0_STDIO_Init                   
-00009185  __aeabi_memclr                     
-00009185  __aeabi_memclr4                    
-00009185  __aeabi_memclr8                    
-00009187  __aeabi_memset                     
-00009187  __aeabi_memset4                    
-00009187  __aeabi_memset8                    
-0000918d  memset                             
-00009201  applyLPF                           
-000092e5  BMP388_compensate_temperature      
-000093c1  __aeabi_d2f                        
-0000942f  BMP388_parse_sensor_data           
-0000949d  I2C_ReadByte                       
-00009509  GetFlightMode                      
-00009571  IntEnable                          
-000095d9  __TI_decompress_lzss               
-00009641  BMP388_readTemperature             
-000096a9  BMP388_Int_Handler                 
-0000970d  frexp                              
-0000970d  frexpl                             
-00009771  BMP388_readPressure                
-000097d5  BMX160_writeBmxReg                 
-00009839  __error__                          
-0000989d  PCF8574A_Write                     
-000098fd  SONAR_Trigger                      
-0000995d  TimerConfigure                     
-000099bd  OrangeRX_isConnected               
-00009a19  GPIOIntTypeSet                     
-00009a71  ORANGE_showState                   
-00009ac9  I2C_readReg                        
-00009b75  BMP388_showState                   
-00009bc9  BMX160_showState                   
-00009c1d  BUZZER_showState                   
-00009c71  __TI_ltoa                          
-00009d19  flightSafeLand                     
-00009d69  GPIOPinConfigure                   
-00009db5  I2CMasterInitExpClk                
-00009e01  I2C_showState                      
-00009e4d  PWM_showState                      
-00009e99  SWITCH_Init                        
-00009ee5  SystemInitialize                   
-00009f31  UARTFlushTx                        
-00009fc9  atoi                               
-0000a015  __aeabi_d2iz                       
-0000a05d  I2CMasterGlitchFilterConfigSet     
-0000a0e5  __TI_auto_init_nobinit_nopinit     
-0000a169  init_Buzzer                        
-0000a1a9  __aeabi_uidiv                      
-0000a1a9  __aeabi_uidivmod                   
-0000a1e9  sprintf                            
-0000a229  PCF8574A_Init                      
-0000a2a5  BUZZ_BUZZER                        
-0000a31d  UARTgetc                           
-0000a359  BMP388_read_all_regs               
-0000a395  BMP388_Int_Configure               
-0000a3cd  SysCtlPeripheralReady              
-0000a405  SysFlag_Check                      
-0000a43d  UART0_STDIO_IntHandler             
-0000a475  __aeabi_f2d                        
-0000a4ad  BMX160_softResetWorker             
-0000a4e5  IntRegister                        
-0000a519  LED_ALL_FUNCTION                   
-0000a54d  LED_LEDInit                        
-0000a581  SysCtlPeripheralEnable             
-0000a5b5  SysFlag_Clear                      
-0000a5e9  SysFlag_Set                        
-0000a61d  UARTFlushRx                        
-0000a651  _c_int00_noargs                    
-0000a685  GetEStopState                      
-0000a6b5  __aeabi_i2d                        
-0000a6e5  BUZZ_BUZZ                          
-0000a711  GPIODirModeSet                     
-0000a769  LED_LED1                           
-0000a795  LED_LED2                           
-0000a7c1  LED_LED3                           
-0000a7ed  UARTEchoSet                        
-0000a841  BMX160_readReg                     
-0000a867  SYSTICK_Delay                      
-0000a88d  SWITCH_SW1_Pressed                 
-0000a8b1  SWITCH_SW2_Pressed                 
-0000a8d5  UARTprintf                         
-0000a8f9  BMX160_scan                        
-0000a91b  PWMGenConfigure                    
-0000a93d  OrangeRX_IntHandler                
-0000a95d  SysTick_Init                       
-0000a97d  __aeabi_ui2d                       
-0000a99d  PWMPulseWidthGet                   
-0000a9bb  PWMPulseWidthSet                   
-0000a9d9  SysTickIntRegister                 
-0000aa11  memccpy                            
-0000aa2d  GPIOPinTypeGPIOOutput              
-0000aa47  copysign                           
-0000aa47  copysignl                          
-0000aa61  BMP388_set_i2c_addr                
-0000aa79  GPIOIntRegister                    
-0000aa91  SysCtlPWMClockGet                  
-0000aaa9  TimerIntRegister                   
-0000aac1  UARTIntRegister                    
-0000aaf1  GPIOPinTypeGPIOInput               
-0000ab07  GPIOPinTypeI2C                     
-0000ab1d  GPIOPinTypeI2CSCL                  
-0000ab33  GPIOPinTypePWM                     
-0000ab49  GPIOPinTypeTimer                   
-0000ab5f  GPIOPinTypeUART                    
-0000ab75  I2CMasterErr                       
-0000ab8b  TimerControlEvent                  
-0000aba1  strchr                             
-0000abb9  SysCtlPWMClockSet                  
-0000abcd  SysCtlResetCauseClear              
-0000abe1  SysTickEnable                      
-0000abf5  SysTickIntEnable                   
-0000ac09  strlen                             
-0000ac1d  PWMGenPeriodGet                    
-0000ac2f  PWMOutputState                     
-0000ac41  TimerLoadSet                       
-0000ac53  TimerMatchSet                      
-0000ac65  wcslen                             
-0000ac77  PWMGenPeriodSet                    
-0000ac89  SysClk_Init                        
-0000ac99  SysTickPeriodSet                   
-0000aca9  TimerEnable                        
-0000acb7  __TI_decompress_none               
-0000acc5  BMP388_user_delay_ms               
-0000acd1  GPIOIntEnable                      
-0000acdd  PWMGenEnable                       
-0000ace9  SysCtlResetCauseGet                
-0000acf5  SysFlag_Init                       
-0000ad01  __TI_zero_init                     
-0000ad0d  I2CMasterEnable                    
-0000ad17  SysTick_IntHandler                 
-0000ad21  TimerValueGet                      
-0000ad2b  UARTIntStatus                      
-0000ad3f  I2CMasterBusy                      
-0000ad47  I2CMasterSlaveAddrSet              
-0000ad4f  TimerIntEnable                     
-0000ad57  UARTIntEnable                      
-0000ad61  __aeabi_errno_addr                 
-0000ad69  malloc                             
-0000ad71  GPIOPinRead                        
-0000ad77  GPIOPinWrite                       
-0000ad7d  ResetISR                           
-0000ad83  SysCtlDelay                        
-0000ad89  UARTClockSourceSet                 
-0000ad8f  I2CMasterControl                   
-0000ad93  I2CMasterDataGet                   
-0000ad97  I2CMasterDataPut                   
-0000ad9b  TimerIntClear                      
-0000ad9f  _system_pre_init                   
-0000ada3  C$$EXIT                            
-0000ada3  abort                              
-0000ada8  _ctypes_                           
-0000b380  subtract_Motor                     
-0000b450  __TI_Handler_Table_Base            
-0000b45c  __TI_Handler_Table_Limit           
-0000b470  __TI_CINIT_Base                    
-0000b488  __TI_CINIT_Limit                   
+00001739  pow                                
+00001739  powl                               
+00002109  Motor_ManMixer                     
+00002a81  BLUETOOTH_IntHandler               
+00003049  PID_master_pid                     
+000035d9  BMX160_getAllData                  
+00003ac9  flightControl_SM                   
+00003eed  acos                               
+00003eed  acosl                              
+00004309  BMX160_updateData                  
+000046b5  UARTvprintf                        
+00004a09  BMP388_parse_calib_data            
+00004d25  atan                               
+00004d25  atanl                              
+00005011  OrangeRX_Init                      
+000052c1  BMP388_compensate_pressure         
+0000555d  BMP388_begin                       
+00005a3d  Motor_setDuty                      
+00005c51  BMP388_set_config                  
+00005e53  _nop                               
+00005e55  OrangeRX_extractData               
+0000604d  BMP388_showData                    
+00006239  PWM_Init                           
+00006421  BMP388_user_i2c_read               
+000067cd  __aeabi_dsub                       
+000067d7  __aeabi_dadd                       
+00006983  __aeabi_idiv0                      
+00006983  __aeabi_ldiv0                      
+00006985  BMP388_calibrate_SM                
+00006b25  BMP388_reset                       
+00006cc5  UARTStdioIntHandler                
+00006e4d  BMP388_calibrate                   
+00006fc1  asinf                              
+00007131  GPIOPadConfigSet                   
+0000729d  atan2f                             
+000073f5  sqrt                               
+000073f5  sqrtl                              
+0000754d  atanf                              
+0000769d  I2C_AddressBruteForcer             
+0000791d  UARTStdioConfig                    
+00007a55  __aeabi_ddiv                       
+00007b8d  BMP388_readAltitude                
+00007cc1  OrangeRX_showActData               
+00007f0d  BMP388_user_i2c_write              
+00008025  SysCtlClockGet                     
+0000813d  UARTwrite                          
+00008251  ldexp                              
+00008251  ldexpl                             
+00008251  scalbn                             
+00008251  scalbnl                            
+00008361  BMP388_get_sensor_data             
+0000846d  BMX160_Init                        
+00008571  I2C_writeSingleReg                 
+00008671  aligned_alloc                      
+00008671  memalign                           
+00008771  __aeabi_dmul                       
+0000886d  floor                              
+0000886d  floorl                             
+00008965  SysCtlClockSet                     
+00008a59  BUZZ_SM                            
+00008b49  OrangeRX_receivedChannelReorganizer
+00008c2d  BMP388_Init                        
+00008d0d  BMX160_setMagnConf                 
+00008de5  round                              
+00008de5  roundl                             
+00008ea9  BMX160_begin                       
+00008f69  trunc                              
+00008f69  truncl                             
+00009025  cosf                               
+0000918b  LED_Drive                          
+0000923d  BMP388_compensate_data             
+000092ed  tanf                               
+00009399  BMP388_get_calib_data              
+00009445  BMP388_set_regs                    
+000094e9  sinf                               
+0000958d  changeMotorDuty                    
+0000962d  __aeabi_memcpy                     
+0000962d  __aeabi_memcpy4                    
+0000962d  __aeabi_memcpy8                    
+0000962d  memcpy                             
+000096c9  __aeabi_uldivmod                   
+00009761  BMX160_softReset                   
+00009889  I2C0_Init                          
+00009915  BMX160_defaultParamSettg           
+000099a1  BMP388_get_regs                    
+00009a29  __aeabi_cdcmpeq                    
+00009a29  __aeabi_cdcmple                    
+00009aaf  __aeabi_cdrcmple                   
+00009b35  PCF8574A_Read                      
+00009bb9  UART0_STDIO_Init                   
+00009c39  __aeabi_memclr                     
+00009c39  __aeabi_memclr4                    
+00009c39  __aeabi_memclr8                    
+00009c3b  __aeabi_memset                     
+00009c3b  __aeabi_memset4                    
+00009c3b  __aeabi_memset8                    
+00009c41  memset                             
+00009cb5  applyLPF                           
+00009d99  BMP388_compensate_temperature      
+00009e75  __aeabi_d2f                        
+00009ee5  BLUETOOTH_Init                     
+00009f51  BMP388_parse_sensor_data           
+00009fbd  I2C_ReadByte                       
+0000a029  GetFlightMode                      
+0000a091  IntEnable                          
+0000a0f9  __TI_decompress_lzss               
+0000a161  BMP388_readTemperature             
+0000a1c9  BMP388_Int_Handler                 
+0000a22d  frexp                              
+0000a22d  frexpl                             
+0000a291  BMP388_readPressure                
+0000a2f5  BMX160_writeBmxReg                 
+0000a359  __error__                          
+0000a3bd  PCF8574A_Write                     
+0000a41d  SONAR_Trigger                      
+0000a47d  TimerConfigure                     
+0000a4dd  OrangeRX_isConnected               
+0000a539  GPIOIntTypeSet                     
+0000a591  ORANGE_showState                   
+0000a5e9  I2C_readReg                        
+0000a695  BMP388_showState                   
+0000a6e9  BMX160_showState                   
+0000a73d  BUZZER_showState                   
+0000a791  __TI_ltoa                          
+0000a839  SystemInitialize                   
+0000a889  flightSafeLand                     
+0000a8d9  GPIOPinConfigure                   
+0000a925  I2CMasterInitExpClk                
+0000a971  I2C_showState                      
+0000a9bd  PWM_showState                      
+0000aa09  SWITCH_Init                        
+0000aa55  UARTFlushTx                        
+0000aaed  atoi                               
+0000ab39  BLUETOOTHprintf                    
+0000ab81  __aeabi_d2iz                       
+0000abc9  UARTConfigSetExpClk                
+0000ac11  I2CMasterGlitchFilterConfigSet     
+0000ac99  __TI_auto_init_nobinit_nopinit     
+0000ad1d  init_Buzzer                        
+0000ad5d  __aeabi_uidiv                      
+0000ad5d  __aeabi_uidivmod                   
+0000ad9d  sprintf                            
+0000addd  PCF8574A_Init                      
+0000ae59  BUZZ_BUZZER                        
+0000aed1  UARTgetc                           
+0000af0d  BMP388_read_all_regs               
+0000af49  BMP388_Int_Configure               
+0000af81  SysCtlPeripheralReady              
+0000afb9  SysFlag_Check                      
+0000aff1  UART0_STDIO_IntHandler             
+0000b029  __aeabi_f2d                        
+0000b061  BMX160_softResetWorker             
+0000b099  IntRegister                        
+0000b0cd  LED_ALL_FUNCTION                   
+0000b101  LED_LEDInit                        
+0000b135  SysCtlPeripheralEnable             
+0000b169  SysFlag_Clear                      
+0000b19d  SysFlag_Set                        
+0000b1d1  UARTFlushRx                        
+0000b205  _c_int00_noargs                    
+0000b239  GetEStopState                      
+0000b269  __aeabi_i2d                        
+0000b299  BUZZ_BUZZ                          
+0000b2c5  GPIODirModeSet                     
+0000b31d  LED_LED1                           
+0000b349  LED_LED2                           
+0000b375  LED_LED3                           
+0000b3a1  UARTEchoSet                        
+0000b3f5  BMX160_readReg                     
+0000b41b  SYSTICK_Delay                      
+0000b441  SWITCH_SW1_Pressed                 
+0000b465  SWITCH_SW2_Pressed                 
+0000b489  UARTprintf                         
+0000b4ad  BMX160_scan                        
+0000b4cf  PWMGenConfigure                    
+0000b4f1  OrangeRX_IntHandler                
+0000b511  SysTick_Init                       
+0000b531  UARTDisable                        
+0000b551  __aeabi_ui2d                       
+0000b571  PWMPulseWidthGet                   
+0000b58f  PWMPulseWidthSet                   
+0000b5ad  SysTickIntRegister                 
+0000b5e5  memccpy                            
+0000b601  GPIOPinTypeGPIOOutput              
+0000b61b  copysign                           
+0000b61b  copysignl                          
+0000b635  BMP388_set_i2c_addr                
+0000b64d  GPIOIntRegister                    
+0000b665  SysCtlPWMClockGet                  
+0000b67d  TimerIntRegister                   
+0000b695  UARTIntRegister                    
+0000b6c5  GPIOPinTypeGPIOInput               
+0000b6db  GPIOPinTypeI2C                     
+0000b6f1  GPIOPinTypeI2CSCL                  
+0000b707  GPIOPinTypePWM                     
+0000b71d  GPIOPinTypeTimer                   
+0000b733  GPIOPinTypeUART                    
+0000b749  I2CMasterErr                       
+0000b75f  TimerControlEvent                  
+0000b775  strchr                             
+0000b78d  SysCtlPWMClockSet                  
+0000b7a1  SysCtlResetCauseClear              
+0000b7b5  SysTickEnable                      
+0000b7c9  SysTickIntEnable                   
+0000b7dd  UARTEnable                         
+0000b7f1  strlen                             
+0000b805  PWMGenPeriodGet                    
+0000b817  PWMOutputState                     
+0000b829  TimerLoadSet                       
+0000b83b  TimerMatchSet                      
+0000b84d  wcslen                             
+0000b85f  PWMGenPeriodSet                    
+0000b871  SysClk_Init                        
+0000b881  SysTickPeriodSet                   
+0000b891  TimerEnable                        
+0000b89f  __TI_decompress_none               
+0000b8ad  BMP388_user_delay_ms               
+0000b8b9  GPIOIntEnable                      
+0000b8c5  PWMGenEnable                       
+0000b8d1  SysCtlResetCauseGet                
+0000b8dd  SysFlag_Init                       
+0000b8e9  __TI_zero_init                     
+0000b8f5  I2CMasterEnable                    
+0000b8ff  SysTick_IntHandler                 
+0000b909  TimerValueGet                      
+0000b913  UARTCharGet                        
+0000b91d  UARTCharPut                        
+0000b927  UARTIntStatus                      
+0000b93b  I2CMasterBusy                      
+0000b943  I2CMasterSlaveAddrSet              
+0000b94b  TimerIntEnable                     
+0000b953  UARTIntEnable                      
+0000b95d  __aeabi_errno_addr                 
+0000b965  malloc                             
+0000b96d  GPIOPinRead                        
+0000b973  GPIOPinWrite                       
+0000b979  ResetISR                           
+0000b97f  SysCtlDelay                        
+0000b985  UARTClockSourceSet                 
+0000b98b  I2CMasterControl                   
+0000b98f  I2CMasterDataGet                   
+0000b993  I2CMasterDataPut                   
+0000b997  TimerIntClear                      
+0000b99b  UARTIntClear                       
+0000b99f  _system_pre_init                   
+0000b9a3  C$$EXIT                            
+0000b9a3  abort                              
+0000b9a8  _ctypes_                           
+0000bf80  subtract_Motor                     
+0000c04c  __TI_Handler_Table_Base            
+0000c058  __TI_Handler_Table_Limit           
+0000c068  __TI_CINIT_Base                    
+0000c080  __TI_CINIT_Limit                   
 20000000  __start___llvm_prf_cnts            
 20000000  __stop___llvm_prf_cnts             
 20000000  g_pfnRAMVectors                    
@@ -1128,39 +1180,53 @@ address   name
 20002920  dev                                
 20002a70  rx_text                            
 20002aa8  dutyOf                             
-20002b0c  Oaccel                             
-20002b10  Obmx160                            
-20002b14  Ogyro                              
-20002b18  Omagn                              
-20002b1c  g_uiSysFlags                       
-20002b20  resetCause                         
-20002b24  buzDuration                        
-20002b26  count                              
-20002b28  pauseTime                          
-20002b2a  BMP388_addr                        
-20002b5b  I2C_state                          
-20002b5c  BMX160_state                       
-20002b60  accelRange                         
-20002b64  gyroRange                          
-20002b68  phi_rad                            
-20002b6c  theta_rad                          
-20002b70  roll_filtered                      
-20002b74  pitch_filtered                     
-20002b78  yaw_filtered                       
-20002ba9  ORANGE_state                       
-20002baa  frameGapChNo                       
-20002bab  rx_connection_status               
-20002bac  base_altitude                      
-20002bb0  BMP388_state                       
-20002bb1  BMP388_calibState                  
-20002c10  Channel_Tune_Variable              
-20002c20  _lock                              
-20002c24  _unlock                            
-20002c30  selected_Motion                    
-20002c38  BUZZER_state                       
-20002c3c  errno                              
-20002c40  PWM_state                          
-20002c41  motorSelect                        
+20002ac8  tune                               
+20002b2c  Oaccel                             
+20002b30  Obmx160                            
+20002b34  Ogyro                              
+20002b38  Omagn                              
+20002b3c  g_uiSysFlags                       
+20002b40  resetCause                         
+20002b44  buzDuration                        
+20002b46  count                              
+20002b48  pauseTime                          
+20002b4a  BMP388_addr                        
+20002b4c  charBuffer                         
+20002c4c  pv_height                          
+20002c4e  pv_roll                            
+20002c50  kp_tune                            
+20002c54  ki_tune                            
+20002c58  roll_kp_tune                       
+20002c5c  roll_ki_tune                       
+20002c60  pitch_kp_tune                      
+20002c64  pitch_ki_tune                      
+20002c68  yaw_kp_tune                        
+20002c6c  yaw_ki_tune                        
+20002c70  alt_kp_tune                        
+20002c74  alt_ki_tune                        
+20002cab  I2C_state                          
+20002cac  BMX160_state                       
+20002cb0  accelRange                         
+20002cb4  gyroRange                          
+20002cb8  phi_rad                            
+20002cbc  theta_rad                          
+20002cc0  roll_filtered                      
+20002cc4  pitch_filtered                     
+20002cc8  yaw_filtered                       
+20002cf9  ORANGE_state                       
+20002cfa  frameGapChNo                       
+20002cfb  rx_connection_status               
+20002cfc  base_altitude                      
+20002d00  BMP388_state                       
+20002d01  BMP388_calibState                  
+20002d60  Channel_Tune_Variable              
+20002d70  _lock                              
+20002d74  _unlock                            
+20002d80  selected_Motion                    
+20002d88  BUZZER_state                       
+20002d8c  errno                              
+20002d90  PWM_state                          
+20002d91  motorSelect                        
 ffffffff  __TI_pprof_out_hndl                
 ffffffff  __TI_prof_data_size                
 ffffffff  __TI_prof_data_start               
@@ -1170,4 +1236,4 @@ ffffffff  binit
 UNDEFED   __mpu_init                         
 UNDEFED   _system_post_cinit                 
 
-[302 symbols]
+[326 symbols]

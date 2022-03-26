@@ -49,6 +49,7 @@ main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdlib.
 main.obj: ../local_include/BMP388/BMP388.h
 main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stddef.h
 main.obj: ../local_include/OrangeRX/OrangeRX.h
+main.obj: ../local_include/BLUETOOTH/BLUETOOTH.h
 main.obj: ../local_include/PWM/PWM.h
 main.obj: ../local_include/PID/PID.h
 main.obj: ../local_include/SONAR/SONAR.h
@@ -153,6 +154,8 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdlib.h:
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stddef.h:
 
 ../local_include/OrangeRX/OrangeRX.h:
+
+../local_include/BLUETOOTH/BLUETOOTH.h:
 
 ../local_include/PWM/PWM.h:
 

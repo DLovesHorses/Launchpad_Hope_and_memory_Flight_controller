@@ -21,6 +21,7 @@
 #define SYSFLAG_SYS_TICK        0
 #define SYSFLAG_UART0_TX        1
 #define SYSFLAG_UART0_RX        2
+#define BLUETOOTH_CHAR_RX       3
 
 #define BMP388_DRDY_INT         10
 #define Orange_RX_INT           20

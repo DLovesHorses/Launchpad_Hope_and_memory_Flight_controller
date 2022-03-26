@@ -403,30 +403,7 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
  *
  *
  */
-void MOTOR_showDuty(void){
 
-    uint8_t count = 0;
-    for(count = 0; count < 4 ; count++){
-        UARTprintf(" Motor : \t %d \t -> \t %d . \n", ( count + 1 ) , mixer.final_duty[count]);
-    }
-    UARTprintf("\n\n");
-}
-
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
 
 void Motor_ManMixer(void)
 {
@@ -848,4 +825,44 @@ void Motor_ManMixer(void)
 #endif
 
 }
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+void MOTOR_showDuty(void){
+
+    uint8_t count = 0;
+    for(count = 0; count < 4 ; count++){
+        UARTprintf(" Motor : \t %d \t -> \t %d . \n", ( count + 1 ) , mixer.final_duty[count]);
+    }
+    UARTprintf("\n\n");
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+
+
+
 

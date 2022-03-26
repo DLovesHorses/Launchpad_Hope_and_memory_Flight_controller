@@ -18,13 +18,28 @@
 
 // Defines
 
+#define ROLL_KP     0.1000f
+#define ROLL_KI     0.0001f
 
+#define PITCH_KP    0.2000f
+#define PITCH_KI    0.0010f
 
 
 
 // Macros
 
 
+typedef struct {
+    float kp;
+    float ki;
+}PID_TUNE_PARAMETER;
+
+typedef struct {
+    PID_TUNE_PARAMETER roll;
+    PID_TUNE_PARAMETER pitch;
+    PID_TUNE_PARAMETER yaw;
+    PID_TUNE_PARAMETER alt;
+}PID_VAR;
 
 
 
@@ -33,6 +48,7 @@
 void PID_altitude_adjust(void);
 void PID_roll_adjust(void);
 void PID_master_pid(void);
+void changeMotorDuty(uint8_t motor, float movementError );
 
 
 #endif /* PID_LOCK_ */

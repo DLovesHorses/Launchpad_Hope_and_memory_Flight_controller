@@ -26,6 +26,7 @@
 #include "local_include/BMX160/BMX160.h"
 #include "local_include/BMP388/BMP388.h"
 #include "local_include/OrangeRX/OrangeRX.h"
+#include "local_include/BLUETOOTH/BLUETOOTH.h"
 #include "local_include/PWM/PWM.h"
 #include "local_include/PID/PID.h"
 #include "local_include/SONAR/SONAR.h"
@@ -38,6 +39,9 @@
 
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
 extern uint8_t motorSelect;
+
+extern float kp_tune;
+extern float ki_tune;
 
 //int32_t w_time_stamp = 0;    // timestamp for bsx_lite
 
@@ -83,6 +87,7 @@ void SystemInitialize(void)
 
      OrangeRX_Init();
      PWM_Init();
+     BLUETOOTH_Init();
     // SONAR_Init();
 
     // BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_2, BUZZ_PAUSE_TIME_500 );
@@ -327,33 +332,28 @@ int main(void)
 
                 case '+':
                 {
-                    static uint8_t duty = 5;
-                    Motor_setDuty(MOTOR_ONE, duty);     // PA6
-                    Motor_setDuty(MOTOR_TWO, duty);     // PA7
-                    Motor_setDuty(MOTOR_THREE, duty);   // PB6
-                    Motor_setDuty(MOTOR_FOUR, duty);    // PB7
-
-                    if (duty < 99)
-                    {
-                        duty++;
-                    }
-
+                    kp_tune += 0.01;
                     break;
                 }
 
                 case '-':
                 {
-                    static uint8_t duty = 95;
-                    Motor_setDuty(MOTOR_ONE, duty);     // PA6
-                    Motor_setDuty(MOTOR_TWO, duty);     // PA7
-                    Motor_setDuty(MOTOR_THREE, duty);   // PB6
-                    Motor_setDuty(MOTOR_FOUR, duty);    // PB7
 
-                    if (duty != 3)
-                    {
-                        duty--;
-                    }
+                    kp_tune -= 0.01;
+                    break;
+                }
 
+                case '*':
+                {
+
+                    ki_tune += 0.0001;
+                    break;
+                }
+
+                case '/':
+                {
+
+                    ki_tune -= 0.0001;
                     break;
                 }
 
@@ -608,6 +608,18 @@ int main(void)
                     state ^= 0x01;
                     LED_LED2(state);
                     break;
+#endif
+                }
+
+                case '5':
+                {
+#ifdef DEBUG
+                    //UARTCharPut(UART5_BASE, '5');
+                    char buffer[200];
+                    int a = 2;
+                    int b = 3;
+                    sprintf(buffer, "UART sending test %d + %d = %f",a, b, (float)a+b );
+                    BLUETOOTHprintf(buffer);
 #endif
                 }
 
