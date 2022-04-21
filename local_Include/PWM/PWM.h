@@ -27,6 +27,10 @@
 #define PWM_FREQ                50000       // 50kHz
 #define PWM_GEN_PERIOD_TICK     800         // see the above calculation
 
+//#define MOTOR_DUTY_LIMIT_MULTIPLIER     0.2f    // Set the upper limit of motor duty
+#define MOTOR_DUTY_PPM_DIVISOR          1018    // clock divided by this value. This is used to set the PPM value.
+
+
 #define MOTOR_ONE_INIT_DUTY     80          // change it to 0 on final version
 #define MOTOR_TWO_INIT_DUTY     80          // change it to 0 on final version
 #define MOTOR_THREE_INIT_DUTY   80          // change it to 0 on final version
@@ -34,6 +38,8 @@
 
 #define RC_STICK_LOW_RANGE_THRESHOLD        49
 #define RC_STICK_HIGH_RANGE_THRESHOLD       53
+
+#define TM4C_CLK_RATE_FOR_PWM                   79999759
 
 
 
@@ -77,6 +83,16 @@ typedef struct{
     uint32_t motor_two;      // keeps track of the duty of motor two
     uint32_t motor_three;    // keeps track of the duty of motor three
     uint32_t motor_four;     // keeps track of the duty of motor four
+
+    uint32_t motor_one_ppm;      // keeps track of the duty of motor one in PPM
+    uint32_t motor_two_ppm;      // keeps track of the duty of motor two in PPM
+    uint32_t motor_three_ppm;    // keeps track of the duty of motor three in PPM
+    uint32_t motor_four_ppm;     // keeps track of the duty of motor four in PPM
+
+    float motor_one_ppm_gain;   // gain value off motor one
+    float motor_two_ppm_gain;   // gain value off motor two
+    float motor_three_ppm_gain; // gain value off motor three
+    float motor_four_ppm_gain;  // gain value off motor four
 
 }MOTOR_DUTY_TRACKER;
 
@@ -168,6 +184,8 @@ typedef struct{
     // keeps track of which multiplier value to use in final deduction calculations for each DOF and for each Motor.
 
     uint8_t final_duty[4];      // final duty of each motor.
+
+    uint32_t final_duty_ppm[4]; // Final duty in PPM (actual output to ESC).
 } MOTOR_VARIABLES;
 
 

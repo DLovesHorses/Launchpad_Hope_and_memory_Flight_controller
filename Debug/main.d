@@ -54,6 +54,7 @@ main.obj: ../local_include/PWM/PWM.h
 main.obj: ../local_include/PID/PID.h
 main.obj: ../local_include/SONAR/SONAR.h
 main.obj: ../local_include/MotorControl/MotorControl.h
+main.obj: ../local_include/PPM/PPM.h
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c
 main.obj: C:/ti/TivaWare_C_Series-2.2.0.295/inc/hw_uart.h
 
@@ -164,6 +165,8 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stddef.h:
 ../local_include/SONAR/SONAR.h:
 
 ../local_include/MotorControl/MotorControl.h:
+
+../local_include/PPM/PPM.h:
 
 C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.c:
 

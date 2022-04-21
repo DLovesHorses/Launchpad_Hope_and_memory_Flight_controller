@@ -11,8 +11,18 @@
 #include "BLUETOOTH.h"
 #include "local_Include/led.h"
 #include "local_include/SysFlag.h"
+#include "local_include/PWM/PWM.h"
+#include "local_include/BMX160/BMX160.h"
+#include "local_include/BMP388/BMP388.h"
+
+
 
 // global variables and externs
+
+
+
+extern float MOTOR_DUTY_LIMIT_MULTIPLIER;
+extern MOTOR_DUTY_TRACKER dutyOf;
 
 extern float roll_kp_tune;
 extern float roll_ki_tune;
@@ -25,6 +35,11 @@ extern float yaw_ki_tune;
 
 extern float alt_kp_tune;
 extern float alt_ki_tune;
+
+extern int roll_filtered;
+extern int pitch_filtered;
+extern int yaw_filtered;
+extern float base_altitude;
 
 // buffer to store the string to send via bluetooth
 char charBuffer[256] = { '0' };
@@ -162,7 +177,7 @@ void BLUETOOTH_IntHandler(void)
     case HEIGHT_KI_PLUS:
     {
         alt_ki_tune += 0.0001;
-        sprintf(charBuffer, "Altitude Ki : %f \n", alt_kp_tune);
+        sprintf(charBuffer, "Altitude Ki : %f \n", alt_ki_tune);
         BLUETOOTHprintf(charBuffer);
         charBuffer[0] = '\0';
 
@@ -173,7 +188,7 @@ void BLUETOOTH_IntHandler(void)
     case HEIGHT_KI_MINUS:
     {
         alt_ki_tune -= 0.0001;
-        sprintf(charBuffer, "Altitude Ki : %f \n", alt_kp_tune);
+        sprintf(charBuffer, "Altitude Ki : %f \n", alt_ki_tune);
         BLUETOOTHprintf(charBuffer);
         charBuffer[0] = '\0';
 
@@ -181,11 +196,213 @@ void BLUETOOTH_IntHandler(void)
         break;
     }
 
+    case MOTOR_SPEED_LIMIT_PLUS:
+    {
+        MOTOR_DUTY_LIMIT_MULTIPLIER += 0.1;
+        sprintf(charBuffer, "Motor Speed Multiplier : %f \n", MOTOR_DUTY_LIMIT_MULTIPLIER);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        //BLUETOOTHprintf("Height Ki- pressed.");
+        break;
+    }
+
+    case MOTOR_SPEED_LIMIT_MINUS:
+    {
+        MOTOR_DUTY_LIMIT_MULTIPLIER -= 0.1;
+        sprintf(charBuffer, "Motor Speed Multiplier : %f \n", MOTOR_DUTY_LIMIT_MULTIPLIER);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        //BLUETOOTHprintf("Height Ki- pressed.");
+        break;
+    }
+
+    case MOTOR_1_GAIN_PLUS:
+    {
+        dutyOf.motor_one_ppm_gain += 0.001;
+        sprintf(charBuffer, "Motor 1 Gain: %f \n", dutyOf.motor_one_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+    case MOTOR_1_GAIN_MINUS:
+    {
+        dutyOf.motor_one_ppm_gain -= 0.001;
+        sprintf(charBuffer, "Motor 1 Gain: %f \n", dutyOf.motor_one_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+    case MOTOR_2_GAIN_PLUS:
+    {
+        dutyOf.motor_two_ppm_gain += 0.001;
+        sprintf(charBuffer, "Motor 2 Gain: %f \n", dutyOf.motor_two_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+    case MOTOR_2_GAIN_MINUS:
+    {
+        dutyOf.motor_two_ppm_gain -= 0.001;
+        sprintf(charBuffer, "Motor 2 Gain: %f \n", dutyOf.motor_two_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+    case MOTOR_3_GAIN_PLUS:
+    {
+        dutyOf.motor_three_ppm_gain += 0.001;
+        sprintf(charBuffer, "Motor 3 Gain: %f \n", dutyOf.motor_three_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+    case MOTOR_3_GAIN_MINUS:
+    {
+        dutyOf.motor_three_ppm_gain -= 0.001;
+        sprintf(charBuffer, "Motor 3 Gain: %f \n", dutyOf.motor_three_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+    case MOTOR_4_GAIN_PLUS:
+    {
+        dutyOf.motor_four_ppm_gain += 0.001;
+        sprintf(charBuffer, "Motor 4 Gain: %f \n", dutyOf.motor_four_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+    case MOTOR_4_GAIN_MINUS:
+    {
+        dutyOf.motor_four_ppm_gain -= 0.001;
+        sprintf(charBuffer, "Motor 4 Gain: %f \n", dutyOf.motor_four_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        break;
+    }
+
+
+
+    case CALIBRATE_HEIGHT_COMMAND:
+    {
+
+        sprintf(charBuffer, "Pressure Sensor Calibrating... \n");
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+        //BMP388_calibrate();
+
+        SysFlag_Set(SYSFLAG_BLUETOOTH_PRESSURE_SENSOR_CALIBRATE_CMD_START);
+        //sprintf(charBuffer, "Pressure Sensor Calibrated. Base Altitude: %f \n", base_altitude);
+        //BLUETOOTHprintf(charBuffer);
+        //charBuffer[0] = '\0';
+
+
+
+        break;
+    }
+
+
+    case SHOW_ALL_TUNE_VARIABLE:
+    {
+
+        // show Tune variables
+        BLUETOOTHprintf("\n\n == Current Tune Variables Values ==\n");
+
+        sprintf(charBuffer, "Roll Kp: %f \n Roll Ki: %f \n Pitch Kp: %f \n Pitch Ki: %f \n Height Kp: %f \n Height Ki: %f \n Motor 1 gain: %f \n Motor 2 gain: %f \n Motor 3 gain: %f \n Motor 4 gain: %f \n\n ",
+                roll_kp_tune, roll_ki_tune, pitch_kp_tune, pitch_ki_tune, alt_kp_tune, alt_ki_tune, dutyOf.motor_one_ppm_gain, dutyOf.motor_two_ppm_gain, dutyOf.motor_three_ppm_gain, dutyOf.motor_four_ppm_gain);
+
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+
+        // show sensor data
+
+
+        BLUETOOTHprintf("\n == Sensor Data ==\n");
+
+        BMX160_updateData();
+
+        float AltReading = BMP388_readAltitude();
+        AltReading -= base_altitude;
+        int16_t current_height = (int16_t) (100 * AltReading);
+
+        sprintf(charBuffer, "Roll: %d \n Pitch: %d \n Yaw: %d \n Height: %d \n Base Alt: %f \n\n", roll_filtered, -1 *  pitch_filtered, yaw_filtered, current_height, base_altitude);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+
+
+        break;
+    }
+
+
+
     default:
     {
         // do nothing
     }
 
+    }
+
+    if(MOTOR_DUTY_LIMIT_MULTIPLIER == 0.2){
+        dutyOf.motor_one_ppm_gain = 0.998;
+        dutyOf.motor_two_ppm_gain = 0.997;
+        dutyOf.motor_three_ppm_gain = 0.999;
+        dutyOf.motor_four_ppm_gain = 0.996;
+
+        sprintf(charBuffer, "\n\n Motor 1 gain: %f \n Motor 2 gain: %f \n Motor 3 gain: %f \n Motor 4 gain: %f \n\n", dutyOf.motor_one_ppm_gain, dutyOf.motor_two_ppm_gain, dutyOf.motor_three_ppm_gain, dutyOf.motor_four_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+    }
+
+    if(MOTOR_DUTY_LIMIT_MULTIPLIER >= 0.29f && MOTOR_DUTY_LIMIT_MULTIPLIER <= 0.31f){
+        dutyOf.motor_one_ppm_gain = 0.998f;
+        dutyOf.motor_two_ppm_gain = 0.978f;
+        dutyOf.motor_three_ppm_gain = 0.989f;
+        dutyOf.motor_four_ppm_gain = 0.992f;
+
+        sprintf(charBuffer, "\n\n Motor 1 gain: %f \n Motor 2 gain: %f \n Motor 3 gain: %f \n Motor 4 gain: %f \n\n", dutyOf.motor_one_ppm_gain, dutyOf.motor_two_ppm_gain, dutyOf.motor_three_ppm_gain, dutyOf.motor_four_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+    }
+
+    if(MOTOR_DUTY_LIMIT_MULTIPLIER >= 0.39f && MOTOR_DUTY_LIMIT_MULTIPLIER <= 0.41f){
+        dutyOf.motor_one_ppm_gain = 1.0f;
+        dutyOf.motor_two_ppm_gain = 0.977f;
+        dutyOf.motor_three_ppm_gain = 0.980f;
+        dutyOf.motor_four_ppm_gain = 0.995f;
+
+        sprintf(charBuffer, "\n\n Motor 1 gain: %f \n Motor 2 gain: %f \n Motor 3 gain: %f \n Motor 4 gain: %f \n\n", dutyOf.motor_one_ppm_gain, dutyOf.motor_two_ppm_gain, dutyOf.motor_three_ppm_gain, dutyOf.motor_four_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
+    }
+
+    if(MOTOR_DUTY_LIMIT_MULTIPLIER >= 0.49f && MOTOR_DUTY_LIMIT_MULTIPLIER <= 0.51f){
+        dutyOf.motor_one_ppm_gain = 1.0f;
+        dutyOf.motor_two_ppm_gain = 0.970f;
+        dutyOf.motor_three_ppm_gain = 0.977f;
+        dutyOf.motor_four_ppm_gain = 0.989f;
+
+        sprintf(charBuffer, "\n\n Motor 1 gain: %f \n Motor 2 gain: %f \n Motor 3 gain: %f \n Motor 4 gain: %f \n\n", dutyOf.motor_one_ppm_gain, dutyOf.motor_two_ppm_gain, dutyOf.motor_three_ppm_gain, dutyOf.motor_four_ppm_gain);
+        BLUETOOTHprintf(charBuffer);
+        charBuffer[0] = '\0';
     }
 
     UARTConfigSetExpClk(

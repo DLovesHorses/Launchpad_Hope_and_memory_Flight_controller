@@ -952,9 +952,36 @@ void BMX160_updateData(void)
     // Calculate Heading
     // TODO: Make this process more robust.
 
+///*  // old yaw calculation
     float yaw = 90
                 - (atan(magData.y / magData.x) * 180 / (2 * acos(0.0)));
 
+//*/
+/*
+    // new yaw calculation.
+    float yaw = 0.0f;
+    if (magData.x > 0){
+        yaw = atan(magData.y / magData.x);
+    }
+    else if (magData.x == 0 && magData.y > 0){
+        yaw = acosf(0.0) / 2; // PI / 2
+    }
+    else if (magData.x == 0 && magData.y < 0){
+        yaw = -1 * acosf(0.0) / 2; // -PI / 2
+    }
+    else if (magData.x < 0 && magData.y >= 0){
+        yaw = atan(magData.y / magData.x) + acosf(0.0);
+    }
+    else if (magData.x < 0 && magData.y < 0){
+        yaw = atan(magData.y / magData.x) - acosf(0.0);
+    }
+    else {
+        yaw = 10000.0f; // Invalid
+    }
+
+    // change yaw from rad to degrees.
+    yaw *= RAD_TO_DEG;
+*/
     // filter heading
     static LOW_PASS_FILTER complimantary_filter_yaw;
     complimantary_filter_yaw.Fc = 10.05f; // cut-off freq. for yaw change.

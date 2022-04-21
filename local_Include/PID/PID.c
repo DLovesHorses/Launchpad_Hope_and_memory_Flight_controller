@@ -51,8 +51,6 @@ float alt_ki_tune = 0.0f;
 
 PID_VAR tune;
 
-
-
 // Function definitions.
 
 void PID_altitude_adjust(void)
@@ -232,7 +230,7 @@ void PID_master_pid(void)
     OrangeRX_extractData();
 
     // update BMX160 sensor data (for roll, pitch & yaw)
-    BMX160_updateData();
+    //BMX160_updateData();
 
     // get process variable for height
     float AltReading = BMP388_readAltitude();
@@ -241,7 +239,7 @@ void PID_master_pid(void)
 
     // get process variables for roll, pitch and yaw
     int16_t pv_roll = roll_filtered;
-    int16_t pv_pitch = (-1) *pitch_filtered;        // multiplied by -1 so that the sp and pv aligns in direction.
+    int16_t pv_pitch = (-1) * pitch_filtered; // multiplied by -1 so that the sp and pv aligns in direction.
     int16_t pv_yaw = yaw_filtered;
 
     // variables to store appropriate data
@@ -255,6 +253,23 @@ void PID_master_pid(void)
     int16_t sp_yaw;
     int16_t sp_height;
 
+    // set tuning variables roll
+    tune.roll.kp = ROLL_KP; // roll_kp_tune;    // save this tuned value in ROLL_KP;
+    tune.roll.ki = ROLL_KI; // roll_ki_tune;    // save this tunde value in ROLL_KI;
+
+    // set tuning variables roll
+    tune.pitch.kp = PITCH_KP; // pitch_kp_tune;    // save this tunde value in PITCH_KP;
+    tune.pitch.ki = PITCH_KI; //pitch_ki_tune;    // save this tunde value in PITCH_KI;
+
+    // set tuning variables roll
+    tune.yaw.kp = yaw_kp_tune;    // save this tunde value in YAW_KP;
+    tune.yaw.ki = yaw_ki_tune;    // save this tunde value in YAW_KI;
+
+    // set tuning variables roll
+    tune.alt.kp = alt_kp_tune;    // save this tunde value in ALT_KP;
+    tune.alt.ki = alt_ki_tune;    // save this tunde value in ALT_KI;
+
+#ifdef BLUETOOTH_TUNE
     // set tuning variables roll
     tune.roll.kp = roll_kp_tune;    // save this tuned value in ROLL_KP;
     tune.roll.ki = roll_ki_tune;    // save this tunde value in ROLL_KI;
@@ -270,6 +285,26 @@ void PID_master_pid(void)
     // set tuning variables roll
     tune.alt.kp = alt_kp_tune;    // save this tunde value in ALT_KP;
     tune.alt.ki = alt_ki_tune;    // save this tunde value in ALT_KI;
+
+#else
+    // set tuning variables roll
+    tune.roll.kp = ROLL_KP;
+    tune.roll.ki = ROLL_KI;
+
+    // set tuning variables roll
+    tune.pitch.kp = PITCH_KP;
+    tune.pitch.ki = PITCH_KI;
+
+    // set tuning variables roll
+    tune.yaw.kp = yaw_kp_tune;    // save this tunde value in YAW_KP;
+    tune.yaw.ki = yaw_ki_tune;    // save this tunde value in YAW_KI;
+
+    // set tuning variables roll
+    tune.alt.kp = ALT_KP;
+    tune.alt.ki = ALT_KI;
+
+
+#endif
 
     if (OrangeRX_isConnected())
     {
@@ -299,293 +334,334 @@ void PID_master_pid(void)
         sp_height = 0;
     }
 
-
     /*
-    // Enable PID for height only if the Aileron, Elevator and Rudder are not changed. (add some buffer to let the TX, RX trimming possible).
-    // Priority:
-    // Roll -> Pitch -> Height
-    if ((sp_roll > -3 && sp_roll < 3) && (sp_pitch > -3 && sp_pitch < 3)
-            && (sp_yaw > -3 && sp_yaw < 3))
+     // Enable PID for height only if the Aileron, Elevator and Rudder are not changed. (add some buffer to let the TX, RX trimming possible).
+     // Priority:
+     // Roll -> Pitch -> Height
+     if ((sp_roll > -3 && sp_roll < 3) && (sp_pitch > -3 && sp_pitch < 3)
+     && (sp_yaw > -3 && sp_yaw < 3))
+     {
+
+     // Reverse action of P Controller
+     float error = sp_height + pv_height;
+     float kp = 0.4;
+     float height_error = kp * error;
+
+     //To enable the manual filght control of height, enable the following line of code.
+     //height_error = sp_height;
+
+     uint8_t count = 0;
+     for (count = 0; count < 4; count++)
+     {
+     switch (count)
+     {
+
+     case M1:
+     {
+     changeMotorDuty(M1, height_error);
+     break;
+     }
+
+     case M2:
+     {
+     changeMotorDuty(M2, height_error);
+     break;
+     }
+
+     case M3:
+     {
+     changeMotorDuty(M3, height_error);
+     break;
+     }
+
+     case M4:
+     {
+     changeMotorDuty(M4, height_error);
+     break;
+     }
+
+     }
+
+     }
+     UARTprintf("Height Changed. \n");
+
+     }
+
+
+
+     */
+
+    if (!(sp_roll > -3 && sp_roll < 3) || !(sp_pitch > -3 && sp_pitch < 3))
     {
 
-        // Reverse action of P Controller
-        float error = sp_height - pv_height;
-        float kp = 0.4;
-        float height_error = kp * error;
+        // if Aileron (Roll is changed), Force the drone to go to requested direction
+        if (!(sp_roll > -3 && sp_roll < 3)) //else if (!(sp_roll > -3 && sp_roll < 3))
+        {
+
+            // Reverse action of P Controller
+            float error = sp_roll - pv_roll;
+            float kp = tune.roll.kp;
+
+            float ki = tune.roll.ki;
+
+            static float intigral_error_dt = 0;
+            intigral_error_dt += error;
+
+            float p_term = kp * error;
+            float i_term = ki * intigral_error_dt;
+
+            float roll_error = (p_term + i_term);
+
+            if (sp_roll <= -3)
+            {
+                // if requested to go left, slow motor 1 and motor 2, and speed up motor 3 and motor 4
+
+                uint8_t count = 0;
+                for (count = 0; count < 4; count++)
+                {
+                    switch (count)
+                    {
+
+                    case M1:
+                    {
+                        changeMotorDuty(M1, roll_error);
+                        break;
+                    }
+
+                    case M2:
+                    {
+                        changeMotorDuty(M2, roll_error);
+                        break;
+                    }
+
+                    case M3:
+                    {
+                        changeMotorDuty(M3, -1 * roll_error);
+                        break;
+                    }
+
+                    case M4:
+                    {
+                        changeMotorDuty(M4, -1 * roll_error);
+                        break;
+                    }
+
+                    }
+
+                }
+
+                UARTprintf("Roll Left. \n\n\n");
+
+            }
+
+            else    //(sp_roll >= 3)
+            {
+                // if requested to go right, slow motor 3 and motor 4, and speed up motor 1 and motor 2
+
+                uint8_t count = 0;
+                for (count = 0; count < 4; count++)
+                {
+                    switch (count)
+                    {
+
+                    case M1:
+                    {
+                        changeMotorDuty(M1, roll_error);
+                        break;
+                    }
+
+                    case M2:
+                    {
+                        changeMotorDuty(M2, roll_error);
+                        break;
+                    }
+
+                    case M3:
+                    {
+                        changeMotorDuty(M3, (-1) * roll_error);
+                        break;
+                    }
+
+                    case M4:
+                    {
+                        changeMotorDuty(M4, (-1) * roll_error);
+                        break;
+                    }
+
+                    }
+
+                }
+
+                UARTprintf("Roll Right. \n\n\n");
+
+            }
+
+        }
+
+        // if Elevator (Pitch is changed), Force the drone to go to Forward / Backward
+        if (!(sp_pitch > -3 && sp_pitch < 3))
+        {
+
+            // Reverse action of P Controller
+            float error = sp_pitch - pv_pitch;
+            float kp = tune.pitch.kp;
+            float ki = tune.pitch.ki;
+
+            static float intigral_error_dt = 0;
+            intigral_error_dt += error;
+
+            float p_term = kp * error;
+            float i_term = ki * intigral_error_dt;
+
+            float pitch_error = (p_term + i_term);
+
+            if (sp_pitch <= -3)
+            {
+                // if requested to go backward, slow motor 2 and motor 4, speed up motor 1 and motor 3
+
+                uint8_t count = 0;
+                for (count = 0; count < 4; count++)
+                {
+
+                    switch (count)
+                    {
+
+                    case M1:
+                    {
+                        changeMotorDuty(M1, -1 * pitch_error);
+                        break;
+                    }
+
+                    case M2:
+                    {
+                        changeMotorDuty(M2, pitch_error);
+                        break;
+                    }
+
+                    case M3:
+                    {
+                        changeMotorDuty(M3, -1 * pitch_error);
+                        break;
+                    }
+
+                    case M4:
+                    {
+                        changeMotorDuty(M4, pitch_error);
+                        break;
+                    }
+
+                    }
+
+                }
+
+                UARTprintf("Go Forward. \n\n\n");
+
+            }
+
+            else
+            {
+                // if requested to go forward, slow motor 1 and motor 3 and speed up motor 2 and motor 4
+
+                uint8_t count = 0;
+                for (count = 0; count < 4; count++)
+                {
+                    switch (count)
+                    {
+
+                    case M1:
+                    {
+                        changeMotorDuty(M1, (-1) * pitch_error);
+                        break;
+                    }
+
+                    case M2:
+                    {
+                        changeMotorDuty(M2, pitch_error);
+                        break;
+                    }
+
+                    case M3:
+                    {
+                        changeMotorDuty(M3, (-1) * pitch_error);
+                        break;
+                    }
+
+                    case M4:
+                    {
+                        changeMotorDuty(M4, pitch_error);
+                        break;
+                    }
+
+                    }
+
+                }
+
+                UARTprintf("Go Backward. \n\n\n");
+            }
+        }
+
+    }
+
+    else
+    {
+        // If Roll and Pitch are not changed, all motors will follow throttle stick value.
+        int8_t throttle_value = rx_data.dataOfCh[THROTTLE];
+        float throttle_multiplier = mixer.channelConstant[K1];
 
         uint8_t count = 0;
         for (count = 0; count < 4; count++)
         {
-            switch (count)
-            {
-
-            case M1:
-            {
-                changeMotorDuty(M1, height_error);
-                break;
-            }
-
-            case M2:
-            {
-                changeMotorDuty(M2, height_error);
-                break;
-            }
-
-            case M3:
-            {
-                changeMotorDuty(M3, height_error);
-                break;
-            }
-
-            case M4:
-            {
-                changeMotorDuty(M4, height_error);
-                break;
-            }
-
-            }
-
-        }
-        UARTprintf("Height Changed. \n");
-
-    }
-
-
-*/
-
-    // if Aileron (Roll is changed), Force the drone to go to requested direction
-    if (!(sp_roll > -3 && sp_roll < 3))//else if (!(sp_roll > -3 && sp_roll < 3))
-    {
-
-        // Reverse action of P Controller
-        float error = sp_roll - pv_roll;
-        float kp = tune.roll.kp;
-
-        float ki = tune.roll.ki;
-
-        static float intigral_error_dt = 0;
-        intigral_error_dt += error;
-
-        float p_term = kp * error;
-        float i_term = ki * intigral_error_dt;
-
-        float roll_error = (p_term + i_term) ;
-
-
-        if (sp_roll <= -3)
-        {
-            // if requested to go left, slow motor 1 and motor 2
-
-            uint8_t count = 0;
-            for (count = 0; count < 4; count++)
-            {
-                switch (count)
-                {
-
-                case M1:
-                {
-                    changeMotorDuty(M1, roll_error);
-                    break;
-                }
-
-                case M2:
-                {
-                    changeMotorDuty(M2, roll_error);
-                    break;
-                }
-
-                case M3:
-                {
-
-                    break;
-                }
-
-                case M4:
-                {
-
-                    break;
-                }
-
-                }
-
-            }
-
-            UARTprintf("Roll Left. \n\n\n");
-
-        }
-
-        else    //(sp_roll >= 3)
-        {
-            // if requested to go right, slow motor 3 and motor 4
-
-            uint8_t count = 0;
-            for (count = 0; count < 4; count++)
-            {
-                switch (count)
-                {
-
-                case M1:
-                {
-                    break;
-                }
-
-                case M2:
-                {
-                    break;
-                }
-
-                case M3:
-                {
-                    changeMotorDuty(M3, (-1) * roll_error);
-                    break;
-                }
-
-                case M4:
-                {
-                    changeMotorDuty(M4, (-1) * roll_error);
-                    break;
-                }
-
-                }
-
-            }
-
-            UARTprintf("Roll Right. \n\n\n");
-
-        }
-
-    }
-
-
-
-
-    // if Elevator (Pitch is changed), Force the drone to go to Forward / Backward
-    if (!(sp_pitch > -3 && sp_pitch < 3))
-    {
-
-        // Reverse action of P Controller
-        float error = sp_pitch - pv_pitch;
-        float kp = tune.pitch.kp;
-        float ki = tune.pitch.ki;
-
-        static float intigral_error_dt = 0;
-        intigral_error_dt += error;
-
-        float p_term = kp * error;
-        float i_term = ki * intigral_error_dt;
-
-        float pitch_error = (p_term + i_term) ;
-
-        if (sp_pitch <= -3)
-        {
-            // if requested to go backward, slow motor 2 and motor 4
-
-            uint8_t count = 0;
-            for (count = 0; count < 4; count++)
-            {
-
-                switch (count)
-                {
-
-                case M1:
-                {
-                    break;
-                }
-
-                case M2:
-                {
-                    changeMotorDuty(M2, pitch_error);
-                    break;
-                }
-
-                case M3:
-                {
-
-                    break;
-                }
-
-                case M4:
-                {
-                    changeMotorDuty(M4, pitch_error);
-                    break;
-                }
-
-                }
-
-            }
-
-            UARTprintf("Go Forward. \n\n\n");
-
-        }
-
-        else
-        {
-            // if requested to go forward, slow motor 1 and motor 3
-
-            uint8_t count = 0;
-            for (count = 0; count < 4; count++)
-            {
-                switch (count)
-                {
-
-                case M1:
-                {
-                    changeMotorDuty(M1, (-1) * pitch_error);
-                    break;
-                }
-
-                case M2:
-                {
-                    break;
-                }
-
-                case M3:
-                {
-                    changeMotorDuty(M3, (-1) * pitch_error);
-                    break;
-                }
-
-                case M4:
-                {
-
-                    break;
-                }
-
-                }
-
-            }
-
-            UARTprintf("Go Backward. \n\n\n");
+            mixer.final_duty[count] = (throttle_value * throttle_multiplier);
+            Motor_setDuty(count, mixer.final_duty[count]);
         }
     }
+    /*
+     else{
+     UARTprintf("Yaw Changed. \n");
+     }
 
-
-/*
-    else{
-        UARTprintf("Yaw Changed. \n");
-    }
-
-    */
+     */
     //MOTOR_showDuty();
-
 #ifdef DEBUG
 
     UARTprintf("Variable \t -> \t SP \t , \t PV\n");
     UARTprintf("Height \t \t -> \t %d \t , \t %d \n", sp_height, pv_height);
     UARTprintf("Roll \t \t -> \t %d \t , \t %d \n", sp_roll, pv_roll);
     UARTprintf("Pitch \t \t -> \t %d \t , \t %d \n", sp_pitch, pv_pitch);
-    UARTprintf("Yaw \t \t -> \t %d \t , \t %d \n", sp_yaw, pv_yaw);
-
-    char cBuffer[80];
-    sprintf(cBuffer,
-            " Tuning Variables: \t Kp : \t %f \t Ki : \t %f.",
-            kp_tune, ki_tune);
-    UARTprintf("%s", cBuffer);
-
-    cBuffer[0] = '\0';
-
+    UARTprintf("Yaw \t \t -> \t %d \t , \t %d \n\n", sp_yaw, pv_yaw);
 
     UARTprintf("\n\n");
+
+    /*
+     UARTprintf("Tuning variables: \n");
+
+     char charBuffer[252];
+     charBuffer[0] = '\0';
+     sprintf(charBuffer, "Roll Kp \t -> \t %f\nRoll Ki \t -> \t %f", roll_kp_tune,
+     roll_ki_tune);
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+     UARTprintf("\n");
+
+     sprintf(charBuffer, "Pitch Kp \t -> \t %f\nPitch Ki \t -> \t %f", pitch_kp_tune,
+     pitch_ki_tune);
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+     UARTprintf("\n");
+
+     sprintf(charBuffer, "Yaw Kp \t \t -> \t %f\nYaw Ki \t \t -> \t %f", yaw_kp_tune,
+     yaw_ki_tune);
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+     UARTprintf("\n");
+
+     sprintf(charBuffer, "Altitude Kp \t -> \t %f\nAltitude Ki \t -> \t %f", alt_kp_tune,
+     alt_ki_tune);
+     UARTprintf("%s", charBuffer);
+     charBuffer[0] = '\0';
+     UARTprintf("\n\n\n");
+
+     */
 
 #endif
 

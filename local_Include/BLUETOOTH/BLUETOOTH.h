@@ -36,6 +36,23 @@
 #define HEIGHT_KP_MINUS         'A'
 #define HEIGHT_KI_PLUS          'B'
 #define HEIGHT_KI_MINUS         'C'
+#define MOTOR_SPEED_LIMIT_PLUS  'D'
+#define MOTOR_SPEED_LIMIT_MINUS 'E'
+
+#define MOTOR_1_GAIN_PLUS       'G'
+#define MOTOR_1_GAIN_MINUS      'H'
+
+#define MOTOR_2_GAIN_PLUS       'I'
+#define MOTOR_2_GAIN_MINUS      'J'
+
+#define MOTOR_3_GAIN_PLUS       'K'
+#define MOTOR_3_GAIN_MINUS      'L'
+
+#define MOTOR_4_GAIN_PLUS       'M'
+#define MOTOR_4_GAIN_MINUS      'N'
+
+#define CALIBRATE_HEIGHT_COMMAND    'Z'
+#define SHOW_ALL_TUNE_VARIABLE      'X'
 
 
 

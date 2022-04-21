@@ -18,12 +18,15 @@
 #include "local_Include/SysTick.h"
 #include "local_Include/SysFlag.h"
 #include "local_Include/SystemAttitude/LPF.h"
+#include "local_Include/BLUETOOTH/BLUETOOTH.h"
 
 // global variables and externs
 struct bmp3_dev dev;
 uint8_t BMP388_addr;
 
 float base_altitude = 0.0f;
+
+float alt_filtered = 0.0f;
 bool BMP388_state = NOT_INITIALIZED;
 bool BMP388_calibState = BMP388_NOT_CALIBRATED;
 
@@ -267,6 +270,8 @@ void BMP388_calibrate(void)
                 "Actual Altitude: \t %f \t  filtered_altitude : \t %f \n",
                 actual_Altitude, filtered_Altitude);
         UARTprintf("%s", buffer);
+
+        BLUETOOTHprintf(buffer);
         buffer[0] = '\0';
 #endif
 
@@ -277,6 +282,8 @@ void BMP388_calibrate(void)
     sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n",
             filtered_Altitude);
     UARTprintf("%s", buffer);
+    BLUETOOTHprintf(buffer);
+
     buffer[0] = '\0';
     return;
 }
@@ -333,6 +340,9 @@ void BMP388_calibrate_SM(void)
                     "Actual Altitude: \t %f \t  filtered_altitude : \t %f \n",
                     actual_Altitude, filtered_Altitude);
             UARTprintf("%s", buffer);
+
+            BLUETOOTHprintf(buffer);
+
             buffer[0] = '\0';
 #endif
         }
@@ -348,6 +358,11 @@ void BMP388_calibrate_SM(void)
                 sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n",
                         base_altitude);
                 UARTprintf("%s", buffer);
+
+                BLUETOOTHprintf(buffer);
+                BUZZ_BUZZER(BUZZ_DUR_MEDIUM, BUZZ_REP_TIME_2, BUZZ_PAUSE_TIME_500);
+
+
                 buffer[0] = '\0';
             }
 
@@ -359,6 +374,8 @@ void BMP388_calibrate_SM(void)
         sprintf(buffer, "BMP388 Calibrated. \t Base Altitude : \t %f \n",
                 base_altitude);
         UARTprintf("%s", buffer);
+
+        BLUETOOTHprintf(buffer);
         buffer[0] = '\0';
     }
 
@@ -470,7 +487,7 @@ int8_t BMP388_begin(void)
     rslt = BMP388_set_config();
 
 // set-up the interrupt system
-    BMP388_Int_Configure();
+    //BMP388_Int_Configure();
 
 // next call is for debug purpose only: to ensure config is properly set
     BMP388_read_all_regs();

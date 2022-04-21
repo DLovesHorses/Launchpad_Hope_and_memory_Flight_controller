@@ -24,6 +24,11 @@
 #define PITCH_KP    0.2000f
 #define PITCH_KI    0.0010f
 
+#define ALT_KP      0.0f
+#define ALT_KI      0.0f
+
+#define ALT_TIMER   3
+
 
 
 // Macros

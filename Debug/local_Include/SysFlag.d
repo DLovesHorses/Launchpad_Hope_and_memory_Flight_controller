@@ -2,7 +2,7 @@
 
 local_Include/SysFlag.obj: ../local_Include/SysFlag.c
 local_Include/SysFlag.obj: ../local_Include/SysFlag.h
-local_Include/SysFlag.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h
+local_Include/SysFlag.obj: C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/From\ College/DroneProject/DroneProject/local_include/global.h
 local_Include/SysFlag.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h
 local_Include/SysFlag.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h
 local_Include/SysFlag.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/linkage.h
@@ -42,7 +42,7 @@ local_Include/SysFlag.obj: C:/ti/TivaWare_C_Series-2.2.0.295/utils/uartstdio.h
 
 ../local_Include/SysFlag.h:
 
-C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/DroneProject/local_include/global.h:
+C:/Users/Standard\ Account/Desktop/College/6th\ sem/System\ Integration/Project/Code\ versions/From\ College/DroneProject/DroneProject/local_include/global.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h:
 

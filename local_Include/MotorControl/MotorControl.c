@@ -19,6 +19,8 @@
 #include "local_Include/OrangeRX/OrangeRX.h"
 #include "local_Include/PID/PID.h"
 #include "local_Include/BMP388/BMP388.h"
+#include "local_Include/BLUETOOTH/BLUETOOTH.h"
+
 
 // global variables and externs
 
@@ -254,6 +256,7 @@ bool GetEStopState(void)
 void flightControl_SM(void)
 {
     static uint8_t curState = IDLE;
+    static bool show_rx_state_bluetooth = TRUE;
     /*
      if(OrangeRX_isConnected() == NOT_CONNECTED){
      // bypass the state machine. Turn Solid Red.
@@ -272,6 +275,10 @@ void flightControl_SM(void)
     {
         // bypass the state machine. Turn Solid Red.
 
+        if (show_rx_state_bluetooth == TRUE){
+            show_rx_state_bluetooth = FALSE;
+            BLUETOOTHprintf("Flight Controller: Receiver is not connected.\n");
+        }
         curState = RX_NOT_CONNECTED;
         BMP388_calibState = BMP388_NOT_CALIBRATED;
         //LED_Drive(RED, ON);
@@ -290,6 +297,7 @@ void flightControl_SM(void)
             BUZZ_BUZZ(OFF);
             LED_Drive(RED, ON);
             timer++;
+
         }
 
         if (GetEStopState() == ENGAGED)
@@ -313,6 +321,9 @@ void flightControl_SM(void)
         {
             LED_Drive(LED_ALL, OFF);
             BUZZ_BUZZ(OFF);
+
+            BLUETOOTHprintf("Flight Controller: Estop Engaged\n");
+
         }
         if (timer == IDLE_STATE_LED_LEVEL_STABLE_TIME)
         {
@@ -366,6 +377,9 @@ void flightControl_SM(void)
             LED_Drive(LED_ALL, OFF);
             BUZZ_BUZZ(OFF);
 
+            BLUETOOTHprintf("Flight Controller: Calibration mode\n");
+
+
         }
         if (BMP388_calibState == BMP388_NOT_CALIBRATED)
         {
@@ -375,7 +389,7 @@ void flightControl_SM(void)
             {
                 ledState ^= 0x01;
                 LED_Drive(BLUE, ledState);
-
+                BUZZ_BUZZ(ledState);
                 timer = 1;
             }
             else
@@ -395,6 +409,7 @@ void flightControl_SM(void)
             {
                 ledState ^= 0x01;
                 LED_Drive(BLUE, ledState);
+                BUZZ_BUZZ(ledState);
 
                 timer = 1;
             }
@@ -451,6 +466,7 @@ void flightControl_SM(void)
         {
             LED_Drive(LED_ALL, OFF);
             BUZZ_BUZZ(OFF);
+            BLUETOOTHprintf("Flight Controller: Manual mode Selected\n");
 
             timer++;
         }
@@ -532,6 +548,8 @@ void flightControl_SM(void)
         {
             LED_Drive(LED_ALL, OFF);
             BUZZ_BUZZ(OFF);
+            BLUETOOTHprintf("Flight Controller: Automatic mode selected\n");
+
 
         }
         if (timer == AUTO_STATE_LED_LEVEL_STABLE_TIME)

@@ -39,7 +39,8 @@
 #define TRUE true
 #define FALSE false
 
-#define SAMPLE_TIME_MS     100     // 100 ms sample time
+#define SAMPLE_TIME_MS          100     // 100 ms sample time
+#define ESC_REFRESH_PERIOD_MS   5      // 20 ms refresh rate
 
 
 enum DeviceConnectionStatus{

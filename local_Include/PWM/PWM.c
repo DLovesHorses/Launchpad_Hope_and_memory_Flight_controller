@@ -17,12 +17,16 @@
 // global variables and externs
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
 
+float MOTOR_DUTY_LIMIT_MULTIPLIER = 0.2f;   // default : 0.2f
+
 bool  PWM_state = NOT_INITIALIZED;
 uint8_t motorSelect = MOTOR_ALL;
 
 MOTOR_VARIABLES mixer;
 
 MOTOR_DUTY_TRACKER dutyOf;
+
+
 
 const bool subtract_Motor[8][4] = { { 0, 0, 0, 0 },      // MOVE_UP [0]
         { 0, 0, 1, 1 },      // MOVE_RIGHT      [1]
@@ -36,9 +40,9 @@ const bool subtract_Motor[8][4] = { { 0, 0, 0, 0 },      // MOVE_UP [0]
 };
 
 // NOTE :
-float Channel_Tune_Variable[4] = { 1.0f,     // this is 'a' // Aileron  [0] (K2)   // K2 = a% of k1
-        1.0f,     // this is 'e' // Elevator   [1] (K3)        // K3 = e% of k1
-        1.0f,     // this is 'r' // Rudder     [2] (K4)        // K4 = r% of k1
+float Channel_Tune_Variable[4] = { 0.2f,     // this is 'a' // Aileron  [0] (K2)   // K2 = a% of k1
+        0.2f,     // this is 'e' // Elevator   [1] (K3)        // K3 = e% of k1
+        0.2f,     // this is 'r' // Rudder     [2] (K4)        // K4 = r% of k1
         1.0f      // Throttle   [3] (K1)
         };
 
@@ -60,6 +64,7 @@ char *motion_string[8] = { "UP", "RIGHT", "Forward", "Rotate Right", "DOWN",
 void PWM_Init(void)
 {
 
+#ifdef PWM_ENABLED
     SysCtlPWMClockSet(SYSCTL_PWMDIV_2);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM1);
@@ -93,6 +98,10 @@ void PWM_Init(void)
     Motor_setDuty(MOTOR_THREE, 10); // 10% duty on PB6
     Motor_setDuty(MOTOR_FOUR, 10);  // 10% duty on PB7
 
+
+
+
+
     /*
      PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, MOTOR_ONE_INIT_DUTY);     // PA6 duty (Motor 1, CW)
      PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, MOTOR_TWO_INIT_DUTY);     // PA7 duty (Motor 2, CCW)
@@ -111,10 +120,7 @@ void PWM_Init(void)
     PWMGenEnable(PWM1_BASE, PWM_GEN_1);
     PWMGenEnable(PWM0_BASE, PWM_GEN_0);
 
-    mixer.channelConstant[K1] = Channel_Tune_Variable[K1];  // Throttle constant
-    mixer.channelConstant[K2] = Channel_Tune_Variable[K2] * Channel_Tune_Variable[K1];   // Aileron constant (in terms of percentage of throttle_constant)
-    mixer.channelConstant[K3] = Channel_Tune_Variable[K3] * Channel_Tune_Variable[K1];  // Elevator constant (in terms of percentage of throttle_constant)
-    mixer.channelConstant[K4] = Channel_Tune_Variable[K4] * Channel_Tune_Variable[K1];   // Rudder constant (in terms of percentage of throttle_constant)
+
 
     UARTprintf("PWM 0 clock: 0x%x\n", SysCtlPWMClockGet());
     UARTprintf("PWM 0 Gen 0 Period : %d\n",
@@ -123,6 +129,28 @@ void PWM_Init(void)
                PWMPulseWidthGet(PWM0_BASE, PWM_OUT_0));
 
     PWM_state = INITIALIZED;
+
+
+#endif      // PWM_ENABLED
+
+    mixer.channelConstant[K1] = Channel_Tune_Variable[K1];  // Throttle constant
+    mixer.channelConstant[K2] = Channel_Tune_Variable[K2] * Channel_Tune_Variable[K1];   // Aileron constant (in terms of percentage of throttle_constant)
+    mixer.channelConstant[K3] = Channel_Tune_Variable[K3] * Channel_Tune_Variable[K1];  // Elevator constant (in terms of percentage of throttle_constant)
+    mixer.channelConstant[K4] = Channel_Tune_Variable[K4] * Channel_Tune_Variable[K1];   // Rudder constant (in terms of percentage of throttle_constant)
+
+    dutyOf.motor_one_ppm = (TM4C_CLK_RATE_FOR_PWM / 1000);
+    dutyOf.motor_two_ppm = (TM4C_CLK_RATE_FOR_PWM / 1000);
+    dutyOf.motor_three_ppm = (TM4C_CLK_RATE_FOR_PWM / 1000);
+    dutyOf.motor_four_ppm = (TM4C_CLK_RATE_FOR_PWM / 1000);
+
+    // define default motor gains here
+    dutyOf.motor_one_ppm_gain   = 0.998f;
+    dutyOf.motor_two_ppm_gain   = 0.987f;
+    dutyOf.motor_three_ppm_gain = 0.999f;
+    dutyOf.motor_four_ppm_gain  = 0.996f;
+
+
+    return;
 
 }
 /*
@@ -178,15 +206,20 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         duty = 1;
     }
 
-    uint32_t convDuty = (uint32_t) ((duty * PWM_GEN_PERIOD_TICK) / 100);
+    uint32_t convDuty = (uint32_t) (((duty * PWM_GEN_PERIOD_TICK) / 100) * MOTOR_DUTY_LIMIT_MULTIPLIER);
+
 
     switch (motorID)
     {
     case MOTOR_ONE:
     {
         dutyOf.motor_one = convDuty;
+        dutyOf.motor_one_ppm = ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) + ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) * duty * MOTOR_DUTY_LIMIT_MULTIPLIER / 100));
+        dutyOf.motor_one_ppm *= dutyOf.motor_one_ppm_gain;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one); // PA6 duty (Motor 1, CW)
+#endif
 
         break;
     }
@@ -194,8 +227,12 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
     case MOTOR_TWO:
     {
         dutyOf.motor_two = convDuty;
+        dutyOf.motor_two_ppm = ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) + ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) * duty * MOTOR_DUTY_LIMIT_MULTIPLIER / 100));
+        dutyOf.motor_two_ppm *= dutyOf.motor_two_ppm_gain;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two); // PA7 duty (Motor 2, CCW)
+#endif
 
         break;
     }
@@ -203,8 +240,12 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
     case MOTOR_THREE:
     {
         dutyOf.motor_three = convDuty;
+        dutyOf.motor_three_ppm = ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) + ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) * duty * MOTOR_DUTY_LIMIT_MULTIPLIER / 100));
+        dutyOf.motor_three_ppm *= dutyOf.motor_three_ppm_gain;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three); // PB6 duty (Motor 3, CCW)
+#endif
 
         break;
     }
@@ -212,8 +253,12 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
     case MOTOR_FOUR:
     {
         dutyOf.motor_four = convDuty;
+        dutyOf.motor_four_ppm = ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) + ((SysCtlClockGet() / MOTOR_DUTY_PPM_DIVISOR) * duty * MOTOR_DUTY_LIMIT_MULTIPLIER / 100));
+        dutyOf.motor_four_ppm *= dutyOf.motor_four_ppm_gain;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four); // PB7 duty (Motor 4, CW)
+#endif
 
         break;
     }
@@ -223,8 +268,10 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         dutyOf.motor_one = convDuty;
         dutyOf.motor_three = convDuty;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one); // PA6 duty (Motor 1, CW)
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three); // PB6 duty (Motor 3, CCW)
+#endif
 
         break;
     }
@@ -234,8 +281,10 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         dutyOf.motor_two = convDuty;
         dutyOf.motor_four = convDuty;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two); // PA7 duty (Motor 2, CCW)
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four); // PB7 duty (Motor 4, CW)
+#endif
 
         break;
     }
@@ -245,8 +294,10 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         dutyOf.motor_one = convDuty;
         dutyOf.motor_two = convDuty;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one); // PA6 duty (Motor 1, CW)
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two); // PA7 duty (Motor 2, CCW)
+#endif
 
         break;
     }
@@ -256,8 +307,10 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         dutyOf.motor_three = convDuty;
         dutyOf.motor_four = convDuty;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three); // PB6 duty (Motor 3, CCW)
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four); // PB7 duty (Motor 4, CW)
+#endif
 
         break;
     }
@@ -267,8 +320,10 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         dutyOf.motor_one = convDuty;
         dutyOf.motor_four = convDuty;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one); // PA6 duty (Motor 1, CW)
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four); // PB7 duty (Motor 4, CW)
+#endif
 
         break;
     }
@@ -278,8 +333,10 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         dutyOf.motor_two = convDuty;
         dutyOf.motor_three = convDuty;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two); // PA7 duty (Motor 2, CCW)
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three); // PB6 duty (Motor 3, CCW)
+#endif
 
         break;
     }
@@ -291,11 +348,12 @@ void Motor_setDuty(uint8_t motorID, uint8_t duty)
         dutyOf.motor_three = convDuty;
         dutyOf.motor_four = convDuty;
 
+#ifdef PWM_ENABLED
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, dutyOf.motor_one); // PA6 duty (Motor 1, CW)
         PWMPulseWidthSet(PWM1_BASE, PWM_OUT_3, dutyOf.motor_two); // PA7 duty (Motor 2, CCW)
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, dutyOf.motor_three); // PB6 duty (Motor 3, CCW)
         PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1, dutyOf.motor_four); // PB7 duty (Motor 4, CW)
-
+#endif
         break;
     }
     default:

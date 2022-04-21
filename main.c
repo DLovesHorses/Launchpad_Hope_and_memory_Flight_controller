@@ -31,6 +31,7 @@
 #include "local_include/PID/PID.h"
 #include "local_include/SONAR/SONAR.h"
 #include "local_include/MotorControl/MotorControl.h"
+#include "local_include/PPM/PPM.h"
 
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
@@ -39,9 +40,15 @@
 
 extern Orange_RX_Channel_Data rx_data;    // Received channel frequency content.
 extern uint8_t motorSelect;
+extern uint8_t curSelectedESC;
+extern MOTOR_DUTY_TRACKER dutyOf;
+
+extern float base_altitude;
 
 extern float kp_tune;
 extern float ki_tune;
+
+extern float MOTOR_DUTY_LIMIT_MULTIPLIER;
 
 //int32_t w_time_stamp = 0;    // timestamp for bsx_lite
 
@@ -77,21 +84,22 @@ void SystemInitialize(void)
     SWITCH_Init();
 
     UART0_STDIO_Init();
-     I2C0_Init();
+    BLUETOOTH_Init();
+    I2C0_Init();
 
-     PCF8574A_Init();
+    PCF8574A_Init();
     // MPU9250_Init(); // don't use
-     BMX160_Init();
-     init_Buzzer();
-     BMP388_Init();
+    BMX160_Init();
+    init_Buzzer();
+    BMP388_Init();
 
-     OrangeRX_Init();
-     PWM_Init();
-     BLUETOOTH_Init();
+    OrangeRX_Init();
+    PWM_Init();
+    PPM_Init();
+
     // SONAR_Init();
 
     // BUZZ_BUZZER(BUZZ_DUR_LONG, BUZZ_REP_TIME_2, BUZZ_PAUSE_TIME_500 );
-
 
 }
 
@@ -120,6 +128,19 @@ int main(void)
             SysFlag_Clear(SYSFLAG_SYS_TICK);
 
             BUZZ_SM(BUZZ_SM_CALLED_FROM_MAIN); // don't remove. It is necessary for Buzzer state machine
+
+
+            if(SysFlag_Check(SYSFLAG_BLUETOOTH_PRESSURE_SENSOR_CALIBRATE_CMD_START)){
+
+                SysFlag_Clear(SYSFLAG_BLUETOOTH_PRESSURE_SENSOR_CALIBRATE_CMD_START);
+                BMP388_calibrate();
+
+                char charBuffer[80];
+                sprintf(charBuffer, "Pressure Sensor Calibrated. Base Altitude: %f \n", base_altitude);
+                BLUETOOTHprintf(charBuffer);
+                charBuffer[0] = '\0';
+            }
+
 
             /*
              *
@@ -273,7 +294,6 @@ int main(void)
              * Operation to do if BMP388 Data-Ready int was sent.
              */
 
-
             if (SysFlag_Check(BMP388_DRDY_INT))
             {
                 // clear the flag
@@ -285,6 +305,47 @@ int main(void)
                 BUZZ_PAUSE_TIME_100);
 #endif
             }
+
+            static uint8_t ESC_PPM_PERIOD = 0;
+            if (ESC_PPM_PERIOD == ESC_REFRESH_PERIOD_MS){
+
+                ESC_PPM_PERIOD = 0;
+
+                switch (curSelectedESC)
+                {
+
+                case ESC_1:
+                {
+                    PPM_ESC_HighLevelControl(ESC_1, dutyOf.motor_one_ppm);
+                    break;
+                }
+                case ESC_2:
+                {
+                    PPM_ESC_HighLevelControl(ESC_2, dutyOf.motor_two_ppm);
+                    break;
+                }
+                case ESC_3:
+                {
+                    PPM_ESC_HighLevelControl(ESC_3, dutyOf.motor_three_ppm);
+                    break;
+                }
+                case ESC_4:
+                {
+                    PPM_ESC_HighLevelControl(ESC_4, dutyOf.motor_four_ppm);
+                    break;
+                }
+
+                default:
+                {
+
+                    break;
+                }
+
+                }
+
+
+            }
+            ESC_PPM_PERIOD++;
 
 
             static uint16_t sensorDataSampleTimeCounter = 0;
@@ -299,17 +360,12 @@ int main(void)
                 // GetEStopState();
                 // GetFlightMode();
 
-               //  Motor_ManMixer();
+                //  Motor_ManMixer();
                 // PID_altitude_adjust();
                 //flightControl();
                 //MOTOR_showDuty();
-                //BMX160_updateData();
+                BMX160_updateData(); // Enable this so that the Uuser can see the roll and pitch of the system even when the automatic controller is not running
                 flightControl_SM();
-
-
-
-
-
 
                 // for debug only
                 uint8_t data[8] = { 0 };
@@ -332,14 +388,24 @@ int main(void)
 
                 case '+':
                 {
-                    kp_tune += 0.01;
+                    MOTOR_DUTY_LIMIT_MULTIPLIER += 0.1;
+
+                    char charBuffer[80];
+                    sprintf(charBuffer, "Motor Duty Multiplier : %f\n", MOTOR_DUTY_LIMIT_MULTIPLIER);
+                            UARTprintf("%s", charBuffer);
+                    //kp_tune += 0.01;
                     break;
                 }
 
                 case '-':
                 {
 
-                    kp_tune -= 0.01;
+                    MOTOR_DUTY_LIMIT_MULTIPLIER -= 0.1;
+
+                    char charBuffer[80];
+                    sprintf(charBuffer, "Motor Duty Multiplier : %f\n", MOTOR_DUTY_LIMIT_MULTIPLIER);
+                            UARTprintf("%s", charBuffer);
+                    //kp_tune -= 0.01;
                     break;
                 }
 
@@ -486,7 +552,6 @@ int main(void)
                     break;
                 }
 
-
                 case 's':
                 {
                     // Display State of the devices
@@ -497,7 +562,6 @@ int main(void)
                     BUZZER_showState();
                     PWM_showState();
                     ORANGE_showState();
-
 
                     break;
 
@@ -511,7 +575,8 @@ int main(void)
                     uint8_t reg = 0x44; //
                     uint8_t data = 0;
                     BMX160_readReg(reg, &data, 1);
-                    UARTprintf("BMX160: Reg: 0x%x \t -> \t Data: 0x%x", reg, data);
+                    UARTprintf("BMX160: Reg: 0x%x \t -> \t Data: 0x%x", reg,
+                               data);
                     UARTprintf("\n");
                     break;
 
@@ -546,19 +611,9 @@ int main(void)
                     bool pb6State = receivedData & PCF8574A_PB6;
                     UARTprintf("\nPB4 state: %d ", pb4State);
                     UARTprintf("PB5 state: %d ", pb5State);
-                    UARTprintf("PB6 state: %d/n/n", pb6State);
+                    UARTprintf("PB6 state: %d\n\n", pb6State);
 
-                    UARTprintf("Reading all registers of MPU9250/n/n");
-                    uint8_t gyroData[1];
-                    int count;
-                    for (count = 0; count < 256; count++)
-                    {
-                        //MPU9250_MultiByteRead(count, 1, gyroData);
-                        //I2C_ReadByte(MPU9250_SA, count, gyroData);
-                        UARTprintf("Reg: %d (0x%X), \t value: 0x%X \n", count,
-                                   count, gyroData[0]);
-                        SysCtlDelay(10000);
-                    }
+
 #endif
                     break;
                 }
@@ -607,6 +662,7 @@ int main(void)
                     static bool state = 0;
                     state ^= 0x01;
                     LED_LED2(state);
+                    BUZZ_BUZZ(state);
                     break;
 #endif
                 }
@@ -618,11 +674,36 @@ int main(void)
                     char buffer[200];
                     int a = 2;
                     int b = 3;
-                    sprintf(buffer, "UART sending test %d + %d = %f",a, b, (float)a+b );
+                    sprintf(buffer, "UART sending test %d + %d = %f", a, b,
+                            (float) a + b);
                     BLUETOOTHprintf(buffer);
+                    break;
 #endif
                 }
 
+                case '6':
+                {
+
+#ifdef DEBUG
+
+                    break;
+
+#endif
+                }
+
+                case '7':
+                {
+
+#ifdef DEBUG
+                    BMP388_calibrate();
+
+                    break;
+#endif
+
+
+
+
+                }
                 case '\x03': // CTRL + C
                 {
                     uint8_t i = 0;
@@ -667,14 +748,12 @@ int main(void)
                 BUZZ_PAUSE_TIME_500);
             }
 
-           /*   // test individual degree of freedoms.
-               // Press 'p' to change DOF to test.
-            OrangeRX_extractData();
-            uint8_t duty = (uint8_t) (rx_data.ch_nom_data[3]);
-            Motor_setDuty(motorSelect, duty);
-          */
-
-
+            /*   // test individual degree of freedoms.
+             // Press 'p' to change DOF to test.
+             OrangeRX_extractData();
+             uint8_t duty = (uint8_t) (rx_data.ch_nom_data[3]);
+             Motor_setDuty(motorSelect, duty);
+             */
 
         }
         else
